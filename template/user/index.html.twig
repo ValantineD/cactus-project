@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} User {% endblock %}
+
+{% block body %}
+    <h1>User Index</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td> {{ user.id }}</td>
+                <td> {{ user.username }}</td>
+                <td> {{ user.email }}</td>
+                <td> {{ user.password }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
