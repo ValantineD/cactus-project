@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserController extends AbstractController
 {
 
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/', name: 'cactus_db_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
@@ -26,15 +26,15 @@ class UserController extends AbstractController
         ]);
 
     }
-    #[Route('/new', name: "app_user_new", methods: ["GET", "POST"])]
+    #[Route('/new', name: "cactus_db_user_new", methods: ["GET", "POST"])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createFormBuilder($user)
-            ->add('username', )
-            ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
-            ->add('submit', SubmitType::class, [
+            ->add('username')
+            ->add('email')
+            ->add('password')
+            ->add('submit', [
                 'label' => 'Enregistrer',])
             ->getForm();
         $form->handleRequest($request);
@@ -47,7 +47,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('/');
         }
 
-        return $this->render('/user/new.html.twig', [
+        return $this->render('/template/user/new.html.twig', [
             'form' => $form,
         ]);
     }
