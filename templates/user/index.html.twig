@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} User {% endblock %}
+{% block title %} Index {% endblock %}
 
 {% block body %}
     <h1>User Index</h1>
@@ -11,6 +11,7 @@
             <th>Username</th>
             <th>Email</th>
             <th>Password</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -20,6 +21,10 @@
                 <td> {{ user.username }}</td>
                 <td> {{ user.email }}</td>
                 <td> {{ user.password }}</td>
+                <td>
+                    <a href="{{ path('cactus_db_user_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('cactus_db_user_edit', {'id': user.id}) }}">edit</a>
+                </td>
             </tr>
         {% else %}
             <tr>
@@ -28,4 +33,6 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <a href="{{ path('cactus_db_user_new') }}">Create new</a>
 {% endblock %}
