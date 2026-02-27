@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,7 +19,6 @@ class UserController extends AbstractController
     public function index(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
-        dump($users);
 
         return $this->render('user/index.html.twig', [
             'title' => 'Voici ma page index user',
@@ -34,20 +34,21 @@ class UserController extends AbstractController
             ->add('username')
             ->add('email')
             ->add('password')
-            ->add('submit', [
-                'label' => 'Enregistrer',])
+            ->add('submit', SubmitType::class,[
+                'label' => 'Enregistrer'])
             ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            echo('Form submitted!');
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('/');
+            return $this->redirectToRoute('cactus_db_user_index');
         }
 
-        return $this->render('/template/user/new.html.twig', [
+        return $this->render('/user/new.html.twig', [
             'form' => $form,
         ]);
     }
