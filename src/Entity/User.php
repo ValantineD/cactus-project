@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -21,6 +22,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profileFilename = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $username = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -32,14 +36,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $location = null;
+
     #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilePicture = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $location = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -49,6 +53,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setId(?int $id): static
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onProfileFilename(): static
+    {
+        $finder = new Finder();
+        $finder->files()->in(dirname(__DIR__, 2) . '/public/images/profiles/');
+
+        $files = [];
+        foreach ($finder as $file) {
+            $files[] = explode("public/", $file->getRealPath())[1];
+        }
+
+        $this->profileFilename = $files[array_rand($files)];
+
+        return $this;
+    }
+
+    public function getProfileFilename(): ?string
+    {
+        return $this->profileFilename;
+    }
+
+    public function setProfileFilename(?string $profileFilename): static
+    {
+        $this->profileFilename = $profileFilename;
 
         return $this;
     }
@@ -89,6 +121,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?string $location): static
+    {
+        $this->location = $location;
+
+        return $this;
+    }
 
     #[ORM\PrePersist]
     public function onCreatedAt(): static
@@ -109,18 +168,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRoles(): array
+    #[ORM\PreUpdate]
+    public function onUpdatedAt(): static
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        $this->updatedAt = new \DateTime("now");
+        return $this;
     }
 
-    public function setRoles(array $roles): static
+    public function getUpdatedAt(): ?\DateTime
     {
-        $this->roles = $roles;
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTime $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -132,30 +194,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
-    }
-
-    public function getProfilePicture(): ?string
-    {
-        return $this->profilePicture;
-    }
-
-    public function setProfilePicture(?string $profilePicture): static
-    {
-        $this->profilePicture = $profilePicture;
-
-        return $this;
-    }
-
-    public function getLocation(): ?string
-    {
-        return $this->location;
-    }
-
-    public function setLocation(?string $location): static
-    {
-        $this->location = $location;
-
-        return $this;
+        return (string)$this->email;
     }
 }
