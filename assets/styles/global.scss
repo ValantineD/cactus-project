@@ -1,1 +1,129 @@
 @import "~bootstrap/scss/bootstrap";
+@import "./button";
+@import "./form";
+
+@font-face {
+    font-family: 'Chewy';
+    src: url('../fonts/Chewy-Regular.woff2') format('woff2'),
+    url('../fonts/Chewy-Regular.woff') format('woff'),
+    url('../fonts/Chewy-Regular.ttf') format('ttf');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Light.woff2') format('woff2'),
+    url('../fonts/Poppins-Light.woff') format('woff'),
+    url('../fonts/Poppins-Light.ttf') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Medium.woff2') format('woff2'),
+    url('../fonts/Poppins-Medium.woff') format('woff'),
+    url('../fonts/Poppins-Medium.ttf') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-SemiBold.woff2') format('woff2'),
+    url('../fonts/Poppins-SemiBold.woff') format('woff'),
+    url('../fonts/Poppins-SemiBold.ttf') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+:root {
+    --font-poppins: 'Poppins', sans-serif;
+    --font-chewy: 'Chewy', sans-serif;
+    --primary-color: rgba(215, 192, 151, 1);
+    --secondary-color: rgba(231, 222, 175, 1);
+    --tertiary-color: #418F3B;
+    --quaternary-color: rgba(38, 67, 19, 1);
+    --texte-clair: rgba(245, 245, 240, 1);
+    --texte-fonce: rgba(17, 17, 17, 1);
+    --green-pastel: rgba(115, 175, 111, 0.15000000596046448);
+    --beige-transparent: rgba(215, 192, 151, 0.25);
+    --red: rgba(255, 56, 60, 1);
+    --grey: rgba(142, 142, 147, 1);
+    --text-black: rgba(0, 0, 0, 1);
+}
+
+html {
+    font-size: 16px;
+    font-family: var(--font-poppins);
+    font-weight: 500;
+    color: var(--text-black);
+}
+
+.logo {
+    font-family: var(--font-chewy);
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+h4 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+h5 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+h6 {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+p {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+label {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.accent {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+small {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.cactus-border-shadow {
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    flex-shrink: 1;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.5);
+}
+
+
+
+

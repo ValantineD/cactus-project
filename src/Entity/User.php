@@ -40,6 +40,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $location = null;
 
     #[ORM\Column(nullable: true)]
+    private ?\DateTime $birthday = null;
+
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $createdAt = null;
 
     #[ORM\Column(nullable: true)]
@@ -145,6 +148,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLocation(?string $location): static
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    public function getBirthday(): ?\DateTime
+    {
+        return $this->birthday;
+    }
+
+    public function setBirthday(?\DateTime $birthday): static
+    {
+        $this->birthday = $birthday;
 
         return $this;
     }

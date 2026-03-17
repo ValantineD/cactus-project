@@ -3,18 +3,28 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="container py-4 mx-auto">
 
-    {{ form_errors(registrationForm) }}
+        <h1 class="logo text-center py-4">Don't be a Cacti, <br> Be a Cact-us!</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        <div class="cactus-border-shadow p-5 mx-auto" style="width: 700px">
+            {{ form_errors(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.username) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            {{ form_row(registrationForm.birthday) }}
+            <div class="py-4">
+                <button type="submit" class="btn btn-cactus-primary d-block w-100">S'inscrire</button>
+            </div>
+            <a href="{{ path('app_login') }}" class="h6 text-center d-block link-offset-2 link-underline-dark link-underline-opacity-0 link-underline-opacity-75-hover">Vous avez déjà un compte ?</a>
+            {{ form_end(registrationForm) }}
+        </div>
+
+    </div>
 {% endblock %}
+
+{#border border-1 border-danger p-5 mx-auto#}
