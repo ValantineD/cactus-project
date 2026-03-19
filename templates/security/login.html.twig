@@ -3,26 +3,48 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
-        </div>
-    {% endif %}
+    <h1 class="logo text-center py-4">Don't be a Cacti, <br> Be a Cact-us!</h1>
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+    <form method="post" class="cactus-border-shadow p-5 mx-auto" style="width: 700px">
+            <div style="border-bottom: 2px solid var(--primary-color)">
+                <div class="mb-3">
+                    <label for="inputEmail" class="form-label">Adresse E-mail</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+                           class="form-control"
+                           autocomplete="email" placeholder="adresse e-mail" required autofocus>
+                </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label">Mot de Passe</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control"
+                           autocomplete="current-password" placeholder="mot de passe" required>
+                </div>
+
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
+                       value="{{ csrf_token('authenticate') }}">
+
+                <div class="py-4">
+                    <button class="btn btn-lg btn-cactus-secondary d-block w-100" type="submit">
+                        Se Connecter
+                    </button>
+                </div>
+
+                <div class="mb-4">
+                    <a href="" class="h6 text-center d-block link-offset-2 link-underline-dark link-underline-opacity-0
+                link-underline-opacity-75-hover">
+                        Mot de passe oublié?
+                    </a>
+                </div>
+            </div>
+
+            <div class="py-4">
+                <a class="btn btn-lg btn-cactus-primary d-block w-100" href="{{ path('app_register') }}">
+                    Créer un nouveau compte
+                </a>
+            </div>
+    </form>
 {% endblock %}
