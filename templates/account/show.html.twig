@@ -3,37 +3,188 @@
 {% block title %}My Account{% endblock %}
 
 {% block body %}
-    <h1>My Profile</h1>
 
-    <img src="{{ asset(user.profileFilename) }}" alt="pic_product">
+    <div class="row container gx-5">
+        <div class="col-12 col-lg-4" style="border-right: 2px solid var(--primary-color)">
+            <h2>Profil</h2>
+            {{ include('partials/_side_menu_profile.html.twig') }}
+        </div>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Username</th>
-            <td>{{ user.username }}</td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td>{{ user.email }}</td>
-        </tr>
-        <tr>
-            <th>Created At</th>
-            <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Location</th>
-            <td>{{ user.location }}</td>
-        </tr>
-        </tbody>
-    </table>
+        <div class="col-12 col-lg-8 px-5">
 
-    <a href="{{ path('app_home') }}">back to home</a>
-    <a href="{{ path('app_logout') }}">Logout</a>
+            <div class="d-flex justify-content-between align-items-start" style="border-bottom: 2px solid var(--primary-color)">
+                <div class="cactus-border-shadow p-4 mb-4"
+                     style="width: 365px; height: 290px; border-radius: 20px;">
+                    <div class="row gx-5">
+                        <div class="col text-center">
+                            <img src="{{ asset(user.profileFilename) }}" alt="pic_product" style="width: 150px"
+                                 loading="lazy">
+                            <h2>
+                                {{ user.username }}
+                            </h2>
+                            <p class="small">
+                                {{ user.location }}
+                            </p>
+                        </div>
 
-    {% if app.user %}
-        <a href="{{ path('app_user_edit', {'username': user.username}) }}">edit</a>
-    {% endif %}
+                        <div class="col p-1">
+                            <div style="border-bottom: 1px solid var(--primary-color)">
+                                <p class="h3">57</p>
+                                <p>Activité créée</p>
+                            </div>
+                            <div style="border-bottom: 1px solid var(--primary-color)">
+                                <p class="h3">77</p>
+                                <p>Activité créée</p>
+                            </div>
+                            <div>
+                                <p class="h3">42</p>
+                                <p>Activité créée</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="bi bi-chat-dots-fill"></i>
+                        <p>Langues parlées: Français, Anglais</p>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="bi bi-person-fill"></i>
+                        <p>Membre depuis 2016 </p>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="bi bi-cake2-fill"></i>
+                        <p> Âge: 35 ans</p>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center" style="background-color: var(--green-pastel)">
+                        <i class="bi bi-shield-fill-check"></i>
+                        <p> Identité verifiée </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <h5>Badges:</h5>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    {#            <table class="table"> #}
+    {#                <tbody> #}
+    {#                <tr> #}
+    {#                    <th>Username</th> #}
+    {#                    <td>{{ user.username }}</td> #}
+    {#                </tr> #}
+    {#                <tr> #}
+    {#                    <th>Email</th> #}
+    {#                    <td>{{ user.email }}</td> #}
+    {#                </tr> #}
+    {#                <tr> #}
+    {#                    <th>Created At</th> #}
+    {#                    <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td> #}
+    {#                </tr> #}
+    {#                <tr> #}
+    {#                    <th>Location</th> #}
+    {#                    <td>{{ user.location }}</td> #}
+    {#                </tr> #}
+    {#                </tbody> #}
+    {#            </table> #}
+
+    {#        </div> #}
+
+    {#        <a href="{{ path('app_home') }}">back to home</a> #}
+    {#        <a href="{{ path('app_logout') }}">Logout</a> #}
+
+    {#        {% if app.user %} #}
+    {#            <a href="{{ path('app_user_edit', {'username': user.username}) }}">edit</a> #}
+    {#        {% endif %} #}
+
+
+
+    {#    <div class="whole-31"> #}
+    {#        <div> #}
+    {#            <div class="left-menu-profil-33"> #}
+    {#                {{ include('partials/_side_menu_profile.html.twig') }} #}
+    {#            </div> #}
+    {#            <div class="main-58"> #}
+    {#                <p class="h2"><span class="text-black">À propos de moi</span></p> #}
+    {#                <div class="cards-60"> #}
+    {#                    <div class="apropos-61"> #}
+    {#                        <div class="card-pfp"> #}
+    {#                            <div class="property-1-big"> #}
+    {#                                <img src="images/pfp-64.png" class="pfp-64" alt="pfp"/> #}
+    {#                                <div class="frame-22960-65"> #}
+    {#                                    <p class="h3"><span class="text-rgb-17-17-17">Annabelle</span></p> #}
+    {#                                    <p class="small"><span class="text-rgb-17-17-17">Marseille, France</span></p> #}
+    {#                                </div> #}
+    {#                            </div> #}
+    {#                            <div class="frame-22959-68"> #}
+    {#                                <div class="frame-22942-69"> #}
+    {#                                    <p class="h3"><span class="text-rgb-17-17-17">57</span></p> #}
+    {#                                    <p class="body"><span class="text-rgb-17-17-17">Activité créée</span></p> #}
+    {#                                </div> #}
+    {#                                <img src="images/divider-72.svg" class="divider-72" alt="divider"/> #}
+    {#                                <div class="frame-22944-73"> #}
+    {#                                    <p class="h3"><span class="text-rgb-17-17-17">77</span></p> #}
+    {#                                    <p class="body"><span class="text-rgb-17-17-17">Activité Totale</span></p> #}
+    {#                                </div> #}
+    {#                                <img src="images/divider-76.svg" class="divider-76" alt="divider"/> #}
+    {#                                <div class="frame-22943-77"> #}
+    {#                                    <div class="frame-22944-78"> #}
+    {#                                        <p class="h3"><span class="text-rgb-17-17-17">72</span></p> #}
+    {#                                        <div class="like"> #}
+    {#                                            <img src="images/vector-stroke-81.svg" class="vector-stroke-81" #}
+    {#                                                 alt="vector-stroke"/> #}
+    {#                                        </div> #}
+    {#                                    </div> #}
+    {#                                    <p class="body"><span class="text-rgb-17-17-17">Like</span></p> #}
+    {#                                </div> #}
+    {#                            </div> #}
+    {#                        </div> #}
+    {#                        <div class="texte-83"> #}
+    {#                            <div class="langues-84"> #}
+    {#                                <div class="langue"> #}
+    {#                                    <img src="images/langue-86.svg" class="langue-86" alt="langue"/> #}
+    {#                                </div> #}
+    {#                                <p class="body"><span #}
+    {#                                        class="text-rgb-17-17-17">Langues parlées: Français, Anglais </span></p> #}
+    {#                            </div> #}
+    {#                            <div class="lvoalisation-88"> #}
+    {#                                <div class="person-fill"> #}
+    {#                                    <img src="images/person-fill-90.svg" class="person-fill-90" alt="person-fill"/> #}
+    {#                                </div> #}
+    {#                                <p class="body"><span class="text-rgb-17-17-17">Membre depuis 2016</span></p> #}
+    {#                            </div> #}
+    {#                            <div class="lvoalisation-92"> #}
+    {#                                <div class="cake"> #}
+    {#                                    <img src="images/union-94.svg" class="union-94" alt="union"/> #}
+    {#                                </div> #}
+    {#                                <p class="body"><span class="text-rgb-17-17-17">Âge: 35 ans</span></p> #}
+    {#                            </div> #}
+    {#                            <div class="identit-96"> #}
+    {#                                <div class="verified"> #}
+    {#                                    <img src="images/verified-98.svg" class="verified-98" alt="verified"/> #}
+    {#                                </div> #}
+    {#                                <p class="body"><span class="text-rgb-17-17-17">Identité verifiée</span></p> #}
+    {#                            </div> #}
+    {#                        </div> #}
+    {#                    </div> #}
+    {#                </div> #}
+    {#                <img src="images/divider-100.svg" class="divider-100" alt="divider"/> #}
+    {#                <div class="badges-101"> #}
+    {#                    <p class="h5"><span class="text-rgb-17-17-17">Badges:</span></p> #}
+    {#                    <div class="wrap-103"> #}
+    {#                    </div> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#        </div> #}
+    {#    </div> #}
+
+
 
 
 {% endblock %}

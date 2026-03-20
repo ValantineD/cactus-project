@@ -1,0 +1,39 @@
+{% set currentPath = path(app.request.attributes.get('_route'),
+    app.request.attributes.get('_route_params')) %}
+<div class="d-flex flex-column flex-shrink-0 p-3">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="{{ path('app_user_show', {'username': app.user.username}) }}"
+               class="h6 btn d-flex gap-2 align-items-center {{ currentPath === path('app_user_show', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}"
+               aria-current="page">
+                {{ include('partials/_profile.html.twig', {size: 40}) }}
+                A propos de Moi
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="h6 d-flex gap-2 align-items-center btn">
+                <i class="bi bi-envelope-fill" style="font-size: 40px"></i>
+                Messagerie
+            </a>
+        </li>
+        <li>
+            <a href="#" class="h6 btn d-flex gap-2 align-items-center">
+                <i class="bi bi-calendar-check" style="font-size: 40px"></i>
+                Calendrier
+            </a>
+        </li>
+        <li>
+            <a href="#" class="h6 btn d-flex gap-2 align-items-center">
+                <i class="bi bi-book" style="font-size: 40px"></i>
+                Historique des Activités
+            </a>
+        </li>
+        <li>
+            <a href="{{ path("app_user_edit", {'username': app.user.username}) }}"
+               class="h6 btn d-flex gap-2 align-items-center  {{ currentPath === path('app_user_edit', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}">
+                <i class="bi bi-sunglasses" style="font-size: 40px"></i>
+                Personalisation du Compte
+            </a>
+        </li>
+    </ul>
+</div>
