@@ -55,6 +55,7 @@ class RegistrationFormType extends AbstractType
             ->add("birthday", DateType::class, [
                 "label" => "Date d'anniversaire",
                 'widget' => 'single_text',
+
             ])
         ;
     }
