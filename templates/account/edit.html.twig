@@ -24,7 +24,7 @@
             <button id="openModalBtn" class=" btn btn-cactus-primary">Change Profile Picture</button>
 
             <div class="view">
-                <div class="modal-pfp container">
+                <div class="modal-pfp container overflow-auto">
                     <button id="closeModalBtn" type="button" class="close btn-close" aria-label="Close"></button>
 
                     <div class="text-center">
@@ -36,7 +36,7 @@
 
                     <h3>Autres Images de Profil disponibles:</h3>
 
-                    <div class="d-flex gap-3 justify-content-center flex-wrap img-pfp mx-auto">
+                    <div class="d-flex gap-3 justify-content-center flex-wrap img-pfp mx-auto ">
                         <img src="{{ asset('images/profiles/pfp-cactus-1.png') }}" alt="cactus picture 1"
                              loading="lazy">
                         <img src="{{ asset('images/profiles/pfp-cactus-2.png') }}" alt="cactus picture 2"
@@ -65,12 +65,4 @@
             {{ include('account/_delete_form.html.twig') }}
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            // you may need to change this code if you are not using Bootstrap Datepicker
-            $('.js-datepicker').datepicker({
-                format: 'yyyy-mm-dd'
-            });
-        });
-    </script
 {% endblock %}

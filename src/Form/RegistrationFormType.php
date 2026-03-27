@@ -32,8 +32,6 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 "label" => "Mot de Passe",
                 'mapped' => false,
                 'attr' => [
@@ -47,7 +45,6 @@ class RegistrationFormType extends AbstractType
                     new Length(
                         min: 6,
                         max: 4096,
-                        // max length allowed by Symfony for security reasons
                         minMessage: 'Your password should be at least {{ limit }} characters',
                     ),
                 ],
@@ -55,7 +52,8 @@ class RegistrationFormType extends AbstractType
             ->add("birthday", DateType::class, [
                 "label" => "Date d'anniversaire",
                 'widget' => 'single_text',
-
+                'html5'  => false,
+                'format' => 'dd/MM/yyyy'
             ])
         ;
     }

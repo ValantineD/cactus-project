@@ -59,7 +59,7 @@
                             <i class="bi bi-cake2-fill"></i>
                             <p> Né(e) le: {{ user.birthday|date("d/m/Y") }} </p>
                         </div>
-                        <div class="d-flex gap-2" style="background-color: var(--green-pastel)">
+                        <div class="d-flex gap-2 cactus-active-side-menu justify-content-center" >
                             <i class="bi bi-shield-fill-check"></i>
                             <p> Identité verifiée </p>
                         </div>
@@ -71,6 +71,9 @@
                     {% if (currentPath != path('app_user_show', {'username': app.user.username})) %}
                         <div class="">
                             <button class="btn-cactus-primary btn w-100">Envoyer un message</button>
+                        </div>
+                        <div class="">
+                            <button class="btn btn-danger w-100">Bloquer l'utilisateur</button>
                         </div>
                     {% endif %}
 
@@ -84,5 +87,15 @@
 
         </div>
     </div>
+    <script>
+
+        $(document).ready(function () {
+            // you may need to change this code if you are not using Bootstrap Datepicker
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+
 
 {% endblock %}

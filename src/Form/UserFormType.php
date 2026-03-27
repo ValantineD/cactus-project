@@ -36,14 +36,11 @@ class UserFormType extends AbstractType
             ->add('username')
             ->add('email')
             ->add('location')
-            ->add('birthday', DateType::class, [
+            ->add("birthday", DateType::class, [
                 "label" => "Date d'anniversaire",
                 'widget' => 'single_text',
-                'html5' => false,
-
-                // adds a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
-                ])
+                'html5'  => false,
+                'format' => 'dd/MM/yyyy'])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
