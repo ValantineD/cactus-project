@@ -20,6 +20,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 "label" => "Nom d'utilisateur",
+                'required'   => true,
                 "attr" => [
                     "placeholder" => "Nom d'utilisateur",
                     "autocomplete" => "off"
@@ -27,12 +28,14 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 "label" => "Adresse e-mail",
+                'required'   => true,
                 "attr" => [
                         "placeholder" => "adresse mail",
                 ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 "label" => "Mot de Passe",
+                'required'   => true,
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',
@@ -53,6 +56,7 @@ class RegistrationFormType extends AbstractType
                 "label" => "Date d'anniversaire",
                 'widget' => 'single_text',
                 'html5'  => false,
+                'required' => false,
                 'format' => 'dd/MM/yyyy'
             ])
         ;
