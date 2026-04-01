@@ -10,14 +10,14 @@
 {% block body %}
     <div class="container">
         <div class="row gx-5">
-            <div class="col-12 col-lg-4 order-2 order-lg-1" style="border-right: 2px solid var(--primary-color)">
-                <h2>Profil</h2>
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
                 {{ include('partials/_side_menu_profile.html.twig') }}
             </div>
 
             <div class="col-12 col-lg-8 order-1 order-lg-2 px-5">
 
-                <h1>Edit User</h1>
+                <h1 class="text-break">Modification du Profil</h1>
 
                 <img class="mainImg" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
                      width="200" height="200" loading="lazy">
@@ -64,6 +64,7 @@
                 {{ form(form) }}
 
                 <a href="{{ path('app_home') }}" class="btn btn-cactus-secondary">back to home</a>
+
                 {{ include('account/_delete_form.html.twig') }}
             </div>
         </div>

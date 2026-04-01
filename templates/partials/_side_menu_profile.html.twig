@@ -1,39 +1,29 @@
 {% set currentPath = path(app.request.attributes.get('_route'),
     app.request.attributes.get('_route_params')) %}
 <div class="d-flex flex-column flex-shrink-0 p-3">
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
+    <div class="d-flex flex-column mb-auto ">
             <a href="{{ path('app_user_show', {'username': app.user.username}) }}"
-               class="h6 btn d-flex gap-2 align-items-center {{ currentPath === path('app_user_show', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}"
-               aria-current="page">
+               class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none {{ currentPath === path('app_user_show', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}"
+               aria-current="page" style="min-height: 74px">
                 {{ include('partials/_profile.html.twig', {size: 40}) }}
                 A propos de Moi
             </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="h6 d-flex gap-2 align-items-center btn">
+            <a href="#" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none" style="min-height: 74px">
                 <i class="bi bi-envelope-fill" style="font-size: 40px"></i>
                 Messagerie
             </a>
-        </li>
-        <li>
-            <a href="#" class="h6 btn d-flex gap-2 align-items-center">
+            <a href="#" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none" style="min-height: 74px">
                 <i class="bi bi-calendar-check" style="font-size: 40px"></i>
                 Calendrier
             </a>
-        </li>
-        <li>
-            <a href="#" class="h6 btn d-flex gap-2 align-items-center">
+            <a href="#" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none" style="min-height: 74px">
                 <i class="bi bi-book" style="font-size: 40px"></i>
                 Historique des Activités
             </a>
-        </li>
-        <li>
             <a href="{{ path("app_user_edit", {'username': app.user.username}) }}"
-               class="h6 btn d-flex gap-2 align-items-center  {{ currentPath === path('app_user_edit', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}">
+               class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none {{ currentPath === path('app_user_edit', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}" style="min-height: 74px">
                 <i class="bi bi-sunglasses" style="font-size: 40px"></i>
-                Personalisation du Compte
+                Personnalisation du Compte
             </a>
-        </li>
-    </ul>
+    </div>
 </div>

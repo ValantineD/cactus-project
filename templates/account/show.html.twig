@@ -4,83 +4,20 @@
 
 {% block body %}
     <div class="container">
-        <div class="row gx-5">
-            <div class="col-12 col-lg-4 order-2 order-lg-1" style="border-right: 2px solid var(--primary-color)">
-                <h2>Profil</h2>
+        <div class="row">
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
                 {{ include('partials/_side_menu_profile.html.twig') }}
             </div>
 
             <div class="col-12 col-lg-8 px-5 order-1 order-lg-2">
 
-                <div class="d-flex flex-column flex-lg-row gap-4 align-items-start"
-                     style="border-bottom: 2px solid var(--primary-color)">
-                    <div class="cactus-border-shadow p-3 p-lg-5 w-100 mx-auto"
-                         style="max-width: 365px; border-radius: 20px;">
-                        <div class="d-flex gap-3 flex-column flex-lg-row">
-                            <div class="text-center">
-                                <img src="{{ asset(user.profileFilename) }}" alt="pic_product" style="width: 150px"
-                                     loading="lazy">
-                                <h2>
-                                    {{ user.username }}
-                                </h2>
-                                <p class="small">
-                                    {{ user.location }}
-                                </p>
-                            </div>
-
-                            <div class="flex-row flex-lg-column">
-                                <div style="border-bottom: 1px solid var(--primary-color)">
-                                    <p class="h3">57</p>
-                                    <p>Activité créée</p>
-                                </div>
-                                <div style="border-bottom: 1px solid var(--primary-color)">
-                                    <p class="h3">77</p>
-                                    <p>Activité créée</p>
-                                </div>
-                                <div>
-                                    <p class="h3">42</p>
-                                    <p>Activité créée</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 d-flex flex-column justify-content-between" style="max-height: 300px">
-                        <div class="">
-                            <div class="d-flex justify-content-center">
-                                <i class="bi bi-chat-dots-fill"></i>
-                                <p>Langues parlées: Français, Anglais</p>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <i class="bi bi-person-fill"></i>
-                                <p>Membre depuis {{ user.createdAt|date("m/Y") }} </p>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <i class="bi bi-cake2-fill"></i>
-                                <p> Né(e) le: {{ user.birthday|date("d/m/Y") }} </p>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-center gap-2 w-100 cactus-active-side-menu">
-                                <i class="bi bi-shield-fill-check"></i>
-                                <p> Identité verifiée </p>
-                            </div>
-                        </div>
-
-                        {% set currentPath = path(app.request.attributes.get('_route'),
-                            app.request.attributes.get('_route_params')) %}
-
-                        {% if (currentPath != path('app_user_show', {'username': app.user.username})) %}
-                            <div class="">
-                                <button class="btn-cactus-primary btn w-100">Envoyer un message</button>
-                            </div>
-                            <div class="">
-                                <button class="btn btn-danger w-100">Bloquer l'utilisateur</button>
-                            </div>
-                        {% endif %}
-
-                    </div>
+                <div class="">
+                <h1>Profil</h1>
+                {{ include('partials/_profile_card.html.twig') }}
                 </div>
 
-                <div class="p-4">
+                <div class="d-flex p-4">
                     <h5>Badges:</h5>
                 </div>
 
@@ -88,16 +25,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-
-        $(document).ready(function () {
-            // you may need to change this code if you are not using Bootstrap Datepicker
-            $('.js-datepicker').datepicker({
-                format: 'yyyy-mm-dd'
-            });
-        });
-    </script>
-
-
 {% endblock %}
