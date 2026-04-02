@@ -2,18 +2,24 @@
 
 namespace App\Tests\entities\user;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class HashPasswordTest extends WebTestCase
+class HashPasswordTest extends KernelTestCase
 {
-// verif si ça appelle bien le hash
-//
-//    public function testSomething(): void
-//    {
-//        $client = static::createClient();
-//        $crawler = $client->request('GET', '/');
-//
-//        $this->assertResponseIsSuccessful();
-//        $this->assertSelectorTextContains('h1', 'Hello World');
-//    }
+    public function testHasherPassword(): void
+    {
+        self::bootKernel();
+        $container = self::getContainer();
+
+        $passwordHasher = $container->get(UserPasswordHasherInterface::class);
+
+        $user = new User();
+        $plainPassword = 'Test12345';
+
+        $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+
+        $this->assertEquals(true, $passwordHasher->isPasswordValid($user, $plainPassword));
+    }
 }

@@ -22,10 +22,10 @@
                style="min-width: 80px"></a>
             <h1 class="text-break">Modification du Profil</h1>
 
-            <img class="mainImg" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
+            <img class="mainImg p-3" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
                  width="200" height="200" loading="lazy">
 
-            <button id="openModalBtn" class=" btn btn-cactus-primary">Change Profile Picture</button>
+            <button id="openModalBtn" class="btn btn-cactus-primary my-3">Change Profile Picture</button>
 
             <div class="view">
                 <div class="modal-pfp container overflow-auto">
@@ -75,7 +75,7 @@
                     {{ form_row(form.location) }}
                     {{ form_row(form.birthday) }}
 
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between pt-2">
                         <a href="{{ path('app_home') }}" class="btn btn-cactus-secondary">back to home</a>
                         {{ form_widget(form.submit) }}
                     </div>
