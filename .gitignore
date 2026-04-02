@@ -24,3 +24,8 @@ yarn-error.log
 
 /test.css/
 /test_suppr.html/
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###

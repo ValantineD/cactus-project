@@ -1,0 +1,149 @@
+<div class=" d-none d-lg-block">
+    <div class="d-flex flex-row gap-4 pb-5 align-items-start"
+         style="border-bottom: 2px solid var(--primary-color)">
+        <div class="cactus-border-shadow p-4 w-100 mx-auto d-flex justify-content-center"
+             style="min-width: 365px; border-radius: 20px;">
+            <div class="d-flex gap-5 flex-row align-items-center">
+                <div class="text-center">
+                    <img src="{{ asset(user.profileFilename) }}" alt="pic_product" style="max-width: 150px"
+                         loading="lazy">
+                    <h2>
+                        {{ user.username }}
+                    </h2>
+                    <p class="small">
+                        {{ user.location }}
+                    </p>
+                </div>
+
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex flex-column justify-content-start"
+                         style="border-bottom: 2px solid var(--primary-color)">
+                        <p class="h3">57</p>
+                        <p>Activité créée</p>
+                    </div>
+                    <div style="border-bottom: 2px solid var(--primary-color)">
+                        <p class="h3">77</p>
+                        <p>Activité Totales</p>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <p class="h3">42</p>
+                            <i class="bi bi-hand-thumbs-up-fill"></i>
+                        </div>
+                        <p>Like</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 d-flex w-100 flex-column justify-content-between">
+            <div class="">
+                <div class="d-flex gap-2 justify-content-center justify-content-lg-start">
+                    <i class="bi bi-chat-dots-fill"></i>
+                    <p>Langues parlées: Français, Anglais</p>
+                </div>
+                <div class="d-flex gap-2 justify-content-center justify-content-lg-start">
+                    <i class="bi bi-person-fill"></i>
+                    <p>Membre depuis {{ user.createdAt|date("m/Y") }} </p>
+                </div>
+                <div class="d-flex gap-2 justify-content-center justify-content-lg-start">
+                    <i class="bi bi-cake2-fill"></i>
+                    <p> Né(e) le: {{ user.birthday|date("d/m/Y") }} </p>
+                </div>
+                <div
+                    class="d-flex gap-3 justify-content-center align-items-center cactus-active-side-menu py-2">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <label class="p-0 m-0">Identité verifiée</label>
+                </div>
+            </div>
+
+            {% set currentPath = path(app.request.attributes.get('_route'),
+                app.request.attributes.get('_route_params')) %}
+
+            {% if (currentPath != path('app_user_show', {'username': app.user.username})) %}
+                <div class="d-flex mx-auto-5 pt-5 justify-content-between flex-column gap-1">
+                    <div>
+                        <button class="btn-cactus-primary btn w-100">Envoyer un message</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger w-100">Bloquer l'utilisateur</button>
+                    </div>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<div class=" d-block d-lg-none">
+    <div class="d-flex flex-column gap-4 align-items-start">
+        <div class="mx-auto">
+            <div class="d-flex gap-3 flex-column">
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <img src="{{ asset(user.profileFilename) }}" alt="pic_product" style="max-width: 150px"
+                         loading="lazy">
+                    <h2>
+                        {{ user.username }}
+                    </h2>
+                    <div
+                        class="d-flex flex-row d-flex gap-3 justify-content-center align-items-center cactus-active-side-menu p-2">
+                        <i class="bi bi-shield-fill-check"></i>
+                        <label> Identité verifiée </label>
+                    </div>
+                    <div class="d-flex flex-row justify-content-center gap-1">
+                        <small>42 Activités participées depuis {{ user.createdAt|date("m/Y") }}</small>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row justify-content-between">
+                    <div class="d-flex flex-column justify-content-center align-items-center text-center p-3"
+                         style="border-right: 2px solid var(--primary-color); flex: 1">
+                        <p class="h3">57</p>
+                        <p>Activité créée</p>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center" style="flex: 1">
+                        <div class="d-flex">
+                            <p class="h3">72</p>
+                            <i class="bi bi-hand-thumbs-up-fill"></i>
+                        </div>
+                        <p>Like</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 d-flex w-100 flex-column justify-content-between">
+            <div class="">
+                <div class="d-flex gap-2 justify-content-start">
+                    <i class="bi bi-chat-dots-fill"></i>
+                    <p>Langues parlées: Français, Anglais</p>
+                </div>
+                <div class="d-flex gap-2 justify-content-start">
+                    <i class="bi bi-signpost-split-fill"></i>
+                    <p>Je vis: {{ user.location }} </p>
+                </div>
+                <div class="d-flex gap-2 justify-content-start">
+                    <i class="bi bi-cake2-fill"></i>
+                    <p> Né(e) le: {{ user.birthday|date("d/m/Y") }} </p>
+                </div>
+            </div>
+
+            {% set currentPath = path(app.request.attributes.get('_route'),
+                app.request.attributes.get('_route_params')) %}
+
+            {% if (currentPath != path('app_user_show', {'username': app.user.username})) %}
+                <div class="d-flex py-3 justify-content-between flex-row">
+                    <div>
+                        <button class="btn-cactus-primary btn">Envoyer un message</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger">Bloquer l'utilisateur</button>
+                    </div>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>

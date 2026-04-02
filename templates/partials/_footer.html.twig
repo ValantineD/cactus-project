@@ -1,16 +1,44 @@
+{% set currentPath = path(app.request.attributes.get('_route'),
+    app.request.attributes.get('_route_params')) %}
+
 <footer class="py-3 d-none d-lg-block" style="background-color: var(--beige-transparent)">
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
         <li class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Home</a></li>
         <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Recherche</a></li>
-        <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Profil</a></li>
+        <li class="nav-item"><a
+                href="{% if app.user %}{{ path('app_user_show', {'username': app.user.username}) }}{% else %}{{ path('app_login') }}{% endif %}"
+                class="nav-link px-2 text-body-secondary">Profil</a></li>
         <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">Aide</a></li>
         <li class="nav-item"><a href="" class="nav-link px-2 text-body-secondary">About</a></li>
     </ul>
     <p class="text-center text-body-secondary">© 2026 Cactus, Inc</p>
 </footer>
 
-<footer class="d-lg-none sticky-bottom py-3" style="background-color: var(--quaternary-color)">
-    <button>Home</button>
-    <button>Search</button>
-    <button>Profile</button>
+<footer class="d-lg-none sticky-bottom py-4 px-5 d-flex justify-content-between"
+        style="background-color: var(--primary-color)">
+    <div>
+        <a href="{{ path('app_home') }}"
+           class="btn {{ currentPath === path('app_home') ? "btn-menu-selected" : '' }}">
+            <i class="{{ currentPath === path('app_home') ? "bi-signpost-split-fill" : 'bi-signpost-split' }} bi h4"></i>
+        </a>
+    </div>
+    <div>
+        <a href="" class="btn">
+            <i class="bi-search bi h4"></i>
+        </a>
+    </div>
+    <div>
+        {% if app.user %}
+            <a href="{{ path('app_user_show', {'username': app.user.username}) }}"
+               class="btn {{ currentPath === path('app_user_show', {'username': app.user.username}) ? "btn-menu-selected" : '' }}">
+                <i class="{{ currentPath === path('app_user_show', {'username': app.user.username}) ? "bi-person-fill" : 'bi-person' }} bi h4"></i>
+            </a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn">
+                <i class="bi bi-person h4"></i>
+            </a>
+        {% endif %}
+    </div>
+
+
 </footer>

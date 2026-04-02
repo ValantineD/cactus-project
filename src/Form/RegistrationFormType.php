@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -20,6 +21,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 "label" => "Nom d'utilisateur",
+                'required' => false,
                 "attr" => [
                     "placeholder" => "Nom d'utilisateur",
                     "autocomplete" => "off"
@@ -27,12 +29,14 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 "label" => "Adresse e-mail",
+                'required' => false,
                 "attr" => [
-                        "placeholder" => "adresse mail",
+                    "placeholder" => "adresse mail",
                 ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 "label" => "Mot de Passe",
+                'required' => false,
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',
@@ -49,13 +53,11 @@ class RegistrationFormType extends AbstractType
                     ),
                 ],
             ])
-            ->add("birthday", DateType::class, [
+            ->add("birthday", BirthdayType::class, [
                 "label" => "Date d'anniversaire",
-                'widget' => 'single_text',
-                'html5'  => false,
-                'format' => 'dd/MM/yyyy'
-            ])
-        ;
+                'widget' => 'choice',
+                'format' => 'dd MM yyyy',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

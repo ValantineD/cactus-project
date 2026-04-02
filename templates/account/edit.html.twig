@@ -8,20 +8,24 @@
 {% endblock %}
 
 {% block body %}
-    <div class="row container gx-5">
-        <div class="col-12 col-lg-4" style="border-right: 2px solid var(--primary-color)">
-            <h2>Profil</h2>
+<div class="container">
+    <div class="row gx-5">
+        <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+            <h2>Menu</h2>
             {{ include('partials/_side_menu_profile.html.twig') }}
         </div>
 
-        <div class="col-12 col-lg-8 px-5">
+        <div class="col-12 col-lg-8 order-1 order-lg-2 px-5">
 
-            <h1>Edit User</h1>
+            <a href="{{ path('app_user_parameters') }}"
+               class="d-lg-none btn btn-cactus-secondary bi bi-arrow-left-circle"
+               style="min-width: 80px"></a>
+            <h1 class="text-break">Modification du Profil</h1>
 
-            <img class="mainImg" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
+            <img class="mainImg p-3" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
                  width="200" height="200" loading="lazy">
 
-            <button id="openModalBtn" class=" btn btn-cactus-primary">Change Profile Picture</button>
+            <button id="openModalBtn" class="btn btn-cactus-primary my-3">Change Profile Picture</button>
 
             <div class="view">
                 <div class="modal-pfp container overflow-auto">
@@ -30,7 +34,8 @@
                     <div class="text-center">
                         <h2>Photo de profil actuelle:</h2>
 
-                        <img class="tmpImg" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
+                        <img class="tmpImg" src="{{ asset(app.user.profileFilename) }}"
+                             alt="photo de profil actuelle"
                              width="200" height="200" loading="lazy">
                     </div>
 
@@ -59,10 +64,31 @@
                 </div>
             </div>
 
-            {{ form(form) }}
+            <div>
+                <div>
+                    {{ form_start(form) }}
 
-            <a href="{{ path('app_home') }}" class="btn btn-cactus-secondary">back to home</a>
-            {{ include('account/_delete_form.html.twig') }}
+                    {{ form_row(form.picture) }}
+                    {{ form_row(form.profileFilename) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.location) }}
+                    {{ form_row(form.birthday) }}
+
+                    <div class="d-flex justify-content-between pt-2">
+                        <a href="{{ path('app_home') }}" class="btn btn-cactus-secondary">back to home</a>
+                        {{ form_widget(form.submit) }}
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+
+                <div class="d-flex mx-auto py-5">
+                    {{ include('account/_delete_form.html.twig') }}
+                </div>
+
+            </div>
         </div>
     </div>
-{% endblock %}
+
+    {% endblock %}

@@ -1,25 +1,27 @@
-.form-control {
-    background-color: var(--texte-clair);
-    border: 1px solid var(--primary-color);
-
-    &:focus {
-        background-color: var(--beige-transparent);
+form {
+    .form-control, .form-select {
+        background-color: var(--texte-clair);
         border: 1px solid var(--primary-color);
-        box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
-    }
-}
 
-.form-check-input {
-    background-color: var(--beige-transparent);
-    border-color: var(--tertiary-color);
-
-    &:checked {
-        background-color: var(--quaternary-color);
-        border-color: var(--quaternary-color);
-        box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+        &:focus {
+            background-color: var(--beige-transparent);
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+        }
     }
 
-    &:focus {
-        box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+    .form-check-input {
+        background-color: var(--beige-transparent);
+        border-color: var(--tertiary-color);
+
+        &:checked {
+            background-color: var(--quaternary-color);
+            border-color: var(--quaternary-color);
+            box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+        }
     }
 }
