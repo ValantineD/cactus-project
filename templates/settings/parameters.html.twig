@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Parameters{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
+            </div>
+
+            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2">
+                <h1 class="text-break">Paramètres</h1>
+                <div class="p-lg-3">
+                    <a href="{{ path("app_user_edit") }}"
+                       class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none"
+                       style="min-height: 74px">
+                        <i class="bi bi-sunglasses" style="font-size: 40px"></i>
+                        Personnaliser le Profil
+                    </a>
+                    <a href="#"
+                       class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none"
+                       style="min-height: 74px">
+                        <i class="bi bi-key" style="font-size: 40px"></i>
+                        Modifier le Mot de Passe
+                    </a>
+                    <a href="#"
+                       class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none"
+                       style="min-height: 74px">
+                        <i class="bi bi-person-check" style="font-size: 40px"></i>
+                        Verifier le Compte
+                    </a>
+                    <a href="#"
+                       class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none"
+                       style="min-height: 74px">
+                        <i class="bi bi-shield-lock" style="font-size: 40px"></i>
+                        Confidentialité et Securité
+                    </a>
+                    <a href="#"
+                       class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none"
+                       style="min-height: 74px">
+                        <i class="bi bi-question-octagon" style="font-size: 40px"></i>
+                        Help Center
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

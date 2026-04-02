@@ -17,11 +17,11 @@
 
                 <div class="d-flex flex-column gap-3">
                     <div class="d-flex flex-column justify-content-start"
-                         style="border-bottom: 1px solid var(--primary-color)">
+                         style="border-bottom: 2px solid var(--primary-color)">
                         <p class="h3">57</p>
                         <p>Activité créée</p>
                     </div>
-                    <div style="border-bottom: 1px solid var(--primary-color)">
+                    <div style="border-bottom: 2px solid var(--primary-color)">
                         <p class="h3">77</p>
                         <p>Activité Totales</p>
                     </div>
@@ -98,7 +98,7 @@
 
                 <div class="d-flex flex-row justify-content-between">
                     <div class="d-flex flex-column justify-content-center align-items-center text-center p-3"
-                         style="border-right: 1px solid var(--primary-color); flex: 1">
+                         style="border-right: 2px solid var(--primary-color); flex: 1">
                         <p class="h3">57</p>
                         <p>Activité créée</p>
                     </div>
@@ -133,12 +133,12 @@
                 app.request.attributes.get('_route_params')) %}
 
             {% if (currentPath != path('app_user_show', {'username': app.user.username})) %}
-                <div class="d-flex mx-auto-5 py-5 justify-content-between flex-row">
+                <div class="d-flex py-3 justify-content-between flex-row">
                     <div>
-                        <button class="btn-cactus-primary btn w-100">Envoyer un message</button>
+                        <button class="btn-cactus-primary btn">Envoyer un message</button>
                     </div>
                     <div>
-                        <button class="btn btn-danger w-100">Bloquer l'utilisateur</button>
+                        <button class="btn btn-danger">Bloquer l'utilisateur</button>
                     </div>
                 </div>
 

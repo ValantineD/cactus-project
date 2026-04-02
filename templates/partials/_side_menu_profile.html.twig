@@ -1,5 +1,6 @@
 {% set currentPath = path(app.request.attributes.get('_route'),
     app.request.attributes.get('_route_params')) %}
+
 <div class="d-flex flex-column flex-shrink-0 p-3">
     <div class="d-flex flex-column mb-auto ">
             <a href="{{ path('app_user_show', {'username': app.user.username}) }}"
@@ -20,10 +21,10 @@
                 <i class="bi bi-book" style="font-size: 40px"></i>
                 Historique des Activités
             </a>
-            <a href="{{ path("app_user_edit", {'username': app.user.username}) }}"
-               class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none {{ currentPath === path('app_user_edit', {'username': app.user.username}) ? "cactus-active-side-menu" : '' }}" style="min-height: 74px">
-                <i class="bi bi-sunglasses" style="font-size: 40px"></i>
-                Personnalisation du Compte
+            <a href="{{ path('app_user_parameters')}}"
+               class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none {{ currentPath === path('app_user_parameters') ? "cactus-active-side-menu" : '' }}" style="min-height: 74px">
+                <i class="bi bi-gear-fill" style="font-size: 40px"></i>
+                Paramètres
             </a>
     </div>
 </div>

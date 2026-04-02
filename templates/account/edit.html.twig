@@ -8,66 +8,87 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row gx-5">
-            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
-                <h2>Menu</h2>
-                {{ include('partials/_side_menu_profile.html.twig') }}
+<div class="container">
+    <div class="row gx-5">
+        <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+            <h2>Menu</h2>
+            {{ include('partials/_side_menu_profile.html.twig') }}
+        </div>
+
+        <div class="col-12 col-lg-8 order-1 order-lg-2 px-5">
+
+            <a href="{{ path('app_user_parameters') }}"
+               class="d-lg-none btn btn-cactus-secondary bi bi-arrow-left-circle"
+               style="min-width: 80px"></a>
+            <h1 class="text-break">Modification du Profil</h1>
+
+            <img class="mainImg" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
+                 width="200" height="200" loading="lazy">
+
+            <button id="openModalBtn" class=" btn btn-cactus-primary">Change Profile Picture</button>
+
+            <div class="view">
+                <div class="modal-pfp container overflow-auto">
+                    <button id="closeModalBtn" type="button" class="close btn-close" aria-label="Close"></button>
+
+                    <div class="text-center">
+                        <h2>Photo de profil actuelle:</h2>
+
+                        <img class="tmpImg" src="{{ asset(app.user.profileFilename) }}"
+                             alt="photo de profil actuelle"
+                             width="200" height="200" loading="lazy">
+                    </div>
+
+                    <h3>Autres Images de Profil disponibles:</h3>
+
+                    <div class="d-flex gap-3 justify-content-center flex-wrap img-pfp mx-auto ">
+                        <img src="{{ asset('images/profiles/pfp-cactus-1.png') }}" alt="cactus picture 1"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-2.png') }}" alt="cactus picture 2"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-3.png') }}" alt="cactus picture 3"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-4.png') }}" alt="cactus picture 4"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-5.png') }}" alt="cactus picture 5"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-6.png') }}" alt="cactus picture 6"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-7.png') }}" alt="cactus picture 7"
+                             loading="lazy">
+                        <img src="{{ asset('images/profiles/pfp-cactus-8.png') }}" alt="cactus picture 8"
+                             loading="lazy">
+                    </div>
+
+                    <button type="button" class="btn btn-cactus-primary valid-mainImg">Valider</button>
+                </div>
             </div>
 
-            <div class="col-12 col-lg-8 order-1 order-lg-2 px-5">
+            <div>
+                <div>
+                    {{ form_start(form) }}
 
-                <h1 class="text-break">Modification du Profil</h1>
+                    {{ form_row(form.picture) }}
+                    {{ form_row(form.profileFilename) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.location) }}
+                    {{ form_row(form.birthday) }}
 
-                <img class="mainImg" src="{{ asset(app.user.profileFilename) }}" alt="photo de profil actuelle"
-                     width="200" height="200" loading="lazy">
-
-                <button id="openModalBtn" class=" btn btn-cactus-primary">Change Profile Picture</button>
-
-                <div class="view">
-                    <div class="modal-pfp container overflow-auto">
-                        <button id="closeModalBtn" type="button" class="close btn-close" aria-label="Close"></button>
-
-                        <div class="text-center">
-                            <h2>Photo de profil actuelle:</h2>
-
-                            <img class="tmpImg" src="{{ asset(app.user.profileFilename) }}"
-                                 alt="photo de profil actuelle"
-                                 width="200" height="200" loading="lazy">
-                        </div>
-
-                        <h3>Autres Images de Profil disponibles:</h3>
-
-                        <div class="d-flex gap-3 justify-content-center flex-wrap img-pfp mx-auto ">
-                            <img src="{{ asset('images/profiles/pfp-cactus-1.png') }}" alt="cactus picture 1"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-2.png') }}" alt="cactus picture 2"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-3.png') }}" alt="cactus picture 3"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-4.png') }}" alt="cactus picture 4"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-5.png') }}" alt="cactus picture 5"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-6.png') }}" alt="cactus picture 6"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-7.png') }}" alt="cactus picture 7"
-                                 loading="lazy">
-                            <img src="{{ asset('images/profiles/pfp-cactus-8.png') }}" alt="cactus picture 8"
-                                 loading="lazy">
-                        </div>
-
-                        <button type="button" class="btn btn-cactus-primary valid-mainImg">Valider</button>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ path('app_home') }}" class="btn btn-cactus-secondary">back to home</a>
+                        {{ form_widget(form.submit) }}
                     </div>
+
+                    {{ form_end(form) }}
                 </div>
 
-                {{ form(form) }}
+                <div class="d-flex mx-auto py-5">
+                    {{ include('account/_delete_form.html.twig') }}
+                </div>
 
-                <a href="{{ path('app_home') }}" class="btn btn-cactus-secondary">back to home</a>
-
-                {{ include('account/_delete_form.html.twig') }}
             </div>
         </div>
     </div>
 
-{% endblock %}
+    {% endblock %}

@@ -22,6 +22,7 @@ class authTest extends WebTestCase
     {
 
         yield ["/account/val"];
-        yield ["/account/val/edit"];
+        yield ["/settings/profile"];
+        yield ["/settings/"];
     }
 }
