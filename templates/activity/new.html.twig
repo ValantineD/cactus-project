@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activité Nouvelle{% endblock %}
+
+{% block body %}
+    <div class="cactus-border-shadow  w-100 mx-auto p-3 p-lg-5">
+
+    <h1>Create new Activity</h1>
+
+    {{ form(form) }}
+
+    </div>
+    <a href="{{ path('app_home') }}">back to home</a>
+{% endblock %}

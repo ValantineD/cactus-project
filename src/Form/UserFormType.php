@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -36,11 +36,11 @@ class UserFormType extends AbstractType
             ->add('username')
             ->add('email')
             ->add('location')
-            ->add("birthday", DateType::class, [
+            ->add("birthday", BirthdayType::class, [
                 "label" => "Date d'anniversaire",
-                'widget' => 'single_text',
-                'html5'  => false,
-                'format' => 'dd/MM/yyyy'])
+                'widget' => 'choice',
+                'format' => 'dd MM yyyy',
+            ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
