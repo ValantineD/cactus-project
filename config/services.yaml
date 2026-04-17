@@ -8,6 +8,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.supported_languages: fr
+    app.upload.activities: '%kernel.project_dir%/public/uploads/activities'
+    app.upload.profile: '%kernel.project_dir%/public/uploads/user/profile'
 
 services:
     # default configuration for services in *this* file

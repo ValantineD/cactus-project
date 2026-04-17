@@ -23,15 +23,12 @@ class Activity
     private ?string $tags = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
     private ?string $location = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Assert\NotBlank]
     private ?\DateTime $date = null;
 
     #[ORM\Column(nullable: true)]
@@ -40,11 +37,10 @@ class Activity
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $images = null;
 
-    #[ORM\Column]
-    private ?bool $status = null;
+//    #[ORM\Column]
+//    private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
-    #[Assert\NotNull]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -150,17 +146,17 @@ class Activity
         return $this;
     }
 
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
+//    public function isStatus(): ?string
+//    {
+//        return $this->status;
+//    }
+//
+//    public function setStatus(?string $status): static
+//    {
+//        $this->status = $status;
+//
+//        return $this;
+//    }
 
     public function getUser(): ?User
     {

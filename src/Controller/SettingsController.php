@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Form\UserFormType;
+use App\Services\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +25,7 @@ final class SettingsController extends AbstractController
     public function edit(
         Request                                                                $request,
         EntityManagerInterface                                                 $entityManager,
-        #[Autowire('%kernel.project_dir%/public/uploads/user/profile')] string $pictureDirectory
+        FileUploader $fileUploader
     ): Response
     {
         $user = $this->getUser();
@@ -36,24 +36,19 @@ final class SettingsController extends AbstractController
 
             $pictureFile = $form->get('picture')->getData();
 
+            $pictureFile = $form->get('picture')->getData();
+
             if ($pictureFile) {
-                // remove old image
-                if ($user->getProfileFilename()) {
-                    $oldImagePath = $this->getParameter('kernel.project_dir') . '/uploads/user/profile/' . $user->getProfileFilename();
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
+                $oldFilename = $user->getProfileFilename();
+                if ($oldFilename && str_starts_with($oldFilename, 'uploads/user/profile/')) {
+                    $oldPath = $this->getParameter('kernel.project_dir') . '/public/' . $oldFilename;
+                    if (file_exists($oldPath)) {
+                        unlink($oldPath);
                     }
                 }
 
-                $newFilename = "uploads/user/profile/" . uniqid('user_', true) . '.' . $pictureFile->guessExtension();
-
-                try {
-                    $pictureFile->move($pictureDirectory, $newFilename);
-                } catch (FileException $e) {
-                    throw new Exception($e->getMessage());
-                }
-
-                $user->setProfileFilename($newFilename);
+                $newFilename = $fileUploader->uploadImage($pictureFile, "user");
+                $user->setProfileFilename('uploads/user/profile/' . $newFilename);
             }
 
             $entityManager->flush();

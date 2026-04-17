@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Form;
 
 use App\Entity\Activity;
@@ -11,24 +12,24 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 class ActivityFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-//            ->add('images', FileType::class, [
-//                'label' => 'Image Activity',
-//                'mapped' => false,
-//                'required' => false,
-//                'constraints' => [
-//                    new Assert\File(
-//                        extensions: ['jpg', 'jpeg', 'png'],
-//                        extensionsMessage: 'Please upload a valid picture'
-//                    ),
-//                ]
-//            ])
             ->add('title')
             ->add('description')
+            ->add('images', FileType::class, [
+                'label' => 'Image Activity',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Assert\File(
+                        extensions: ['jpg', 'jpeg', 'png'],
+                        extensionsMessage: 'Please upload a valid picture'
+                    ),
+                ]])
             ->add('location')
             ->add('date', DateType::class, [
                 "label" => "Date de l'Activité",
@@ -37,14 +38,15 @@ class ActivityFormType extends AbstractType
             ])
             ->add('spot')
             ->add('tags')
+
             ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer',
-                'attr' => [
-                    "class" => "btn btn-cactus-primary"
-                ]
-            ]);
-        ;
+        'label' => 'Enregistrer',
+        'attr' => [
+            "class" => "btn btn-cactus-primary"
+        ]
+    ]);
     }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

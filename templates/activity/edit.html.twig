@@ -1,32 +1,32 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %}New Activity{% endblock %}
+{% block title %}Edit Activity{% endblock %}
 
 
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
-                <h2>Category</h2>
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
             </div>
 
 
             <div class="col-12 col-lg-8 px-5 order-1 order-lg-2">
-                <h1>New Activity</h1>
+                <h1 class="text-break">Edit Activity</h1>
 
 
                 <div class="cactus-border-shadow w-100 mx-auto p-3 p-lg-5">
                     {{ form_start(form) }}
 
 
-                    {{ form_row(form.images) }}
                     {{ form_row(form.title) }}
                     {{ form_row(form.description) }}
                     {{ form_row(form.location) }}
                     {{ form_row(form.date) }}
                     {{ form_row(form.spot) }}
-                    {{ form_row(form.tags) }}
+{#                    {{ form_row(form.tags) }}#}
 
 
                     <div class="d-flex justify-content-between pt-2">
@@ -36,6 +36,11 @@
 
 
                     {{ form_end(form) }}
+                </div>
+
+
+                <div class="d-flex mx-auto py-5">
+                    {{ include('activity/_delete_form.html.twig') }}
                 </div>
             </div>
         </div>

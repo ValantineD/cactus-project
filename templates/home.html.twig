@@ -6,6 +6,7 @@
 
     <a href="{{ path('app_register') }}">Create new</a>
     <a href="{{ path('app_login') }}">Login</a>
+    <a href="{{ path('app_activity_index') }}">Activity</a>
 
     {% if app.user %}
         <a href="{{ path('app_user_show', {'username': app.user.username}) }}" >My Account</a>
