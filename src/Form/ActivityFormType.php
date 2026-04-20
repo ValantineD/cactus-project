@@ -36,6 +36,9 @@ class ActivityFormType extends AbstractType
                     ),
                 ]])
             ->add('location')
+            /** @todo
+             * champ des heures + date
+             */
             ->add('date', DateType::class, [
                 "label" => "Date de l'Activité",
                 'widget' => 'choice',

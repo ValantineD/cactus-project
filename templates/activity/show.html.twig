@@ -14,25 +14,27 @@
 
                 <div class="cactus-border-shadow p-3 p-lg-5 mb-3">
                     <ul class="list-unstyled">
-                        <li class="mb-2"><img src="{{ asset(activity.images) }}" alt="pic_product"
-                                              style="max-width: 700px" loading="lazy"></li>
+                        <li class="mb-2"> {% if activity.images %}
+                                <img src="{{ asset(activity.images) }}" alt="pic_product" style="max-width: 150px" loading="lazy">
+                            {% else %}
+                                pas d'images
+                            {% endif %}</li>
                         <li class="mb-2"><strong>Description:</strong> {{ activity.description }}</li>
                         <li class="mb-2"><strong>Location:</strong> {{ activity.location }}</li>
                         <li class="mb-2">
                             <strong>Date:</strong> {{ activity.date ? activity.date|date('d/m/Y') : '-' }}
                         </li>
                         <li class="mb-2"><strong>Spots:</strong> {{ activity.spot }}</li>
-                        {#                        <li class="mb-2"><strong>Tags:</strong> {{ activity.tags }}</li> #}
                         <li class="mb-2">
                             <strong>Created by:</strong>
-                            {{ activity.user ? activity.user.username : '-' }}
+                            <a href="{{ path('app_user_show', {username: activity.user.username}) }}"> {{ activity.user ? activity.user.username : 'Unknown' }}</a>
                         </li>
                         <li class="mb-2">
-                            <strong>Created at:</strong>
-                            {{ activity.createdAt ? activity.createdAt|date('d/m/Y') : '-' }}
-                        </li><li class="mb-2">
-                            <strong>Tags:</strong>
-                            {{ activity.tags ? 'no tags' }}
+                            {% for tag in activity.tags %}
+                                <span class="btn cactus-dropdown">{{ tag }}</span>
+                            {% else %}
+                                <p class="text-muted">No tags yet.</p>
+                            {% endfor %}
                         </li>
                     </ul>
                 </div>
