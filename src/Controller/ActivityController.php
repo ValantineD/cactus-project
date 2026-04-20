@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 
@@ -81,6 +82,10 @@ final class ActivityController extends AbstractController
         $form = $this->createForm(ActivityFormType::class, $activity);
         $form->handleRequest($request);
 
+        if ($this->getUser() !== $activity->getUser()) {
+            throw new AccessDeniedHttpException('You cannot edit this activity because you are not its creator!');
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $pictureFile = $form->get('images')->getData();
@@ -110,6 +115,10 @@ final class ActivityController extends AbstractController
     #[Route('/{id}/delete', name: 'app_activity_delete', methods: ['POST'])]
     public function delete(Request $request, Activity $activity, EntityManagerInterface $entityManager): Response
     {
+        if ($this->getUser() !== $activity->getUser()) {
+            throw new AccessDeniedHttpException('You cannot delete this activity because you are not its creator!');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $activity->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($activity);
             $entityManager->flush();

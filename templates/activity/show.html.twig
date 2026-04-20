@@ -5,27 +5,24 @@
 
 
 {% block body %}
+
     <div class="container">
         <div class="row">
-            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
-                <h2>Categories</h2>
-            </div>
-
-
-            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2">
-                <h1 class="text-break">{{ activity.title }}</h1>
+            <div class="px-5 order-1 order-lg-2">
+                <h1>{{ activity.title }}</h1>
 
 
                 <div class="cactus-border-shadow p-3 p-lg-5 mb-3">
                     <ul class="list-unstyled">
+                        <li class="mb-2"><img src="{{ asset(activity.images) }}" alt="pic_product"
+                                              style="max-width: 700px" loading="lazy"></li>
+                        <li class="mb-2"><strong>Description:</strong> {{ activity.description }}</li>
                         <li class="mb-2"><strong>Location:</strong> {{ activity.location }}</li>
-                        <li class="mb-2"><strong>Image:</strong> {{ activity.images }}</li>
                         <li class="mb-2">
                             <strong>Date:</strong> {{ activity.date ? activity.date|date('d/m/Y') : '-' }}
                         </li>
                         <li class="mb-2"><strong>Spots:</strong> {{ activity.spot }}</li>
-                        <li class="mb-2"><strong>Description:</strong> {{ activity.description }}</li>
-{#                        <li class="mb-2"><strong>Tags:</strong> {{ activity.tags }}</li>#}
+                        {#                        <li class="mb-2"><strong>Tags:</strong> {{ activity.tags }}</li> #}
                         <li class="mb-2">
                             <strong>Created by:</strong>
                             {{ activity.user ? activity.user.username : '-' }}
@@ -33,6 +30,9 @@
                         <li class="mb-2">
                             <strong>Created at:</strong>
                             {{ activity.createdAt ? activity.createdAt|date('d/m/Y') : '-' }}
+                        </li><li class="mb-2">
+                            <strong>Tags:</strong>
+                            {{ activity.tags ? 'no tags' }}
                         </li>
                     </ul>
                 </div>
@@ -40,8 +40,10 @@
 
                 <div class="d-flex justify-content-between pt-2">
                     <a href="{{ path('app_activity_index') }}" class="btn btn-cactus-secondary">Back</a>
-                    <a href="{{ path('app_activity_edit', {id: activity.id}) }}"
-                       class="btn btn-cactus-primary">Edit</a>
+                    {% if app.user == activity.user %}
+                        <a href="{{ path('app_activity_edit', {id: activity.id}) }}"
+                           class="btn btn-cactus-primary">Edit</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

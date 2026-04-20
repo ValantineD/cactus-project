@@ -21,5 +21,6 @@ class PublicTest extends WebTestCase
     {
 
         yield ["/"];
+        yield ["/activity"];
     }
 }

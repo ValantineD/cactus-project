@@ -19,8 +19,8 @@ class Activity
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $tags = null;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $tags = [];
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $location = null;
@@ -73,12 +73,12 @@ class Activity
         return $this;
     }
 
-    public function getTags(): ?string
+    public function getTags(): ?array
     {
         return $this->tags;
     }
 
-    public function setTags(?string $tags): static
+    public function setTags(?array $tags): self
     {
         $this->tags = $tags;
 

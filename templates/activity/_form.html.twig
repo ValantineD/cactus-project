@@ -1,0 +1,16 @@
+{{ form_start(form) }}
+
+    {{ form_row(form.images) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.location) }}
+    {{ form_row(form.date) }}
+    {{ form_row(form.spot) }}
+    {{ form_row(form.tags) }}
+
+<div class="d-flex justify-content-between pt-2">
+    <a href="{{ path('app_activity_index') }}" class="btn btn-cactus-secondary">Back</a>
+    {{ form_widget(form.submit) }}
+</div>
+
+{{ form_end(form) }}

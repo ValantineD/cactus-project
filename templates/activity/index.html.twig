@@ -38,9 +38,6 @@
                             <div class="d-flex gap-2">
                                 <a href="{{ path('app_activity_show', {id: activity.id}) }}"
                                    class="btn btn-sm btn-cactus-secondary">View</a>
-                                <a href="{{ path('app_activity_edit', {id: activity.id}) }}"
-                                   class="btn btn-sm btn-cactus-primary">Edit</a>
-                                {{ include('activity/_delete_form.html.twig') }}
                             </div>
                         </div>
                     {% else %}
