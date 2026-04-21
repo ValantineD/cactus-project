@@ -7,13 +7,19 @@ use App\Entity\Activity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ActivityFormType extends AbstractType
 {
@@ -23,19 +29,36 @@ class ActivityFormType extends AbstractType
         $tags = $activity->getTags() ? array_combine(array_values($activity->getTags()), array_values($activity->getTags())) : [];
 
         $builder
-            ->add('title')
-            ->add('description')
-            ->add('images', FileType::class, [
-                'label' => 'Image Activity',
-                'mapped' => false,
-                'required' => false,
+            ->add('title', TextType::class, [
+                'label' => "Titre de l'Activité",
+                'required' => true,
                 'constraints' => [
-                    new Assert\File(
-                        extensions: ['jpg', 'jpeg', 'png'],
-                        extensionsMessage: 'Please upload a valid picture'
+                    new NotBlank(
+                        message: 'Ecrivez un titre',
                     ),
-                ]])
-            ->add('location')
+                    new Length(
+                        min: 4,
+                        max: 40,
+                        minMessage: 'Your Titre should be at least {{ limit }} characters',
+                    ),
+            ]])
+            ->add('description', TextareaType::class, [
+                'label' => "Description de l'Activité",
+            ])
+            ->add('imageFiles', CollectionType::class, [
+                'label'         => 'Photos de l\'Activité',
+                'entry_type'    => ImageFileType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'mapped'        => false,
+                'by_reference'  => false,
+                'entry_options' => ['label' => false],
+                'attr'          => ['id' => 'photo-collection'],
+            ])
+            ->add('location', TextType::class, [
+                "label" => "Lieu de l'Activité",
+                'required' => true,
+            ])
             /** @todo
              * champ des heures + date
              */
@@ -43,8 +66,12 @@ class ActivityFormType extends AbstractType
                 "label" => "Date de l'Activité",
                 'widget' => 'choice',
                 'format' => 'dd MM yyyy HH:mm',
+                "placeholder" => "Select",
             ])
-            ->add('spot')
+            ->add('spot', IntegerType::class, [
+                "label" => "Nombre de places disponibles",
+                'required' => true,
+            ])
             ->add('tags', ChoiceType::class, [
                 'required' => false,
                 'label' => 'Tags',
@@ -73,7 +100,7 @@ class ActivityFormType extends AbstractType
                 'multiple' => true,
                 'choices' => array_combine(array_values($tags), array_values($tags)),
                 'attr' => [
-                    'class' => 'select2-tags',
+                    'class' => 'select-cactus select2-tags',
                 ],
             ]);
 

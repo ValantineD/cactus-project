@@ -25,3 +25,9 @@ form {
         }
     }
 }
+
+.select-cactus {
+    background-color: var(--texte-clair);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+}

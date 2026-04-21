@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Controller;
 
-
 use App\Entity\Activity;
+use App\Entity\ImageFile;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
 use App\Services\FileUploader;
@@ -38,16 +37,25 @@ final class ActivityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            $activity->setUser($user);
+            $activity->setUser($this->getUser());
 
-            $pictureFile = $form->get('images')->getData();
-            if ($pictureFile) {
-                $context =   "activity";
-//                $newFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = $fileUploader->uploadImage($pictureFile, $context);
 
-                $activity->setImages('uploads/activities/' . $newFilename);
+            $position = 0;
+            foreach ($form->get('photos') as $photoForm) {
+
+                $uploadedFile = $photoForm->get('file')->getData();
+
+                if ($uploadedFile) {
+
+                    $newFilename = $fileUploader->uploadImage($uploadedFile, 'activity');
+
+                    $imageFile = new ImageFile();
+                    $imageFile->setFilename('uploads/activities/' . $newFilename);
+                    $imageFile->setPosition($position++);
+
+                    $activity->addImageFile($imageFile);
+                    $entityManager->persist($imageFile);
+                }
             }
 
             $entityManager->persist($activity);

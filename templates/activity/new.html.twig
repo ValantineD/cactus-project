@@ -10,6 +10,7 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('select_tags') }}
+    {{ encore_entry_script_tags('image_file_activity_uploader') }}
 {% endblock %}
 
 {% block body %}
@@ -19,7 +20,44 @@
                 <h1>New Activity</h1>
 
                 <div class="cactus-border-shadow w-100 mx-auto p-3 p-lg-5">
-                    {{ include('activity/_form.html.twig') }}
+                    {{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Photos de l'Activité <small class="text-muted">(5
+                                max)</small></label>
+
+                        <div
+                            id="photo-collection"
+                            data-index="{{ form.imageFiles|length }}"
+                            data-prototype="{{ form_widget(form.imageFiles.vars.prototype)|e('html_attr') }}"
+                            data-max="5"
+                        >
+                            {% for formFile in form.imageFiles %}
+                                <div class="photo-entry input-group mb-2">
+                                    {{ form_widget(formFile.file, { attr: { class: 'form-control' } }) }}
+                                    <button type="button" class="btn btn-outline-danger remove-photo">✕</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="button" id="add-photo" class="btn btn-outline-secondary mt-2">
+                            + Ajouter une photo
+                        </button>
+                        <div id="photo-limit-msg" class="text-danger small mt-1" style="display:none">
+                            Maximum 5 photos atteint.
+                        </div>
+
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }}
+                        {{ form_row(form.location) }}
+                        {{ form_row(form.date) }}
+                        {{ form_row(form.spot) }}
+                        {{ form_row(form.tags) }}
+                    </div>
+
+                    {{ form_row(form.submit) }}
+
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ActivityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,28 +19,31 @@ class Activity
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotNull]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[a-z0-9]+$/i',
+        htmlPattern: '^[a-zA-Z0-9]+$'
+    )]
     private ?string $title = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $tags = [];
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotNull]
     private ?string $location = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NotNull]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\NotNull]
     private ?\DateTime $date = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $spot = null;
-
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $images = null;
-
-//    #[ORM\Column]
-//    private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
     private ?User $user = null;
@@ -48,6 +53,17 @@ class Activity
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updatedAt = null;
+
+    /**
+     * @var Collection<int, ImageFile>
+     */
+    #[ORM\OneToMany(targetEntity: ImageFile::class, mappedBy: 'activity')]
+    private Collection $imageFiles;
+
+    public function __construct()
+    {
+        $this->imageFiles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -134,30 +150,6 @@ class Activity
         return $this;
     }
 
-    public function getImages(): ?string
-    {
-        return $this->images;
-    }
-
-    public function setImages(?string $images): static
-    {
-        $this->images = $images;
-
-        return $this;
-    }
-
-//    public function isStatus(): ?string
-//    {
-//        return $this->status;
-//    }
-//
-//    public function setStatus(?string $status): static
-//    {
-//        $this->status = $status;
-//
-//        return $this;
-//    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -205,6 +197,36 @@ class Activity
     public function setUpdatedAt(?\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImageFile>
+     */
+    public function getImageFiles(): Collection
+    {
+        return $this->imageFiles;
+    }
+
+    public function addImageFile(ImageFile $imageFile): static
+    {
+        if (!$this->imageFiles->contains($imageFile)) {
+            $this->imageFiles->add($imageFile);
+            $imageFile->setActivity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImageFile(ImageFile $imageFile): static
+    {
+        if ($this->imageFiles->removeElement($imageFile)) {
+            // set the owning side to null (unless already changed)
+            if ($imageFile->getActivity() === $this) {
+                $imageFile->setActivity(null);
+            }
+        }
 
         return $this;
     }

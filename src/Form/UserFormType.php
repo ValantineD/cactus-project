@@ -5,12 +5,11 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class UserFormType extends AbstractType
 {
@@ -22,16 +21,15 @@ class UserFormType extends AbstractType
                     "class" => "input-main-img"
                 ]
             ])
-            ->add('picture', FileType::class, [
-                'label' => 'Profil Image',
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new Assert\File(
-                        extensions: ['jpg', 'jpeg', 'png'],
-                        extensionsMessage: 'Please upload a valid picture'
-                    ),
-                ]
+            ->add('photos', CollectionType::class, [
+                'label'         => "Photos de l'Activité",
+                'entry_type'    => ImageFileType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'mapped'        => false,
+                'by_reference'  => false,
+                'entry_options' => ['label' => false],
+                'attr'          => ['id' => 'photo-collection'],
             ])
             ->add('username')
             ->add('email')
