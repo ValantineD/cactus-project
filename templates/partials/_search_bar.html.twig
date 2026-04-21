@@ -1,0 +1,56 @@
+<div class="row mb-4 p-4">
+    <div class="col-12 col-lg-9">
+        <form method="GET" action="">
+            <div class="cactus-border-shadow d-flex flex-column flex-md-row align-items-stretch" style="overflow: hidden; border-radius: 30px;">
+
+                <div class="flex-fill px-3 py-2 border-end">
+                    <label class="d-block px-2" style="font-size: 0.75rem; font-weight: 700;">Localisation</label>
+                    <input
+                        type="text"
+                        name="localisation"
+                        value=""
+                        placeholder="Rechercher une localisation"
+                        class="border-0 bg-transparent w-100 p-0 px-2"
+                        style="outline: none; font-size: 0.875rem;"
+                    >
+                </div>
+
+                <div class="flex-fill px-3 py-2 border-end">
+                    <label class="d-block" style="font-size: 0.75rem; font-weight: 700;">Activité</label>
+                    <input
+                        type="text"
+                        name="activite"
+                        value=""
+                        placeholder="Rechercher une activité"
+                        class="border-0 bg-transparent w-100 p-0"
+                        style="outline: none; font-size: 0.875rem;"
+                    >
+                </div>
+
+                <div class="flex-fill px-3 py-2 d-flex align-items-center justify-content-between">
+                    <div>
+                        <label class="d-block" style="font-size: 0.75rem; font-weight: 700;">Dates</label>
+                        <input
+                            type="text"
+                            name="dates"
+                            value=""
+                            placeholder="Quand ?"
+                            class="border-0 bg-transparent w-100 p-0"
+                            style="outline: none; font-size: 0.875rem;"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-cactus-secondary rounded-circle d-flex align-items-center justify-content-center ms-3 flex-shrink-0" style="width: 42px; height: 42px; padding: 0;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-12 col-lg-3 mt-2 mt-lg-0 d-flex align-items-center">
+        <a href="{{ path('app_activity_new') }}" class="btn btn-cactus-secondary w-100 d-flex align-items-center justify-content-center gap-2" style="height: 58px; border-radius: 8px;">
+            Créer une Activité
+            <i class="bi bi-plus-circle"></i>
+        </a>
+    </div>
+</div>

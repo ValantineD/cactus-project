@@ -15,7 +15,14 @@
     {% endblock %}
 </head>
 <body>
+{% set currentPath = path(app.request.attributes.get('_route'),
+    app.request.attributes.get('_route_params')) %}
+
 {{ include('partials/_header.html.twig') }}
+
+{% if currentPath != path('app_login') and currentPath != path('app_register')%}
+{{ include('partials/_search_bar.html.twig') }}
+{% endif %}
 
 <main class="container py-4">
     {% block body %}{% endblock %}

@@ -147,3 +147,11 @@ ul > li {
     flex-shrink: 1;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5);
 }
+
+.cactus-tags {
+    background: var(--green-pastel);
+    border: 2px solid var(--tertiary-color);
+    border-radius: 5px;
+    color: var(--texte-fonce);
+
+}

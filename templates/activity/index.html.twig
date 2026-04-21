@@ -1,56 +1,80 @@
 {% extends 'base.html.twig' %}
-
-
-{% block title %}Activities{% endblock %}
-
+{% block title %}Recherche Activité{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
-                <h2>Catégories</h2>
-            </div>
+    <div class="container-fluid px-4 py-3">
 
-            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h1>Activities</h1>
-                    <a href="{{ path('app_activity_new') }}" class="btn btn-cactus-primary">+ New Activity</a>
-                </div>
-
-                <div class="mt-3">
+        <div class="row g-3">
+            <div class="col-12 col-lg-6">
+                <div class="row g-3">
                     {% for activity in activities %}
-                        <div class="cactus-border-shadow p-3 mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="mb-1">{{ activity.title }}</h3>
-                            </div>
-                            {% if activity.images %}
-                                <img src="{{ asset(activity.images) }}" alt="pic_product" style="max-width: 150px"
-                                     loading="lazy">
-                            {% else %}
-                                pas d'images
-                            {% endif %}
-                            <p class="mb-1 text-muted">
-                                {{ activity.location }} — {{ activity.date ? activity.date|date('d/m/Y') : '-' }}</p>
-                            <p class="mb-2">
-                                {{ activity.description|slice(0, 100) }}
-                                {% if activity.description|length > 100 %}…{% endif %}</p>
-                            <div class="d-flex gap-2">
-                                {% for tag in activity.tags %}
-                                    <span class="btn cactus-dropdown">{{ tag }}</span>
-                                {% else %}
-                                    <p class="text-muted">No tags yet.</p>
-                                {% endfor %}
-                            </div>
-                            <div class="d-flex py-2">
-                                <a href="{{ path('app_activity_show', {id: activity.id}) }}"
-                                   class="btn btn-cactus-primary">View</a>
-                            </div>
+                        <div class="col-12 col-sm-6">
+                            <a href="{{ path('app_activity_show', {id: activity.id}) }}"
+                               class="text-decoration-none text-dark">
+                                <div class="h-100" style="border-radius: 8px; overflow: hidden;">
+                                    <div style="height: 200px; overflow: hidden; background: #e9e9e9;">
+                                        {% if activity.images %}
+                                            <img
+                                                src="{{ asset(activity.images) }}"
+                                                alt="{{ activity.title }}"
+                                                loading="lazy"
+                                                class="w-100 h-100"
+                                                style="object-fit: cover;"
+                                            >
+                                        {% else %}
+                                            <div
+                                                class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25">
+                                                <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="px-3 pt-1 pb-2">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <h5 class="mb-0" style="font-size: 1rem;">{{ activity.title }}</h5>
+                                            <span class="text-muted ms-2 flex-shrink-0"
+                                                  style="font-size: 0.85rem; white-space: nowrap;">
+                                      </span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mt-1">
+                                            <small class="text-muted">{{ activity.location }}</small>
+                                            <small
+                                                class="text-muted">{{ activity.date ? activity.date|date('M d') : '' }}</small>
+                                        </div>
+
+                                        {% if activity.tags %}
+                                            <div class="d-flex flex-wrap gap-1 mt-2">
+                                                {% for tag in activity.tags %}
+                                                    <span class="badge px-2 cactus-tags">{{ tag }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </a>
                         </div>
                     {% else %}
-                        <p class="text-muted">No activities yet.</p>
+                        <div class="col-12">
+                            <p class="text-muted">Aucune activité trouvée.</p>
+                        </div>
                     {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
+                     style="height: 500px; border-radius: 8px; background: #e0e0e0;">
+                    <div class="text-center text-muted">
+                        <p class="mt-2 mb-0" style="font-size: 0.9rem;">Carte</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+
+
+
+
