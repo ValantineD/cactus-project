@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Theme index{% endblock %}
+
+{% block body %}
+    <h1>Theme index</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Icon</th>
+            <th>Title</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for theme in themes %}
+            <tr>
+                <td>{{ theme.id }}</td>
+                <td><img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}" loading="lazy" style="height: 34px"></td>
+                <td>{{ theme.title }}</td>
+                <td>
+                    <a href="{{ path('app_theme_show', {'id': theme.id}) }}" class="btn btn-cactus-primary">show</a>
+                    <a href="{{ path('app_theme_edit', {'id': theme.id}) }}" class="btn btn-cactus-secondary">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no themes found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_theme_new') }}" class="btn btn-cactus-secondary">Create new</a>
+{% endblock %}

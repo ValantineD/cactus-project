@@ -10,6 +10,7 @@ parameters:
     app.supported_languages: fr
     app.upload.activities: '%kernel.project_dir%/public/uploads/activities'
     app.upload.profile: '%kernel.project_dir%/public/uploads/user/profile'
+    app.upload.theme: '%kernel.project_dir%/public/uploads/theme'
 
 services:
     # default configuration for services in *this* file

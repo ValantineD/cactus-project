@@ -25,5 +25,7 @@ class authTest extends WebTestCase
         yield ["/settings/profile"];
         yield ["/settings/"];
         yield ["/activity/new"];
+        yield ["/admin/theme/"];
+        yield ["/admin/theme/new"];
     }
 }

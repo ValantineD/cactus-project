@@ -29,9 +29,19 @@ class ActivityFormType extends AbstractType
         $tags = $activity->getTags() ? array_combine(array_values($activity->getTags()), array_values($activity->getTags())) : [];
 
         $builder
+            ->add('imageFiles', CollectionType::class, [
+                'label'         => false,
+                'entry_type'    => ImageFileType::class,
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'mapped'        => false,
+                'by_reference'  => false,
+                'entry_options' => ['label' => false],
+                'attr'          => ['id' => 'photo-collection'],
+            ])
             ->add('title', TextType::class, [
                 'label' => "Titre de l'Activité",
-                'required' => true,
+                'required' => false,
                 'constraints' => [
                     new NotBlank(
                         message: 'Ecrivez un titre',
@@ -44,20 +54,11 @@ class ActivityFormType extends AbstractType
             ]])
             ->add('description', TextareaType::class, [
                 'label' => "Description de l'Activité",
-            ])
-            ->add('imageFiles', CollectionType::class, [
-                'label'         => 'Photos de l\'Activité',
-                'entry_type'    => ImageFileType::class,
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'mapped'        => false,
-                'by_reference'  => false,
-                'entry_options' => ['label' => false],
-                'attr'          => ['id' => 'photo-collection'],
+                'required' => false,
             ])
             ->add('location', TextType::class, [
                 "label" => "Lieu de l'Activité",
-                'required' => true,
+                'required' => false,
             ])
             /** @todo
              * champ des heures + date
@@ -67,10 +68,11 @@ class ActivityFormType extends AbstractType
                 'widget' => 'choice',
                 'format' => 'dd MM yyyy HH:mm',
                 "placeholder" => "Select",
+                'required' => false,
             ])
             ->add('spot', IntegerType::class, [
                 "label" => "Nombre de places disponibles",
-                'required' => true,
+                'required' => false,
             ])
             ->add('tags', ChoiceType::class, [
                 'required' => false,
@@ -91,6 +93,8 @@ class ActivityFormType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) {
             $form = $event->getForm();
             $formData = $event->getData();
+
+            if (!isset($formData['tags'])) return;
 
             $tags = $formData['tags'];
 

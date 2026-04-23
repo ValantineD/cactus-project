@@ -20,7 +20,6 @@ class Activity
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotNull]
-    #[Assert\NoSuspiciousCharacters]
     #[Assert\Regex(
         pattern: '/^[a-z0-9]+$/i',
         htmlPattern: '^[a-zA-Z0-9]+$'
@@ -60,9 +59,16 @@ class Activity
     #[ORM\OneToMany(targetEntity: ImageFile::class, mappedBy: 'activity')]
     private Collection $imageFiles;
 
+    /**
+     * @var Collection<int, Theme>
+     */
+    #[ORM\ManyToMany(targetEntity: Theme::class, mappedBy: 'activities')]
+    private Collection $themes;
+
     public function __construct()
     {
         $this->imageFiles = new ArrayCollection();
+        $this->themes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -226,6 +232,33 @@ class Activity
             if ($imageFile->getActivity() === $this) {
                 $imageFile->setActivity(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Theme>
+     */
+    public function getThemes(): Collection
+    {
+        return $this->themes;
+    }
+
+    public function addTheme(Theme $theme): static
+    {
+        if (!$this->themes->contains($theme)) {
+            $this->themes->add($theme);
+            $theme->addActivity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTheme(Theme $theme): static
+    {
+        if ($this->themes->removeElement($theme)) {
+            $theme->removeActivity($this);
         }
 
         return $this;

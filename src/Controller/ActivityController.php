@@ -9,6 +9,9 @@ use App\Repository\ActivityRepository;
 use App\Services\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -28,10 +31,13 @@ final class ActivityController extends AbstractController
 
 
     #[Route('/new', name: 'app_activity_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, FileUploader $fileUploader): Response
+    public function new(
+        Request                                                              $request,
+        EntityManagerInterface                                               $entityManager,
+        #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
+    ): Response
     {
         $activity = new Activity();
-//        $activity->setStatus("draft");
 
         $form = $this->createForm(ActivityFormType::class, $activity);
         $form->handleRequest($request);
@@ -39,19 +45,24 @@ final class ActivityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $activity->setUser($this->getUser());
 
-
-            $position = 0;
-            foreach ($form->get('photos') as $photoForm) {
-
-                $uploadedFile = $photoForm->get('file')->getData();
+            foreach ($form->get('imageFiles') as $index => $file) {
+                $uploadedFile = $file->get('file')->getData();
 
                 if ($uploadedFile) {
+                    $position = $index + 1;
+                    $mimeType = $uploadedFile->getMimeType();
+                    $extension = explode('/', $mimeType)[1];
+                    $newFilename = uniqid('image_file_activity_' . $position . '_') . '.' . $extension;
 
-                    $newFilename = $fileUploader->uploadImage($uploadedFile, 'activity');
+                    try {
+                        $uploadedFile->move($imageActivityDirectory, $newFilename);
+                    } catch (FileException $e) {
+                        throw new Exception($e->getMessage());
+                    }
 
                     $imageFile = new ImageFile();
                     $imageFile->setFilename('uploads/activities/' . $newFilename);
-                    $imageFile->setPosition($position++);
+                    $imageFile->setPosition($position);
 
                     $activity->addImageFile($imageFile);
                     $entityManager->persist($imageFile);
@@ -75,16 +86,17 @@ final class ActivityController extends AbstractController
     {
         return $this->render('activity/show.html.twig', [
             'activity' => $activity,
+            'imageFiles' => $activity->getImageFiles()
         ]);
     }
 
 
     #[Route('/{id}/edit', name: 'app_activity_edit', methods: ['GET', 'POST'])]
     public function edit(
-        Request $request,
-        Activity $activity,
+        Request                $request,
+        Activity               $activity,
         EntityManagerInterface $entityManager,
-        FileUploader $fileUploader
+        FileUploader           $fileUploader
     ): Response
     {
         $form = $this->createForm(ActivityFormType::class, $activity);

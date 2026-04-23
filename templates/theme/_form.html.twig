@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+    {{ form_row(form.iconFilename) }}
+    {{ form_row(form.title) }}
+
+<div class="d-flex justify-content-between pt-2">
+    <a href="{{ path('app_theme_index') }}" class="btn btn-cactus-secondary">Back</a>
+    {{ form_widget(form.submit) }}
+</div>
+{{ form_end(form) }}

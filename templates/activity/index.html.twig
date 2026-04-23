@@ -13,14 +13,10 @@
                                class="text-decoration-none text-dark">
                                 <div class="h-100" style="border-radius: 8px; overflow: hidden;">
                                     <div style="height: 200px; overflow: hidden; background: #e9e9e9;">
-                                        {% if activity.images %}
-                                            <img
-                                                src="{{ asset(activity.images) }}"
-                                                alt="{{ activity.title }}"
-                                                loading="lazy"
-                                                class="w-100 h-100"
-                                                style="object-fit: cover;"
-                                            >
+                                        {% if activity.imageFiles is not empty %}
+                                            <img src="{{ asset(activity.imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                                                 style="max-width: 500px; object-fit: cover;"
+                                                 loading="lazy" class="w-100 h-100">
                                         {% else %}
                                             <div
                                                 class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25">

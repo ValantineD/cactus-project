@@ -12,6 +12,7 @@ class FileUploader {
     public function __construct(
         #[Autowire('%app.upload.activities%')] private string $activitiesDirectory,
         #[Autowire('%app.upload.profile%')] private string $profileDirectory,
+        #[Autowire('%app.upload.theme%')] private string $themeDirectory,
         private SluggerInterface $slugger,
     ) {
     }
@@ -22,6 +23,9 @@ class FileUploader {
         }
         if ($context === "user") {
             return $this->upload($file, $this->profileDirectory);
+        }
+        if ($context === "theme") {
+            return $this->upload($file, $this->themeDirectory);
         }
 
         throw new \InvalidArgumentException("Unknown upload context: $context");

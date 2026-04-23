@@ -1,53 +1,184 @@
 {% extends 'base.html.twig' %}
 
-
 {% block title %}{{ activity.title }}{% endblock %}
-
 
 {% block body %}
 
-    <div class="container">
-        <div class="row">
-            <div class="px-5 order-1 order-lg-2">
-                <h1>{{ activity.title }}</h1>
+    <div class="d-block d-lg-none" style="height: 260px; overflow: hidden; position: relative;">
+        {% if imageFiles is not empty %}
+            <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                 class="w-100 h-100" style="object-fit: cover;" loading="lazy">
+        {% else %}
+            <div class="w-100 h-100 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center">
+                <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+            </div>
+        {% endif %}
+        <a href="{{ path('app_activity_index') }}"
+           class="position-absolute top-0 start-0 m-3 btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+           style="width: 36px; height: 36px; padding:0; background: rgba(255,255,255,0.85);">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+    </div>
 
-
-                <div class="cactus-border-shadow p-3 p-lg-5 mb-3">
-                    <ul class="list-unstyled">
-                        <li class="mb-2"> {% if activity.images %}
-                                <img src="{{ asset(activity.images) }}" alt="pic_product" style="max-width: 150px" loading="lazy">
-                            {% else %}
-                                pas d'images
-                            {% endif %}</li>
-                        <li class="mb-2"><strong>Description:</strong> {{ activity.description }}</li>
-                        <li class="mb-2"><strong>Location:</strong> {{ activity.location }}</li>
-                        <li class="mb-2">
-                            <strong>Date:</strong> {{ activity.date ? activity.date|date('d/m/Y') : '-' }}
-                        </li>
-                        <li class="mb-2"><strong>Spots:</strong> {{ activity.spot }}</li>
-                        <li class="mb-2">
-                            <strong>Created by:</strong>
-                            <a href="{{ path('app_user_show', {username: activity.user.username}) }}"> {{ activity.user ? activity.user.username : 'Unknown' }}</a>
-                        </li>
-                        <li class="mb-2">
-                            {% for tag in activity.tags %}
-                                <span class="badge px-2 cactus-tags">{{ tag }}</span>
-                            {% else %}
-                                <p class="text-muted">No tags yet.</p>
-                            {% endfor %}
-                        </li>
-                    </ul>
+    <div class="container py-3" style="max-width: 860px;">
+        <div class="d-none d-lg-block">
+            <div class="row g-2 mb-3 justify-content-center align-items-center">
+                <div class="col-8">
+                    {% if imageFiles is not empty %}
+                        <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                             loading="lazy" class="img-activity-show-main img-activity-show">
+                    {% else %}
+                        <div
+                            class="w-100 rounded bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center"
+                            style="height: 220px;">
+                        </div>
+                    {% endif %}
                 </div>
 
-
-                <div class="d-flex justify-content-between pt-2">
-                    <a href="{{ path('app_activity_index') }}" class="btn btn-cactus-secondary">Back</a>
-                    {% if app.user == activity.user %}
-                        <a href="{{ path('app_activity_edit', {id: activity.id}) }}"
-                           class="btn btn-cactus-primary">Edit</a>
-                    {% endif %}
+                <div class="col-4">
+                    <div class="d-flex flex-column py-5 gap-4">
+                        {% for image in imageFiles %}
+                            {% if image.position != 1 %}
+                                <div>
+                                    <img src="{{ asset(image.filename) }}" alt="{{ activity.title }}"
+                                         loading="lazy" class="img-activity-show">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="mb-1">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                    <h1 class="mb-1" style="font-size: 1.75rem;">{{ activity.title }}</h1>
+                    <p class="mb-1 fw-600"
+                       style="font-size: 1rem; color: var(--texte-fonce);">{{ activity.location }}</p>
+
+                    <div class="d-flex flex-wrap gap-1 mt-1">
+                        {% for tag in activity.tags %}
+                            <span class="badge cactus-tags">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="text-end flex-shrink-0">
+                    <p class="mb-0 fw-600">
+                        {{ activity.date ? activity.date|date('l d F \\à G\\h') : '-' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <hr style="border-color: 2px var(--primary-color);">
+
+
+        <div class="d-lg-none mb-3">
+            <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
+                 style="height: 200px; border-radius: 8px; background: #e0e0e0;">
+                <div class="text-center text-muted">
+                    <i class="bi bi-map" style="font-size: 2rem;"></i>
+                    <p class="mt-1 mb-0" style="font-size: 0.8rem;">Pas de Carte...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3 d-none d-lg-flex">
+            <div class="col-12 col-md-5">
+                <div class="h-100 d-flex flex-column gap-3">
+                    <div class="d-flex align-items-start gap-3 p-3 cactus-border-shadow">
+                        <i class="bi bi-geo-alt-fill mt-1"
+                           style="color: var(--tertiary-color); font-size: 1.2rem; flex-shrink: 0;"></i>
+                        <div>
+                            <p class="mb-0 fw-bold">{{ activity.location }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3 p-3 cactus-border-shadow">
+                        <i class="bi bi-calendar3 mt-1"
+                           style="color: var(--tertiary-color); font-size: 1.2rem; flex-shrink: 0;"></i>
+                        <div>
+                            <p class="mb-0 fw-bold">{{ activity.date ? activity.date|date('l d F Y') : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-md-7">
+                <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
+                     style="height: 500px; width: 500px; border-radius: 8px; background: #e0e0e0;">
+                    <div class="text-center text-muted">
+                        <i class="bi bi-map" style="font-size: 2rem;"></i>
+                        <p class="mt-1 mb-0" style="font-size: 0.8rem;">Pas de Carte...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <hr style="border-color: 2px var(--primary-color);">
+
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div>
+                <a href="{{ path('app_user_show', {username: activity.user.username}) }}"> {{ activity.user ? activity.user.username : 'Unknown' }}</a>
+                <p class="mb-0 text-muted" style="font-size: 0.8rem;">Créateur d'activité
+                    depuis {{ activity.user.createdAt ? activity.user.createdAt|date('m Y') : '-' }}</p>
+            </div>
+        </div>
+
+
+        <hr style="border-color: 2px var(--primary-color);">
+
+
+        <div class="mb-4">
+            <h5>Détails :</h5>
+            <p style="color: var(--texte-fonce); line-height: 1.6;">{{ activity.description }}</p>
+        </div>
+
+        <div class="mb-5">
+            <h5>Participants :</h5>
+            <div class="d-flex flex-wrap gap-3 mt-2">
+                <p class="text-muted">Aucun participant pour l'instant.</p>
+            </div>
+        </div>
+
+
+        <hr style="border-color: 2px var(--primary-color);">
     </div>
+
+    <div class=" border-top d-flex align-items-center justify-content-between"
+         style="background: white; box-shadow: 0 -2px 8px rgba(0,0,0,0.08);">
+
+        <div>
+            <small class="text-muted d-block">{{ activity.date ? activity.date|date('l d F \\à G\\h') : '' }}</small>
+            <span class="fw-bold">{{ activity.title }}</span>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <p>Places restantes:</p>
+            0 / {{ activity.spot }}
+
+            <button
+                class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 36px; height: 36px; padding: 0;">
+                <i class="bi bi-share"></i>
+            </button>
+
+            {% if app.user %}
+                {% if app.user == activity.user %}
+                    <a href="{{ path('app_activity_edit', {id: activity.id}) }}"
+                       class="btn btn-cactus-secondary">
+                        <i class="bi bi-pencil me-1"></i>Modifier
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn btn-cactus-primary">Participer</a>
+            {% endif %}
+        </div>
+    </div>
+
 {% endblock %}

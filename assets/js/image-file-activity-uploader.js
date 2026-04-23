@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return collection.querySelectorAll('.photo-entry').length;
     }
 
-    function refreshUI() {
+    function displayCountMax() {
         const atMax = countEntries() >= MAX;
         addBtn.style.display = atMax ? 'none' : '';
         limitMsg.style.display = atMax ? '' : 'none';
@@ -26,10 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
         entry.className = 'photo-entry input-group mb-2';
         entry.innerHTML = html;
 
-        // Make sure the input gets Bootstrap styling
         entry.querySelector('input[type="file"]')?.classList.add('form-control');
 
-        // Append remove button
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'btn btn-outline-danger remove-photo';
@@ -38,16 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         collection.appendChild(entry);
         collection.dataset.index = index;
-        refreshUI();
+        displayCountMax();
     });
 
-    // Event delegation for remove buttons
     collection.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove-photo')) {
             e.target.closest('.photo-entry').remove();
-            refreshUI();
+            displayCountMax();
         }
     });
 
-    refreshUI();
+    displayCountMax();
 });
