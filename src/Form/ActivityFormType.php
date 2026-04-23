@@ -4,12 +4,13 @@
 namespace App\Form;
 
 use App\Entity\Activity;
+use App\Entity\Theme;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -17,12 +18,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ActivityFormType extends AbstractType
 {
+
+    public function __construct(private Packages $assets) {}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $activity = $builder->getData();
@@ -30,14 +35,14 @@ class ActivityFormType extends AbstractType
 
         $builder
             ->add('imageFiles', CollectionType::class, [
-                'label'         => false,
-                'entry_type'    => ImageFileType::class,
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'mapped'        => false,
-                'by_reference'  => false,
+                'label' => false,
+                'entry_type' => ImageFileType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'mapped' => false,
+                'by_reference' => false,
                 'entry_options' => ['label' => false],
-                'attr'          => ['id' => 'photo-collection'],
+                'attr' => ['id' => 'photo-collection'],
             ])
             ->add('title', TextType::class, [
                 'label' => "Titre de l'Activité",
@@ -51,7 +56,30 @@ class ActivityFormType extends AbstractType
                         max: 40,
                         minMessage: 'Your Titre should be at least {{ limit }} characters',
                     ),
-            ]])
+                ]])
+            ->add('themes', EntityType::class, [
+                'label' => "Quel Thème ?",
+                'class' => Theme::class,
+                'choice_label' => "title",
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
+                'attr' => [
+                    'id' => 'activity-themes',
+                ],
+                'choice_attr'  => function(Theme $theme) {
+                    return ['data-icon' => $this->assets->getUrl(
+                        '/uploads/themes/' . $theme->getIconFilename())];
+                },
+                'constraints' => [
+                    new Count(
+                        min: 1,
+                        max: 2,
+                        minMessage: 'Veuillez sélectionner au moins 1 thème.',
+                        maxMessage: 'Vous ne pouvez sélectionner que 2 thèmes maximum.'
+                    ),
+                ]
+            ])
             ->add('description', TextareaType::class, [
                 'label' => "Description de l'Activité",
                 'required' => false,
@@ -117,5 +145,7 @@ class ActivityFormType extends AbstractType
             'data_class' => Activity::class,
         ]);
     }
+
+
 }
 

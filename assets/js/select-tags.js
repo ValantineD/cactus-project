@@ -9,3 +9,21 @@ import 'select2/dist/css/select2.min.css';
         placeholder: 'Add tags',
     });
 })($);
+
+
+// import TomSelect from 'tom-select';
+// import 'tom-select/dist/css/tom-select.css';
+//
+// document.addEventListener('DOMContentLoaded', () => {
+//     document.querySelectorAll('.select2-tags').forEach((tag) => {
+//         new TomSelect(tag, {
+//             plugins: ['remove_button', 'drag_drop'],
+//             persist: false,
+//             create: true,
+//             delimiter: ',',
+//             placeholder: 'Add tags',
+//             hideSelected: true,
+//             maxItems: 10
+//         });
+//     });
+// });

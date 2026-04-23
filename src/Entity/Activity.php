@@ -228,7 +228,6 @@ class Activity
     public function removeImageFile(ImageFile $imageFile): static
     {
         if ($this->imageFiles->removeElement($imageFile)) {
-            // set the owning side to null (unless already changed)
             if ($imageFile->getActivity() === $this) {
                 $imageFile->setActivity(null);
             }
