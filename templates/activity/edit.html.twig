@@ -4,12 +4,15 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('select_tags') }}
+    {{ encore_entry_link_tags('select-custom-tags') }}
+    {{ encore_entry_link_tags('select-custom-themes') }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('select_tags') }}
+    {{ encore_entry_script_tags('image-file-activity-uploader') }}
+    {{ encore_entry_script_tags('select-custom-tags') }}
+    {{ encore_entry_script_tags('select-custom-themes') }}
 {% endblock %}
 
 {% block body %}
@@ -26,8 +29,10 @@
                         <div class="py-3">
                             <label class="form-label">Photos de l'Activité <small class="text-muted">(5
                                     max)</small></label>
-                            <img src="{{ asset(activity.imageFiles[0].filename) }}" alt="{{ activity.title }}"
-                                 class="w-100 h-100" style="object-fit: cover;" loading="lazy">
+                            {% if activity.imageFiles|length > 0 %}
+                                <img src="{{ asset(activity.imageFiles.first.filename) }}" alt="{{ activity.title }}"
+                                     class="w-100 h-100" style="object-fit: cover;" loading="lazy">
+                            {% endif %}
                             <div
                                 id="photo-collection"
                                 data-index="{{ form.imageFiles|length }}"

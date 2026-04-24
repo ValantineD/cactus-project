@@ -26,9 +26,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class ActivityFormType extends AbstractType
 {
 
-    public function __construct(private Packages $assets)
-    {
-    }
+    public function __construct(private Packages $assets){}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -68,6 +66,7 @@ class ActivityFormType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'id' => 'activity-themes',
+                    'class' => 'select-custom-themes',
                 ],
                 'choice_attr' => function (Theme $theme) {
                     return [
@@ -111,7 +110,7 @@ class ActivityFormType extends AbstractType
                 'multiple' => true,
                 'choices' => $tags,
                 'attr' => [
-                    'class' => 'select2-tags',
+                    'class' => 'select-custom-tags',
                 ],
             ])
             ->add('submit', SubmitType::class, [

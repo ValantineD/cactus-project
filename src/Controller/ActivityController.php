@@ -61,11 +61,21 @@ final class ActivityController extends AbstractController
                         throw new Exception($e->getMessage());
                     }
 
-                    $imageFile = new ImageFile();
+                    $imageFile = null;
+                    foreach ($activity->getImageFiles() as $existingImage) {
+                        if ($existingImage->getPosition() === $position) {
+                            $imageFile = $existingImage;
+                            break;
+                        }
+                    }
+
+                    if (!$imageFile) {
+                        $imageFile = new ImageFile();
+                        $activity->addImageFile($imageFile);
+                    }
+
                     $imageFile->setFilename('uploads/activities/' . $newFilename);
                     $imageFile->setPosition($position);
-
-                    $activity->addImageFile($imageFile);
                     $entityManager->persist($imageFile);
                 }
 

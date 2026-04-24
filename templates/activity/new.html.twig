@@ -4,15 +4,15 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ encore_entry_link_tags('select_tags') }}
-    {{ encore_entry_link_tags('select_activity_theme') }}
+    {{ encore_entry_link_tags('select-custom-tags') }}
+    {{ encore_entry_link_tags('select-custom-themes') }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('select_tags') }}
-    {{ encore_entry_script_tags('image_file_activity_uploader') }}
-    {{ encore_entry_script_tags('select_activity_theme') }}
+    {{ encore_entry_script_tags('image-file-activity-uploader') }}
+    {{ encore_entry_script_tags('select-custom-tags') }}
+    {{ encore_entry_script_tags('select-custom-themes') }}
 {% endblock %}
 
 {% block body %}
