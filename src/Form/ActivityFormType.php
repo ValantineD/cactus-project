@@ -26,7 +26,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class ActivityFormType extends AbstractType
 {
 
-    public function __construct(private Packages $assets) {}
+    public function __construct(private Packages $assets)
+    {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -58,7 +60,7 @@ class ActivityFormType extends AbstractType
                     ),
                 ]])
             ->add('themes', EntityType::class, [
-                'label' => "Quel Thème ?",
+                'label' => false,
                 'class' => Theme::class,
                 'choice_label' => "title",
                 'multiple' => true,
@@ -67,9 +69,10 @@ class ActivityFormType extends AbstractType
                 'attr' => [
                     'id' => 'activity-themes',
                 ],
-                'choice_attr'  => function(Theme $theme) {
-                    return ['data-icon' => $this->assets->getUrl(
-                        '/uploads/themes/' . $theme->getIconFilename())];
+                'choice_attr' => function (Theme $theme) {
+                    return [
+                        'data-icon' => $this->assets->getUrl($theme->getIconFilename())
+                    ];
                 },
                 'constraints' => [
                     new Count(

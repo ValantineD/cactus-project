@@ -52,3 +52,9 @@
     --bs-btn-disabled-border-color: #198754;
     border-radius: var(--bs-border-radius-xxl) !important;
 }
+
+.badges-theme {
+    background-color: var(--beige-transparent);
+    border: 1px solid var(--primary-color);;
+    border-radius: 20px;
+}

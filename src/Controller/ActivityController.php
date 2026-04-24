@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Activity;
 use App\Entity\ImageFile;
+use App\Entity\Theme;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
 use App\Services\FileUploader;
@@ -67,6 +68,18 @@ final class ActivityController extends AbstractController
                     $activity->addImageFile($imageFile);
                     $entityManager->persist($imageFile);
                 }
+
+                foreach ($activity->getThemes() as $theme) {
+                    if (!$theme->getActivities()->contains($activity)) {
+                        $theme->addActivity($activity);
+                    }
+                }
+
+                foreach ($entityManager->getRepository(Theme::class)->findAll() as $theme) {
+                    if (!$activity->getThemes()->contains($theme)) {
+                        $theme->getActivities()->removeElement($activity);
+                    }
+                }
             }
 
             $entityManager->persist($activity);
@@ -119,6 +132,18 @@ final class ActivityController extends AbstractController
                 $context = "activity";
                 $newFilename = $fileUploader->uploadImage($pictureFile, $context);
                 $activity->setImages('uploads/activities/' . $newFilename);
+            }
+
+            foreach ($activity->getThemes() as $theme) {
+                if (!$theme->getActivities()->contains($activity)) {
+                    $theme->addActivity($activity);
+                }
+            }
+
+            foreach ($entityManager->getRepository(Theme::class)->findAll() as $theme) {
+                if (!$activity->getThemes()->contains($theme)) {
+                    $theme->getActivities()->removeElement($activity);
+                }
             }
 
             $entityManager->flush();

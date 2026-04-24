@@ -26,7 +26,7 @@
                         <div class="py-3">
                             <label class="form-label">Photos de l'Activité <small class="text-muted">(5
                                     max)</small></label>
-                            <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                            <img src="{{ asset(activity.imageFiles[0].filename) }}" alt="{{ activity.title }}"
                                  class="w-100 h-100" style="object-fit: cover;" loading="lazy">
                             <div
                                 id="photo-collection"
@@ -52,6 +52,15 @@
 
 
                         {{ form_row(form.title) }}
+
+                        <div class="pb-3">
+                            <label class="form-label">Thèmes de l'Activité <small class="text-muted">(2
+                                    max)</small></label>
+                            {{ form_widget(form.themes) }}
+                            {{ form_errors(form.themes) }}
+
+                        </div>
+
                         {{ form_row(form.description) }}
                         {{ form_row(form.location) }}
                         {{ form_row(form.date) }}
