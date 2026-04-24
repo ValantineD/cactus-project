@@ -21,8 +21,8 @@ class Activity
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotNull]
     #[Assert\Regex(
-        pattern: '/^[a-z0-9]+$/i',
-        htmlPattern: '^[a-zA-Z0-9]+$'
+        pattern: '/^[a-z0-9\s\p{L}]+$/iu',
+        htmlPattern: '^[a-zA-Z0-9 àâäéèêëîïôöùûüçæœÀÂÄÉÈÊËÎÏÔÖÙÛÜÇÆŒ]+$'
     )]
     private ?string $title = null;
 

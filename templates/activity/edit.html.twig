@@ -27,34 +27,39 @@
                     <div class="mb-4">
 
                         <div class="py-3">
-                            <label class="form-label">Photos de l'Activité <small class="text-muted">(5
-                                    max)</small></label>
-                            {% if activity.imageFiles|length > 0 %}
-                                <img src="{{ asset(activity.imageFiles.first.filename) }}" alt="{{ activity.title }}"
-                                     class="w-100 h-100" style="object-fit: cover;" loading="lazy">
-                            {% endif %}
+                            <label class="form-label">Photos de l'Activité <small class="text-muted">(5 max)</small></label>
+
                             <div
                                 id="photo-collection"
+                                class="photo-grid"
                                 data-index="{{ form.imageFiles|length }}"
                                 data-prototype="{{ form_widget(form.imageFiles.vars.prototype)|e('html_attr') }}"
                                 data-max="5"
                             >
-                                {% for formImageFile in form.imageFiles %}
-                                    <div class="photo-entry input-group mb-2">
-                                        {{ form_widget(formImageFile.file, { attr: { class: 'form-control' } }) }}
-                                        <button type="button" class="btn btn-outline-danger remove-photo">✕</button>
+                                {% for imageFile in activity.imageFiles %}
+                                    <div class="photo-entry photo-existing">
+                                        <img src="{{ asset(imageFile.filename) }}" alt="photo {{ loop.index }}">
+                                        <button type="button" class="remove-photo">✕</button>
+                                        <input type="hidden" name="deleteImages[]" value="{{ imageFile.id }}" disabled>
                                     </div>
                                 {% endfor %}
+
+                                {% for formImageFile in form.imageFiles %}
+                                    <div class="photo-entry photo-new">
+                                        {{ form_widget(formImageFile.file, { attr: { class: 'form-control' } }) }}
+                                        <button type="button" class="remove-photo">✕</button>
+                                    </div>
+                                {% endfor %}
+
+                                <div id="add-photo-slot" class="photo-entry photo-add-slot">
+                                    <button type="button" id="add-photo">+</button>
+                                </div>
                             </div>
 
-                            <button type="button" id="add-photo" class="btn btn-outline-success mt-2">
-                                + Ajouter une photo
-                            </button>
                             <div id="photo-limit-msg" class="text-danger small mt-1" style="display:none">
                                 Maximum 5 photos atteint.
                             </div>
                         </div>
-
 
                         {{ form_row(form.title) }}
 

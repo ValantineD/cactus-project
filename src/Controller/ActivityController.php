@@ -7,7 +7,6 @@ use App\Entity\ImageFile;
 use App\Entity\Theme;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
-use App\Services\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -119,29 +118,59 @@ final class ActivityController extends AbstractController
         Request                $request,
         Activity               $activity,
         EntityManagerInterface $entityManager,
-        FileUploader           $fileUploader
+        #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
     ): Response
     {
-        $form = $this->createForm(ActivityFormType::class, $activity);
-        $form->handleRequest($request);
-
         if ($this->getUser() !== $activity->getUser()) {
             throw new AccessDeniedHttpException('You cannot edit this activity because you are not its creator!');
         }
 
+        $form = $this->createForm(ActivityFormType::class, $activity);
+        $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $pictureFile = $form->get('images')->getData();
-            if ($pictureFile) {
-                if ($activity->getImages()) {
-                    $oldPath = $this->getParameter('kernel.project_dir') . '/public/' . $activity->getImages();
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
+            $deleteIds = $request->request->all('deleteImages');
+            foreach ($deleteIds as $deleteId) {
+                foreach ($activity->getImageFiles() as $imageFile) {
+                    if ($imageFile->getId() === (int) $deleteId) {
+                        $activity->removeImageFile($imageFile);
+                        $entityManager->remove($imageFile);
+                        break;
                     }
                 }
-                $context = "activity";
-                $newFilename = $fileUploader->uploadImage($pictureFile, $context);
-                $activity->setImages('uploads/activities/' . $newFilename);
+            }
+
+            $entityManager->flush();
+
+            $position = 1;
+            foreach ($activity->getImageFiles() as $imageFile) {
+                $imageFile->setPosition($position++);
+                $entityManager->persist($imageFile);
+            }
+
+            $existingCount = $activity->getImageFiles()->count();
+            foreach ($form->get('imageFiles') as $index => $file) {
+                $uploadedFile = $file->get('file')->getData();
+
+                if ($uploadedFile) {
+                    $position = $existingCount + $index + 1;
+                    $mimeType = $uploadedFile->getMimeType();
+                    $extension = explode('/', $mimeType)[1];
+                    $newFilename = uniqid('image_file_activity_' . $position . '_') . '.' . $extension;
+
+                    try {
+                        $uploadedFile->move($imageActivityDirectory, $newFilename);
+                    } catch (FileException $e) {
+                        throw new \Exception($e->getMessage());
+                    }
+
+                    $imageFile = new ImageFile();
+                    $imageFile->setFilename('uploads/activities/' . $newFilename);
+                    $imageFile->setPosition($position);
+                    $activity->addImageFile($imageFile);
+                    $entityManager->persist($imageFile);
+                }
             }
 
             foreach ($activity->getThemes() as $theme) {
@@ -157,6 +186,7 @@ final class ActivityController extends AbstractController
             }
 
             $entityManager->flush();
+
             return $this->redirectToRoute('app_activity_index', [], Response::HTTP_SEE_OTHER);
         }
 
