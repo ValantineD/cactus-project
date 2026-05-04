@@ -53,7 +53,7 @@
         <div class="mb-1">
             <div class="d-flex align-items-center justify-content-between gap-1 pb-3">
                 {% for theme in activity.themes %}
-                    <div class="d-flex badges-theme align-items-center justify-content-center gap-2 p-2 w-50">
+                    <div class="d-flex badges-theme align-items-center justify-content-center gap-2 p-2 {{ (activity.themes|length  > 1) ? "w-50" : "w-100" }}">
                         <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}" loading="lazy"
                              style="height: 20px">
                         <span style="font-size: 18px"><strong>{{ theme.title }}</strong></span>
