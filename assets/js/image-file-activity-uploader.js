@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!collection) return;
 
     const form = collection.closest('form');
-    console.log('form found:', form);
 
     const addSlot = document.getElementById('add-photo-slot');
     const addBtn = document.getElementById('add-photo');
@@ -49,17 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!e.target.classList.contains('remove-photo')) return;
 
         const entry = e.target.closest('.photo-entry');
-        console.log('removing entry:', entry);
-        console.log('is existing:', entry.classList.contains('photo-existing'));
-
         if (entry.classList.contains('photo-existing')) {
             const deleteInput = entry.querySelector('input[type="hidden"]');
-            console.log('deleteInput found:', deleteInput);
+
             if (deleteInput) {
                 deleteInput.disabled = false;
-                console.log('input name:', deleteInput.name, 'value:', deleteInput.value);
                 form.appendChild(deleteInput);
-                console.log('input moved to form, disabled:', deleteInput.disabled);
             }
             entry.remove();
         } else {
@@ -70,15 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     form.addEventListener('submit', (e) => {
-        console.log('form submitting...');
         const formData = new FormData(form);
-        console.log('deleteImages:', formData.getAll('deleteImages[]'));
 
-        // Log ALL form fields
         for (let [key, value] of formData.entries()) {
-            if (key.includes('delete')) {
-                console.log(key, value);
-            }
+            key.includes('delete');
         }
     });
 

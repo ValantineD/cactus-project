@@ -4,50 +4,86 @@
 
 {% block body %}
 
-    <div class="d-block d-lg-none" style="height: 260px; overflow: hidden; position: relative;">
-        {% if imageFiles is not empty %}
-            <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
-                 class="w-100 h-100" style="object-fit: cover;" loading="lazy">
-        {% else %}
-            <div class="w-100 h-100 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center">
-                <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-            </div>
-        {% endif %}
-        <a href="{{ path('app_activity_index') }}"
-           class="position-absolute top-0 start-0 m-3 btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
-           style="width: 36px; height: 36px; padding:0; background: rgba(255,255,255,0.85);">
-            <i class="bi bi-arrow-left"></i>
-        </a>
-    </div>
-
-    <div class="container py-3" style="max-width: 860px;">
-        <div class="d-none d-lg-block">
-            <div class="row g-2 mb-3 justify-content-center align-items-center">
-                <div class="col-8">
-                    {% if imageFiles is not empty %}
-                        <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
-                             loading="lazy" class="img-activity-show-main img-activity-show">
-                    {% else %}
-                        <div
-                            class="w-100 rounded bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center"
-                            style="height: 220px;">
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div class="col-4">
-                    <div class="d-flex flex-column py-5 gap-4">
-                        {% for image in imageFiles %}
-                            {% if image.position != 1 %}
-                                <div>
-                                    <img src="{{ asset(image.filename) }}" alt="{{ activity.title }}"
-                                         loading="lazy" class="img-activity-show">
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+    <div class="d-block d-lg-none" style="position: relative;">
+    {% if imageFiles is not empty %}
+        <div id="activityCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner" style="height: 500px; object-fit: cover;">
+                {% for image in imageFiles %}
+                    <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                        <img src="{{ asset(image.filename) }}" alt="{{ activity.title }}"
+                             class="d-block w-100 h-100" style="object-fit: cover; object-position: 50% 50%;" loading="lazy">
                     </div>
-                </div>
+                {% endfor %}
             </div>
+            {% if imageFiles|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#activityCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#activityCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+                <div class="carousel-indicators" style="margin-bottom: 0.3rem;">
+                    {% for image in imageFiles %}
+                        <button type="button" data-bs-target="#activityCarousel"
+                                data-bs-slide-to="{{ loop.index0 }}"
+                                class="{{ loop.first ? 'active' : '' }}"></button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="w-100 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center"
+             style="height: 260px;">
+            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+        </div>
+    {% endif %}
+
+    <a href="{{ path('app_activity_index') }}"
+       class="position-absolute top-0 start-0 m-3 btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+       style="width: 36px; height: 36px; padding:0; background: rgba(255,255,255,0.85); z-index: 10;">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+</div>
+
+    <div class="container py-3">
+        <div class="d-none d-lg-block mb-3">
+            {% if imageFiles is not empty %}
+                {% if imageFiles|length == 1 %}
+                    <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                         loading="lazy"
+                         class="img-activity-show-main img-activity-show w-100"
+                         style="object-fit: cover; border-radius: 8px; max-height: 580px;">
+                {% else %}
+                    <div class="row g-2 align-items-stretch">
+                        <div class="col-8 d-flex">
+                            <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                                 loading="lazy"
+                                 class="img-activity-show-main img-activity-show w-100"
+                                 style="object-fit: cover; border-radius: 8px; height: 100%;">
+                        </div>
+
+                        <div class="col-4 d-flex flex-column gap-2">
+                            {% for image in imageFiles %}
+                                {% if image.position != 1 %}
+                                    {% set splitFilename = image.filename|split('.') %}
+                                    {% set imagefilename = splitFilename|join('_large.') %}
+
+                                    <div class="flex-grow-1" style="overflow: hidden; border-radius: 8px;">
+                                        <img src="{{ asset(imagefilename) }}" alt="{{ activity.title }}"
+                                             loading="lazy"
+                                             class="img-activity-show w-100 h-100"
+                                             style="object-fit: cover; display: block;">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="w-100 rounded bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center"
+                     style="height: 220px;">
+                </div>
+            {% endif %}
         </div>
 
         <div class="mb-1">

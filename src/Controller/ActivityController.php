@@ -9,7 +9,6 @@ use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,28 +51,48 @@ final class ActivityController extends AbstractController
                     $position = $index + 1;
                     $mimeType = $uploadedFile->getMimeType();
                     $extension = explode('/', $mimeType)[1];
-                    $newFilename = uniqid('image_file_activity_' . $position . '_') . '.' . $extension;
+                    $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_position_' . $position . '_') . '.' . $extension;
 
                     try {
-                        $uploadedFile->move($imageActivityDirectory, $newFilename);
-                    } catch (FileException $e) {
-                        throw new Exception($e->getMessage());
-                    }
+                        if ($uploadedFile->move($imageActivityDirectory, $realFilename)) {
 
-                    $imageFile = null;
-                    foreach ($activity->getImageFiles() as $existingImage) {
-                        if ($existingImage->getPosition() === $position) {
-                            $imageFile = $existingImage;
-                            break;
+                            $sizeLabels = [
+                                'large' => [
+                                    'width' => 500,
+                                    'height' => 500,
+                                ],
+                                'medium' => [
+                                    'width' => 250,
+                                    'height' => 250,
+                                ],
+                                'small' => [
+                                    'width' => 100,
+                                    'height' => 100,
+                                ]
+                            ];
+
+                            foreach ($sizeLabels as $key => $value) {
+                                $newFilename = explode('.', $realFilename)[0] . '_' . $key . '.' . $extension;
+
+                                $imageCreate = 'imagecreatefrom' . $extension;
+
+                                /** @var \GdImage $uploadImage */
+                                $filePath = $imageActivityDirectory . '/' . $realFilename;
+                                $uploadImage = $imageCreate($filePath);
+
+                                $resizedImage = $this->resizeImage($uploadImage, $value['width'], $value['height']);
+
+                                $createAndMoveResizedImage = 'image' . $extension;
+                                $createAndMoveResizedImage($resizedImage, $imageActivityDirectory . '/' . $newFilename);
+                            }
                         }
+
+                    } catch (FileException $e) {
+                        throw new \Exception($e->getMessage());
                     }
 
-                    if (!$imageFile) {
-                        $imageFile = new ImageFile();
-                        $activity->addImageFile($imageFile);
-                    }
-
-                    $imageFile->setFilename('uploads/activities/' . $newFilename);
+                    $imageFile = new ImageFile();
+                    $imageFile->setFilename('uploads/activities/' . $realFilename);
                     $imageFile->setPosition($position);
                     $entityManager->persist($imageFile);
                 }
@@ -115,9 +134,9 @@ final class ActivityController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_activity_edit', methods: ['GET', 'POST'])]
     public function edit(
-        Request                $request,
-        Activity               $activity,
-        EntityManagerInterface $entityManager,
+        Request                                                              $request,
+        Activity                                                             $activity,
+        EntityManagerInterface                                               $entityManager,
         #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
     ): Response
     {
@@ -129,11 +148,11 @@ final class ActivityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $deleteIds = $request->request->all('deleteImages');
+
             foreach ($deleteIds as $deleteId) {
                 foreach ($activity->getImageFiles() as $imageFile) {
-                    if ($imageFile->getId() === (int) $deleteId) {
+                    if ($imageFile->getId() === (int)$deleteId) {
                         $activity->removeImageFile($imageFile);
                         $entityManager->remove($imageFile);
                         break;
@@ -141,15 +160,8 @@ final class ActivityController extends AbstractController
                 }
             }
 
-            $entityManager->flush();
-
-            $position = 1;
-            foreach ($activity->getImageFiles() as $imageFile) {
-                $imageFile->setPosition($position++);
-                $entityManager->persist($imageFile);
-            }
-
             $existingCount = $activity->getImageFiles()->count();
+
             foreach ($form->get('imageFiles') as $index => $file) {
                 $uploadedFile = $file->get('file')->getData();
 
@@ -157,16 +169,57 @@ final class ActivityController extends AbstractController
                     $position = $existingCount + $index + 1;
                     $mimeType = $uploadedFile->getMimeType();
                     $extension = explode('/', $mimeType)[1];
-                    $newFilename = uniqid('image_file_activity_' . $position . '_') . '.' . $extension;
+                    $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_position_' . $position . '_') . '.' . $extension;
 
                     try {
-                        $uploadedFile->move($imageActivityDirectory, $newFilename);
+                        if ($uploadedFile->move($imageActivityDirectory, $realFilename)) {
+
+                            $sizeLabels = [
+                                'large' => [
+                                    'width' => 500,
+                                    'height' => 500,
+                                ],
+                                'medium' => [
+                                    'width' => 250,
+                                    'height' => 250,
+                                ],
+                                'small' => [
+                                    'width' => 100,
+                                    'height' => 100,
+                                ]
+                            ];
+
+                            foreach ($sizeLabels as $key => $value) {
+                                $newFilename = explode('.', $realFilename)[0] . '_' . $key . '.' . $extension;
+
+                                $imageCreate = 'imagecreatefrom' . $extension;
+
+                                /** @var \GdImage $uploadImage */
+                                $filePath = $imageActivityDirectory . '/' . $realFilename;
+
+                                list($widthOrig, $heightOrig) = getimagesize($filePath);
+                                $ratioOrig = $widthOrig / $heightOrig;
+
+                                if ($value['width'] / $value['height'] > $ratioOrig) {
+                                    $value['width'] = $value['height'] * $ratioOrig;
+                                } else {
+                                    $value['height'] = $value['width'] / $ratioOrig;
+                                }
+
+                                $uploadImage = $imageCreate($filePath);
+                                $resizedImage = $this->resizeImage($uploadImage, $value['width'], $value['height']);
+
+                                $createAndMoveResizedImage = 'image' . $extension;
+                                $createAndMoveResizedImage($resizedImage, $imageActivityDirectory . '/' . $newFilename);
+                            }
+                        }
+
                     } catch (FileException $e) {
                         throw new \Exception($e->getMessage());
                     }
 
                     $imageFile = new ImageFile();
-                    $imageFile->setFilename('uploads/activities/' . $newFilename);
+                    $imageFile->setFilename('uploads/activities/' . $realFilename);
                     $imageFile->setPosition($position);
                     $activity->addImageFile($imageFile);
                     $entityManager->persist($imageFile);
@@ -212,5 +265,13 @@ final class ActivityController extends AbstractController
         return $this->redirectToRoute('app_activity_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    private function resizeImage(\GdImage $uploadImage, int $width, int $height): \GdImage
+    {
+        $oldw = imagesx($uploadImage);
+        $oldh = imagesy($uploadImage);
 
+        $temp = imagecreatetruecolor($width, $height);
+        imagecopyresampled($temp, $uploadImage, 0, 0, 0, 0, $width, $height, $oldw, $oldh);
+        return $temp;
+    }
 }

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Recherche Activité{% endblock %}
 
 {% block body %}
-    <div class="container-fluid px-4 py-3">
-
+    <div class="d-none d-lg-block container-fluid px-4 py-3" style="align-items: flex-start; gap: 1rem;">
         <div class="row g-3">
             <div class="col-12 col-lg-6 order-lg-1 order-2">
                 <div class="row g-3">
@@ -14,7 +14,8 @@
                                 <div class="h-100" style="border-radius: 8px; overflow: hidden;">
                                     <div style="height: 200px; overflow: hidden; background: #e9e9e9;">
                                         {% if activity.imageFiles is not empty %}
-                                            <img src="{{ asset(activity.imageFiles[0].filename) }}" alt="{{ activity.title }}"
+                                            <img src="{{ asset(activity.imageFiles[0].filename) }}"
+                                                 alt="{{ activity.title }}"
                                                  style="max-width: 500px; object-fit: cover;"
                                                  loading="lazy" class="w-100 h-100">
                                         {% else %}
@@ -26,13 +27,15 @@
                                     </div>
 
                                     <div class="d-flex align-items-center justify-content-between gap-1 p-1">
-                                    {% for theme in activity.themes %}
-                                        <div class="d-flex badges-theme align-items-center justify-content-center gap-1 p-1 {{ (activity.themes|length  > 1) ? "w-50" : "w-100" }}">
-                                            <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}" loading="lazy"
-                                                 style="height: 15px">
-                                            <span style="font-size: 15px"><strong>{{ theme.title }}</strong></span>
-                                        </div>
-                                    {% endfor %}
+                                        {% for theme in activity.themes %}
+                                            <div
+                                                class="d-flex badges-theme align-items-center justify-content-center gap-1 p-1 {{ (activity.themes|length  > 1) ? "w-50" : "w-100" }}">
+                                                <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}"
+                                                     loading="lazy"
+                                                     style="height: 15px">
+                                                <span style="font-size: 15px"><strong>{{ theme.title }}</strong></span>
+                                            </div>
+                                        {% endfor %}
                                     </div>
 
                                     <div class="px-3 pt-1 pb-2">
@@ -70,17 +73,79 @@
             </div>
 
             <div class="col-12 col-lg-6 order-lg-2 order-1 container-map">
-                <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
-                     style="height: 500px; width: 600px; border-radius: 8px; background: #e0e0e0; position: fixed">
-                    <div class="text-center text-muted">
-                        <i class="bi bi-map" style="font-size: 38px"></i>
-                        <p class="mt-2 mb-0" style="font-size: 0.9rem;">Pas de Carte....</p>
+                <div
+                    style="position: sticky; top: 70px; height: calc(100vh - 90px); border-radius: 8px; overflow: hidden;">
+                    <div class="cactus-border-shadow d-flex align-items-center justify-content-center w-100 h-100"
+                         style="background: #e0e0e0; border-radius: 8px;">
+                        <div class="text-center text-muted">
+                            <i class="bi bi-map" style="font-size: 38px"></i>
+                            <p class="mt-2 mb-0" style="font-size: 0.9rem;">Pas de Carte....</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="d-block d-lg-none "
+         style="height: calc(100vh - 56px); display: flex; flex-direction: column;">
+
+        <div style="flex: 1; background: #e0e0e0; position: relative; overflow: hidden;">
+            <div class="cactus-border-shadow d-flex align-items-center justify-content-center w-100 h-100">
+                <div class="text-center text-muted">
+                    <i class="bi bi-map" style="font-size: 38px"></i>
+                    <p class="mt-2 mb-0" style="font-size: 0.9rem;">Pas de Carte....</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="flex-shrink: 0; padding: 12px 0 12px 12px; background: white;
+                    box-shadow: 0 -2px 12px rgba(0,0,0,0.10); overflow-x: auto;
+                    scrollbar-width: none; -ms-overflow-style: none;">
+
+            <div style="display: flex; gap: 12px; width: max-content;">
+                {% for activity in activities %}
+                    <a href="{{ path('app_activity_show', {id: activity.id}) }}"
+                       class="text-decoration-none text-dark"
+                       style="width: 220px; flex-shrink: 0; border-radius: 10px;
+                              overflow: hidden; background: white;
+                              box-shadow: 0 1px 6px rgba(0,0,0,0.12);">
+                        <div style="height: 120px; overflow: hidden; background: #e9e9e9;">
+                            {% if activity.imageFiles is not empty %}
+                                <img src="{{ asset(activity.imageFiles[0].filename) }}"
+                                     alt="{{ activity.title }}"
+                                     class="w-100 h-100" style="object-fit: cover;" loading="lazy">
+                            {% else %}
+                                <div
+                                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25">
+                                    <i class="bi bi-image text-muted" style="font-size: 1.5rem;"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="px-2 pt-1 pb-2">
+                            <div class="d-flex align-items-center gap-1 mb-1">
+                                {% for theme in activity.themes %}
+                                    <span style="font-size: 12px; font-weight: 600;">{{ theme.title }}</span>
+                                {% endfor %}
+                            </div>
+                            <p class="mb-0 fw-bold"
+                               style="font-size: 0.85rem; line-height: 1.2;">{{ activity.title }}</p>
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted" style="font-size: 0.75rem;">{{ activity.location }}</small>
+                                <small class="text-muted"
+                                       style="font-size: 0.75rem;">{{ activity.date ? activity.date|date('M d') : '' }}</small>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
             </div>
         </div>
     </div>
 {% endblock %}
+
+
+
 
 
 
