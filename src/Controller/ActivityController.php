@@ -47,8 +47,10 @@ final class ActivityController extends AbstractController
             foreach ($form->get('imageFiles') as $index => $file) {
                 $uploadedFile = $file->get('file')->getData();
 
+                if (!$uploadedFile) continue;
+
                 if ($uploadedFile) {
-                    $position = $index + 1;
+                    $position = $activity->getImageFiles()->count() + 1;;
                     $mimeType = $uploadedFile->getMimeType();
                     $extension = explode('/', $mimeType)[1];
                     $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_position_' . $position . '_') . '.' . $extension;
