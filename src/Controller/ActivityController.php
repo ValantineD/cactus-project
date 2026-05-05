@@ -58,8 +58,8 @@ final class ActivityController extends AbstractController
 
                             $sizeLabels = [
                                 'large' => [
-                                    'width' => 500,
-                                    'height' => 500,
+                                    'width' => 700,
+                                    'height' => 700,
                                 ],
                                 'medium' => [
                                     'width' => 250,
