@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\EnumStatus;
 use App\Repository\ActivityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -39,7 +40,11 @@ class Activity
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\NotNull]
-    private ?\DateTime $date = null;
+    private ?\DateTime $dateStart = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\NotNull]
+    private ?\DateTime $dateEnd = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $spot = null;
@@ -64,6 +69,12 @@ class Activity
      */
     #[ORM\ManyToMany(targetEntity: Theme::class, mappedBy: 'activities')]
     private Collection $themes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?EnumStatus $status = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $state = null;
 
     public function __construct()
     {
@@ -132,14 +143,26 @@ class Activity
     }
 
 
-    public function getDate(): ?\DateTime
+    public function getDateStart(): ?\DateTime
     {
-        return $this->date;
+        return $this->dateStart;
     }
 
-    public function setDate(?\DateTime $date): static
+    public function setDateStart(?\DateTime $dateStart): static
     {
-        $this->date = $date;
+        $this->dateStart = $dateStart;
+
+        return $this;
+    }
+
+    public function getDateEnd(): ?\DateTime
+    {
+        return $this->dateEnd;
+    }
+
+    public function setDateEnd(?\DateTime $dateEnd): static
+    {
+        $this->dateEnd = $dateEnd;
 
         return $this;
     }
@@ -262,4 +285,29 @@ class Activity
 
         return $this;
     }
+
+    public function getStatus(): ?EnumStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?EnumStatus $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
 }

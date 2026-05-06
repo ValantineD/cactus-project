@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Activity;
 use App\Entity\ImageFile;
 use App\Entity\Theme;
+use App\Enum\EnumStatus;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +25,7 @@ final class ActivityController extends AbstractController
     public function index(ActivityRepository $activityRepository): Response
     {
         return $this->render('activity/index.html.twig', [
-            'activities' => $activityRepository->findAll(),
+            'activities' => $activityRepository->findBy(['status' => EnumStatus::PUBLISHED]),
         ]);
     }
 
