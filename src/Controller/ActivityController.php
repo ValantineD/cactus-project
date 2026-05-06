@@ -44,32 +44,38 @@ final class ActivityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $activity->setUser($this->getUser());
 
+            $existingCount = $activity->getImageFiles()->count();
+
             foreach ($form->get('imageFiles') as $index => $file) {
                 $uploadedFile = $file->get('file')->getData();
 
                 if (!$uploadedFile) continue;
 
                 if ($uploadedFile) {
-                    $position = $activity->getImageFiles()->count() + 1;;
+                    $position = $existingCount + $index + 1;
                     $mimeType = $uploadedFile->getMimeType();
                     $extension = explode('/', $mimeType)[1];
-                    $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_position_' . $position . '_') . '.' . $extension;
+                    $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_') . '.' . $extension;
 
                     try {
                         if ($uploadedFile->move($imageActivityDirectory, $realFilename)) {
 
                             $sizeLabels = [
+                                'XL' => [
+                                    'width' => 1300,
+                                    'height' => 1300,
+                                ],
                                 'large' => [
-                                    'width' => 700,
-                                    'height' => 700,
+                                    'width' => 900,
+                                    'height' => 900,
                                 ],
                                 'medium' => [
-                                    'width' => 250,
-                                    'height' => 250,
+                                    'width' => 500,
+                                    'height' => 500,
                                 ],
                                 'small' => [
-                                    'width' => 100,
-                                    'height' => 100,
+                                    'width' => 300,
+                                    'height' => 300,
                                 ]
                             ];
 
@@ -80,8 +86,17 @@ final class ActivityController extends AbstractController
 
                                 /** @var \GdImage $uploadImage */
                                 $filePath = $imageActivityDirectory . '/' . $realFilename;
-                                $uploadImage = $imageCreate($filePath);
 
+                                list($widthOrig, $heightOrig) = getimagesize($filePath);
+                                $ratioOrig = $widthOrig / $heightOrig;
+
+                                if ($value['width'] / $value['height'] > $ratioOrig) {
+                                    $value['width'] = $value['height'] * $ratioOrig;
+                                } else {
+                                    $value['height'] = $value['width'] / $ratioOrig;
+                                }
+
+                                $uploadImage = $imageCreate($filePath);
                                 $resizedImage = $this->resizeImage($uploadImage, $value['width'], $value['height']);
 
                                 $createAndMoveResizedImage = 'image' . $extension;
@@ -96,6 +111,7 @@ final class ActivityController extends AbstractController
                     $imageFile = new ImageFile();
                     $imageFile->setFilename('uploads/activities/' . $realFilename);
                     $imageFile->setPosition($position);
+                    $activity->addImageFile($imageFile);
                     $entityManager->persist($imageFile);
                 }
 
@@ -109,6 +125,12 @@ final class ActivityController extends AbstractController
                     if (!$activity->getThemes()->contains($theme)) {
                         $theme->getActivities()->removeElement($activity);
                     }
+                }
+
+                $positionImage = 1;
+                foreach ($activity->getImageFiles() as $imageFile) {
+                    $imageFile->setPosition($positionImage++);
+                    $entityManager->persist($imageFile);
                 }
             }
 
@@ -160,7 +182,7 @@ final class ActivityController extends AbstractController
                         break;
                     }
                 }
-            }
+            }-
 
             $existingCount = $activity->getImageFiles()->count();
 
@@ -171,23 +193,27 @@ final class ActivityController extends AbstractController
                     $position = $existingCount + $index + 1;
                     $mimeType = $uploadedFile->getMimeType();
                     $extension = explode('/', $mimeType)[1];
-                    $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_position_' . $position . '_') . '.' . $extension;
+                    $realFilename = uniqid('image_file_activity_' . $activity->getId() . '_') . '.' . $extension;
 
                     try {
                         if ($uploadedFile->move($imageActivityDirectory, $realFilename)) {
 
                             $sizeLabels = [
+                                'XL' => [
+                                    'width' => 1300,
+                                    'height' => 1300,
+                                ],
                                 'large' => [
+                                    'width' => 900,
+                                    'height' => 900,
+                                ],
+                                'medium' => [
                                     'width' => 500,
                                     'height' => 500,
                                 ],
-                                'medium' => [
-                                    'width' => 250,
-                                    'height' => 250,
-                                ],
                                 'small' => [
-                                    'width' => 100,
-                                    'height' => 100,
+                                    'width' => 300,
+                                    'height' => 300,
                                 ]
                             ];
 
@@ -238,6 +264,12 @@ final class ActivityController extends AbstractController
                 if (!$activity->getThemes()->contains($theme)) {
                     $theme->getActivities()->removeElement($activity);
                 }
+            }
+
+            $positionImage = 1;
+            foreach ($activity->getImageFiles() as $imageFile) {
+                $imageFile->setPosition($positionImage++);
+                $entityManager->persist($imageFile);
             }
 
             $entityManager->flush();

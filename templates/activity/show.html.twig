@@ -5,72 +5,79 @@
 {% block body %}
 
     <div class="d-block d-lg-none" style="position: relative;">
-    {% if imageFiles is not empty %}
-        <div id="activityCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner" style="height: 500px; object-fit: cover;">
-                {% for image in imageFiles %}
-                    <div class="carousel-item {{ loop.first ? 'active' : '' }}">
-                        <img src="{{ asset(image.filename) }}" alt="{{ activity.title }}"
-                             class="d-block w-100 h-100" style="object-fit: cover; object-position: 50% 50%;" loading="lazy">
-                    </div>
-                {% endfor %}
-            </div>
-            {% if imageFiles|length > 1 %}
-                <button class="carousel-control-prev" type="button" data-bs-target="#activityCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#activityCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-                <div class="carousel-indicators" style="margin-bottom: 0.3rem;">
+        {% if imageFiles is not empty %}
+            <div id="activityCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" style="height: 500px; object-fit: cover;">
                     {% for image in imageFiles %}
-                        <button type="button" data-bs-target="#activityCarousel"
-                                data-bs-slide-to="{{ loop.index0 }}"
-                                class="{{ loop.first ? 'active' : '' }}"></button>
+                        <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                            <img src="{{ asset(image.filename) }}" alt="{{ activity.title }}"
+                                 class="d-block w-100 h-100" style="object-fit: cover; object-position: 50% 50%;"
+                                 loading="lazy">
+                        </div>
                     {% endfor %}
                 </div>
-            {% endif %}
-        </div>
-    {% else %}
-        <div class="w-100 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center"
-             style="height: 260px;">
-            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
-        </div>
-    {% endif %}
+                {% if imageFiles|length > 1 %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#activityCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#activityCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                    <div class="carousel-indicators" style="margin-bottom: 0.3rem;">
+                        {% for image in imageFiles %}
+                            <button type="button" data-bs-target="#activityCarousel"
+                                    data-bs-slide-to="{{ loop.index0 }}"
+                                    class="{{ loop.first ? 'active' : '' }}"></button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="w-100 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center"
+                 style="height: 260px;">
+                <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+            </div>
+        {% endif %}
 
-    <a href="{{ path('app_activity_index') }}"
-       class="position-absolute top-0 start-0 m-3 btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
-       style="width: 36px; height: 36px; padding:0; background: rgba(255,255,255,0.85); z-index: 10;">
-        <i class="bi bi-arrow-left"></i>
-    </a>
-</div>
+        <a href="{{ path('app_activity_index') }}"
+           class="position-absolute top-0 start-0 m-3 btn btn-sm rounded-circle d-flex align-items-center justify-content-center"
+           style="width: 36px; height: 36px; padding:0; background: rgba(255,255,255,0.85); z-index: 10;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+    </div>
 
     <div class="container py-3">
         <div class="d-none d-lg-block mb-3">
             {% if imageFiles is not empty %}
                 {% if imageFiles|length == 1 %}
+                    {% set splitFilename = imageFiles.filename|split('.') %}
+                    {% set imagefilename = splitFilename|join('_XL.') %}
                     <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
                          loading="lazy"
                          class="img-activity-show-main"
                          style="object-fit: cover; border-radius: 8px; max-height: 580px;">
                 {% else %}
                     <div class="activity-images-grid">
-                            <div class="img-activity-main-wrapper">
+                        <div class="img-activity-main-wrapper">
                             <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
                                  loading="lazy"
-                                 class="img-activity-show-main">
-                            </div>
+                                 class="img-activity-show-main"
+                                 data-position="{{ imageFiles[0].position }}">
+                        </div>
 
                         <div class="img-activity-secondary-col">
                             {% for image in imageFiles %}
                                 {% if image.position != 1 %}
                                     {% set splitFilename = image.filename|split('.') %}
-                                    {% set imagefilename = splitFilename|join('_large.') %}
+                                    {% set imagefilename = splitFilename|join('_medium.') %}
 
                                     <div class="img-activity-show-secondary-wrapper">
                                         <img src="{{ asset(imagefilename) }}" alt="{{ activity.title }}"
                                              loading="lazy"
-                                             class="img-activity-show-secondary">
+                                             class="img-activity-show-secondary"
+                                             data-position="{{ image.position }}">
                                     </div>
                                 {% endif %}
                             {% endfor %}
@@ -87,7 +94,8 @@
         <div class="mb-1">
             <div class="d-flex align-items-center justify-content-between gap-1 pb-3">
                 {% for theme in activity.themes %}
-                    <div class="d-flex badges-theme align-items-center justify-content-center gap-2 p-2 {{ (activity.themes|length  > 1) ? "w-50" : "w-100" }}">
+                    <div
+                        class="d-flex badges-theme align-items-center justify-content-center gap-2 p-2 {{ (activity.themes|length  > 1) ? "w-50" : "w-100" }}">
                         <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}" loading="lazy"
                              style="height: 20px">
                         <span style="font-size: 18px"><strong>{{ theme.title }}</strong></span>
