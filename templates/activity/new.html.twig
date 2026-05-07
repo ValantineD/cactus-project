@@ -65,12 +65,16 @@
 
                         {{ form_row(form.description) }}
                         {{ form_row(form.location) }}
-                        {{ form_row(form.date) }}
+                        {{ form_row(form.date_start) }}
+                        {{ form_row(form.date_end) }}
                         {{ form_row(form.spot) }}
                         {{ form_row(form.tags) }}
                     </div>
 
-                    {{ form_row(form.submit) }}
+                    <div class="d-flex justify-content-between w-100 pt-3">
+                    {{ form_row(form.saveDraft) }}
+                    {{ form_row(form.savePublish) }}
+                    </div>
 
                     {{ form_end(form) }}
                 </div>

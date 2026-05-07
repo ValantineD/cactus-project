@@ -93,8 +93,15 @@ class ActivityFormType extends AbstractType
             /** @todo
              * champ des heures + date
              */
-            ->add('date', DateType::class, [
-                "label" => "Date de l'Activité",
+            ->add('date_start', DateType::class, [
+                "label" => "Date de début de l'Activité",
+                'widget' => 'choice',
+                'format' => 'dd MM yyyy HH:mm',
+                "placeholder" => "Select",
+                'required' => false,
+            ])
+            ->add('date_end', DateType::class, [
+                "label" => "Date de fin de l'Activité",
                 'widget' => 'choice',
                 'format' => 'dd MM yyyy HH:mm',
                 "placeholder" => "Select",
@@ -113,10 +120,16 @@ class ActivityFormType extends AbstractType
                     'class' => 'select-custom-tags',
                 ],
             ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer',
+            ->add('savePublish', SubmitType::class, [
+                'label' => 'Publier',
                 'attr' => [
                     "class" => "btn btn-cactus-primary"
+                ]
+            ])
+            ->add('saveDraft', SubmitType::class, [
+                'label' => 'Enregistrer en Brouillon',
+                'attr' => [
+                    "class" => "btn btn-cactus-secondary"
                 ]
             ]);
 

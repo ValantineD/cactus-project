@@ -7,7 +7,7 @@
     <div class="d-block d-lg-none" style="position: relative;">
         {% if imageFiles is not empty %}
             <div id="activityCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner" style="height: 500px; object-fit: cover;">
+                <div class="carousel-inner" style="object-fit: cover;">
                     {% for image in imageFiles %}
                         <div class="carousel-item {{ loop.first ? 'active' : '' }}">
                             <img src="{{ asset(image.filename) }}" alt="{{ activity.title }}"
@@ -52,8 +52,6 @@
         <div class="d-none d-lg-block mb-3">
             {% if imageFiles is not empty %}
                 {% if imageFiles|length == 1 %}
-                    {% set splitFilename = imageFiles.filename|split('.') %}
-                    {% set imagefilename = splitFilename|join('_XL.') %}
                     <img src="{{ asset(imageFiles[0].filename) }}" alt="{{ activity.title }}"
                          loading="lazy"
                          class="img-activity-show-main"
@@ -117,7 +115,7 @@
 
                 <div class="text-end flex-shrink-0">
                     <p class="mb-0 fw-600">
-                        {{ activity.date ? activity.date|date('l d F \\à G\\h') : '-' }}
+                        {{ activity.dateStart ? activity.dateStart|date('l d F \\à G\\h') : '-' }}
                     </p>
                 </div>
             </div>
@@ -128,11 +126,29 @@
 
 
         <div class="d-lg-none mb-3">
-            <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
+            <div class="cactus-border-shadow d-flex align-items-center justify-content-center py-3"
                  style="height: 200px; border-radius: 8px; background: #e0e0e0;">
                 <div class="text-center text-muted">
                     <i class="bi bi-map" style="font-size: 2rem;"></i>
                     <p class="mt-1 mb-0" style="font-size: 0.8rem;">Pas de Carte...</p>
+                </div>
+            </div>
+
+            <div class="h-100 d-flex flex-column gap-1">
+                <div class="d-flex align-items-start gap-3 p-3 cactus-border-shadow">
+                    <i class="bi bi-geo-alt-fill mt-1"
+                       style="color: var(--tertiary-color); font-size: 1.2rem; flex-shrink: 0;"></i>
+                    <div>
+                        <p class="mb-0 fw-bold">{{ activity.location }}</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start gap-3 p-3 cactus-border-shadow">
+                    <i class="bi bi-calendar3 mt-1"
+                       style="color: var(--tertiary-color); font-size: 1.2rem; flex-shrink: 0;"></i>
+                    <div>
+                        <p class="mb-0 fw-bold">Commence du {{ activity.dateStart ? activity.dateStart|date('l d F \\à G\\h') : '-' }}</p>
+                        <p class="mb-0 fw-bold">Jusqu'au {{ activity.dateEnd ? activity.dateEnd|date('l d F \\à G\\h') : '-' }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -151,12 +167,12 @@
                         <i class="bi bi-calendar3 mt-1"
                            style="color: var(--tertiary-color); font-size: 1.2rem; flex-shrink: 0;"></i>
                         <div>
-                            <p class="mb-0 fw-bold">{{ activity.date ? activity.date|date('l d F Y') : '-' }}</p>
+                            <p class="mb-0 fw-bold">Commence du {{ activity.dateStart ? activity.dateStart|date('l d F \\à G\\h') : '-' }}</p>
+                            <p class="mb-0 fw-bold">Jusqu'au {{ activity.dateEnd ? activity.dateEnd|date('l d F \\à G\\h') : '-' }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <div class="col-12 col-md-7">
                 <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
@@ -205,7 +221,7 @@
          style="background: white; box-shadow: 0 -2px 8px rgba(0,0,0,0.08);">
 
         <div>
-            <small class="text-muted d-block">{{ activity.date ? activity.date|date('l d F \\à G\\h') : '' }}</small>
+            <small class="text-muted d-block">{{ activity.dateStart ? activity.dateStart|date('l d F \\à G\\h') : '' }}</small>
             <span class="fw-bold">{{ activity.title }}</span>
         </div>
 

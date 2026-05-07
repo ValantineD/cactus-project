@@ -43,6 +43,11 @@ final class ActivityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('saveDraft')->isClicked()) {
+                $activity->setStatus(EnumStatus::DRAFT);
+            } else {
+                $activity->setStatus(EnumStatus::PUBLISHED);
+            }
             $activity->setUser($this->getUser());
 
             $existingCount = $activity->getImageFiles()->count();
@@ -174,6 +179,11 @@ final class ActivityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $deleteIds = $request->request->all('deleteImages');
+            if ($form->get('saveDraft')->isClicked()) {
+                $activity->setStatus(EnumStatus::DRAFT);
+            } else {
+                $activity->setStatus(EnumStatus::PUBLISHED);
+            }
 
             foreach ($deleteIds as $deleteId) {
                 foreach ($activity->getImageFiles() as $imageFile) {
@@ -293,7 +303,8 @@ final class ActivityController extends AbstractController
         }
 
         if ($this->isCsrfTokenValid('delete' . $activity->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($activity);
+            $activity->setStatus(EnumStatus::DELETED);
+            $entityManager->persist($activity);
             $entityManager->flush();
         }
 

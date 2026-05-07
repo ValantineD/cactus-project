@@ -5,6 +5,6 @@ namespace App\Enum;
 enum EnumStatus: string
 {
     case DRAFT = 'Brouillon';
-    case PUBLISHED = 'Center aligned';
-    case DELETED = 'RSupprimé';
+    case PUBLISHED = 'Publié';
+    case DELETED = 'Supprimé';
 }
