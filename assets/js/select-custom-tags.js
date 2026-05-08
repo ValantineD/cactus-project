@@ -2,11 +2,13 @@ import TomSelect from 'tom-select';
 import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 document.querySelectorAll('.select-custom-tags').forEach((tag) => {
+    if (tag.tomselect) return;
+
     new TomSelect(tag, {
         plugins: ['remove_button', 'clear_button'],
         persist: false,
         create: true,
-        delimiter: ",",
+        delimiter: " ",
         placeholder: 'Ajouter des tags',
         maxItems: 10,
         createFilter: /^[a-zA-Z0-9\u00C0-\u017E]+$/,

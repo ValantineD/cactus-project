@@ -188,6 +188,23 @@ final class ActivityController extends AbstractController
             foreach ($deleteIds as $deleteId) {
                 foreach ($activity->getImageFiles() as $imageFile) {
                     if ($imageFile->getId() === (int)$deleteId) {
+
+                        $storedFilename = basename($imageFile->getFilename());
+                        $storedFile = pathinfo($storedFilename, PATHINFO_FILENAME);
+                        $ext = pathinfo($storedFilename, PATHINFO_EXTENSION);
+
+                        $path = $imageActivityDirectory . '/' . $storedFilename;
+                        if (file_exists($path)) {
+                            unlink($path);
+                        }
+
+                        foreach (["XL", "large", "medium", "small"] as $size) {
+                            $path2 = $imageActivityDirectory . '/' . $storedFile . '_' . $size . '.' . $ext;
+                            if (file_exists($path2)) {
+                                unlink($path2);
+                            }
+                        }
+
                         $activity->removeImageFile($imageFile);
                         $entityManager->remove($imageFile);
                         break;

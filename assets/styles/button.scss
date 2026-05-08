@@ -58,3 +58,10 @@
     border: 1px solid var(--primary-color);;
     border-radius: 20px;
 }
+
+#tags-select ~ .ts-wrapper .ts-control .item,
+.select-custom-tags ~ .ts-wrapper .ts-control .item {
+    background-color: var(--green-pastel) !important;
+    border: 1px solid var(--tertiary-color) !important;
+    color: var(--texte-fonce) !important;
+}

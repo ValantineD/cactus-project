@@ -10,18 +10,22 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Range;
 
 class ActivityFormType extends AbstractType
 {
@@ -85,31 +89,80 @@ class ActivityFormType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => "Description de l'Activité",
                 'required' => false,
+                'attr' => [
+                    'rows' => 8,
+                ],
             ])
             ->add('location', TextType::class, [
                 "label" => "Lieu de l'Activité",
                 'required' => false,
             ])
-            /** @todo
-             * champ des heures + date
-             */
-            ->add('date_start', DateType::class, [
-                "label" => "Date de début de l'Activité",
+            ->add('date_start', DateTimeType::class, [
+                'label' => "Date de début de l'Activité",
                 'widget' => 'choice',
-                'format' => 'dd MM yyyy HH:mm',
-                "placeholder" => "Select",
+                'html5' => false,
+                'input' => 'datetime',
+                'placeholder' => [
+                    'day'    => 'Jour',
+                    'month'  => 'Mois',
+                    'year'   => 'Année',
+                    'hour'   => 'Heure',
+                    'minute' => 'Minute',
+                ],
+                'years' => range(date('Y'), date('Y') + 10),
+                'hours' => range(0, 23),
+                'minutes' => range(0, 59, 15),
+                'with_seconds' => false,
                 'required' => false,
+                'constraints' => [
+                    new NotNull(message: 'La date de début ne peut pas être vide.'),
+                    new GreaterThanOrEqual([
+                        'value' => new \DateTime('today'),
+                        'message' => 'La date de début ne peut pas être dans le passé.',
+                    ]),
+                ],
             ])
-            ->add('date_end', DateType::class, [
+            ->add('date_end', DateTimeType::class, [
                 "label" => "Date de fin de l'Activité",
                 'widget' => 'choice',
-                'format' => 'dd MM yyyy HH:mm',
-                "placeholder" => "Select",
+                'html5' => false,
+                'input' => 'datetime',
+                'placeholder' => [
+                    'day'    => 'Jour',
+                    'month'  => 'Mois',
+                    'year'   => 'Année',
+                    'hour'   => 'Heure',
+                    'minute' => 'Minute',
+                ],
+                'years' => range(date('Y'), date('Y') + 10),
+                'hours' => range(0, 23),
+                'minutes' => range(0, 59, 15),
+                'with_seconds' => false,
                 'required' => false,
+                'constraints' => [
+                    new NotNull(message: 'La date de fin ne peut pas être vide.'),
+                    new GreaterThanOrEqual([
+                        'value' => new \DateTime('today'),
+                        'message' => 'La date de fin ne peut pas être dans le passé.',
+                    ]),
+                ],
             ])
             ->add('spot', IntegerType::class, [
                 "label" => "Nombre de places disponibles",
                 'required' => false,
+                'attr' => [
+                    'min' => 2,
+                    'max' => 200,
+                    'step' => 1,
+                    'onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57',
+                ],
+                'constraints' => [
+                    new Range(
+                        min: 2,
+                        max: 200,
+                        notInRangeMessage: 'Le nombre de places doit être entre 2 et 200.',
+                    ),
+                ],
             ])
             ->add('tags', ChoiceType::class, [
                 'required' => false,
@@ -147,10 +200,26 @@ class ActivityFormType extends AbstractType
                 'multiple' => true,
                 'choices' => array_combine(array_values($tags), array_values($tags)),
                 'attr' => [
-                    'class' => 'select-cactus select2-tags',
+                    'class' => 'select-custom-tags',
                 ],
             ]);
 
+        });
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function ($event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $dateStart = $data->getDateStart();
+            $dateEnd = $data->getDateEnd();
+
+            if ($dateStart && $dateEnd && $dateEnd <= $dateStart) {
+                $form->get('date_end')->addError(
+                    new FormError(
+                        'La date de fin ne peut pas être avant la date de début.'
+                    )
+                );
+            }
         });
     }
 

@@ -18,7 +18,7 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="px-5 order-1 order-lg-2">
+            <div class="px-lg-4 px-2 order-1 order-lg-2">
                 <h1 class="text-break">Edit Activity</h1>
 
                 <div class="cactus-border-shadow w-100 mx-auto p-3 p-lg-5">
@@ -36,6 +36,7 @@
                                 data-prototype="{{ form_widget(form.imageFiles.vars.prototype)|e('html_attr') }}"
                                 data-max="5"
                             >
+
                                 {% for imageFile in activity.imageFiles %}
                                     <div class="photo-entry photo-existing">
                                         <img src="{{ asset(imageFile.filename) }}" alt="photo {{ loop.index }}">
@@ -46,15 +47,17 @@
 
                                 {% for formImageFile in form.imageFiles %}
                                     <div class="photo-entry photo-new">
-                                        {{ form_widget(formImageFile.file, { attr: { class: 'form-control' } }) }}
+                                        <div style="display:none">{{ form_widget(formImageFile.file) }}</div>
+                                        <span class="photo-placeholder">+</span>
+                                        <img class="photo-preview" style="display:none" alt="">
                                         <button type="button" class="remove-photo">✕</button>
                                     </div>
                                 {% endfor %}
-
-                                <div id="add-photo-slot" class="photo-entry photo-add-slot">
-                                    <button type="button" id="add-photo">+</button>
-                                </div>
                             </div>
+
+                            <button type="button" id="add-photo" class="btn btn-outline-success mt-2">
+                                + Ajouter une photo
+                            </button>
 
                             <div id="photo-limit-msg" class="text-danger small mt-1" style="display:none">
                                 Maximum 5 photos atteint.

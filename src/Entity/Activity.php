@@ -20,10 +20,11 @@ class Activity
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: 'Le titre ne peut pas être vide.')]
     #[Assert\Regex(
         pattern: '/^[a-z0-9\s\p{L}]+$/iu',
-        htmlPattern: '^[a-zA-Z0-9 àâäéèêëîïôöùûüçæœÀÂÄÉÈÊËÎÏÔÖÙÛÜÇÆŒ]+$'
+        htmlPattern: '^[a-zA-Z0-9 àâäéèêëîïôöùûüçæœÀÂÄÉÈÊËÎÏÔÖÙÛÜÇÆŒ]+$',
+        message: 'Le titre ne peut contenir que des lettres et des chiffres.'
     )]
     private ?string $title = null;
 
@@ -31,22 +32,23 @@ class Activity
     private ?array $tags = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: 'La localisation ne peut pas être vide.')]
     private ?string $location = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: 'La description ne peut pas être vide.')]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Assert\NotNull]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\NotNull(message: 'La date de début ne peut pas être vide.')]
     private ?\DateTime $dateStart = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Assert\NotNull]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE , nullable: true)]
+    #[Assert\NotNull(message: 'La date de fin ne peut pas être vide.')]
     private ?\DateTime $dateEnd = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotNull(message: 'Le nombre de place ne peut pas être vide.')]
     private ?int $spot = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
