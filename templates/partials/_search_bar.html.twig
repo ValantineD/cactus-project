@@ -1,7 +1,7 @@
 <div class="d-none d-lg-block">
     <div class="row mb-4 p-4 ">
         <div class="col-12 col-lg-9">
-            <form method="GET" action="">
+            <form method="GET" action="{{ path('app_activity_index') }}">
                 <div class="cactus-border-shadow d-flex flex-column flex-md-row align-items-stretch"
                      style="overflow: hidden; border-radius: 30px;">
 
@@ -10,7 +10,7 @@
                         <input
                             type="text"
                             name="localisation"
-                            value=""
+                            value="{{ localisation ?? '' }}"
                             placeholder="Rechercher une localisation"
                             class="border-0 bg-transparent w-100 p-0 px-2"
                             style="outline: none; font-size: 0.875rem;"
@@ -22,7 +22,7 @@
                         <input
                             type="text"
                             name="activite"
-                            value=""
+                            value="{{ activite ?? '' }}"
                             placeholder="Rechercher une activité"
                             class="border-0 bg-transparent w-100 p-0"
                             style="outline: none; font-size: 0.875rem;"
@@ -33,9 +33,9 @@
                         <div>
                             <label class="d-block" style="font-size: 0.75rem; font-weight: 700;">Dates</label>
                             <input
-                                type="text"
+                                type="date"
                                 name="dates"
-                                value=""
+                                value="{{ dates ?? '' }}"
                                 placeholder="Quand ?"
                                 class="border-0 bg-transparent w-100 p-0"
                                 style="outline: none; font-size: 0.875rem;"

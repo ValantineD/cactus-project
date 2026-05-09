@@ -22,10 +22,25 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ActivityController extends AbstractController
 {
     #[Route('', name: 'app_activity_index', methods: ['GET'])]
-    public function index(ActivityRepository $activityRepository): Response
+    public function index(ActivityRepository $activityRepository, Request $request): Response
     {
+        $localisation = $request->query->get('localisation');
+        $activite     = $request->query->get('activite');
+        $dates        = $request->query->get('dates');
+
+        $hasSearched = !empty($localisation) || !empty($activite) || !empty($dates);
+
+        if ($hasSearched) {
+            $activities = $activityRepository->findBySearch($localisation, $activite, $dates);
+        } else {
+            $activities = $activityRepository->findBy(['status' => EnumStatus::PUBLISHED]);
+        }
+
         return $this->render('activity/index.html.twig', [
-            'activities' => $activityRepository->findBy(['status' => EnumStatus::PUBLISHED]),
+            'activities' => $activities,
+            'localisation' => $localisation,
+            'activite' => $activite,
+            'dates' => $dates,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Activity;
+use App\Enum\EnumStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,36 @@ class ActivityRepository extends ServiceEntityRepository
         parent::__construct($registry, Activity::class);
     }
 
-    //    /**
-    //     * @return Activity[] Returns an array of Activity objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findBySearch(?string $localisation, ?string $activite, ?string $date): array
+    {
+        $query = $this->createQueryBuilder('searchedActivity')
+            ->where('searchedActivity.status = :status')
+            ->setParameter('status', EnumStatus::PUBLISHED);
 
-    //    public function findOneBySomeField($value): ?Activity
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($localisation)) {
+            $query->andWhere('searchedActivity.location LIKE :location')
+                ->setParameter('location', '%' . $localisation . '%');
+        }
+
+        if (!empty($activite)) {
+            $query->andWhere(
+                $query->expr()->orX(
+                    'searchedActivity.title LIKE :searchedActivity',
+                    'searchedActivity.description LIKE :searchedActivity'
+                )
+            )
+                ->setParameter('searchedActivity', '%' . $activite . '%');
+        }
+
+        if (!empty($date)) {
+            $newDate = \DateTime::createFromFormat('Y-m-d', $date);
+            if ($newDate) {
+                $query->andWhere('searchedActivity.dateStart >= :dateStart')
+                    ->setParameter('dateStart', $newDate->setTime(0, 0, 0));
+            }
+        }
+
+        return $query->orderBy('searchedActivity.dateStart', 'ASC')->getQuery()->getResult();
+    }
 }
+
