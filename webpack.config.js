@@ -21,7 +21,13 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('handleChangePfpModal', './assets/js/handle-change-pfp-modal.js')
+    .addEntry('handle-change-pfp-modal', './assets/js/handle-change-pfp-modal.js')
+    .addEntry('image-file-activity-uploader', './assets/js/image-file-activity-uploader.js')
+
+    .addEntry('select-custom-themes', './assets/js/select-custom-themes.js')
+    .addEntry('select-custom-tags', './assets/js/select-custom-tags.js')
+
+    .addEntry('btn-toggle-date', './assets/js/btn-toggle-date.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

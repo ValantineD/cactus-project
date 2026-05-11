@@ -25,3 +25,104 @@ form {
         }
     }
 }
+
+.select-cactus {
+    background-color: var(--texte-clair);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+}
+
+.ts-dropdown-content {
+        background-color: var(--texte-clair) !important;
+        border: 1px solid var(--primary-color) !important;
+}
+
+.ts-wrapper .ts-control {
+    background: var(--beige-transparent) !important;
+    border: 1px solid var(--primary-color) !important;
+    border-radius: 30px !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: none !important;
+    font-size: 0.875rem;
+    color: var(--texte-fonce);
+    min-height: unset;
+}
+
+.ts-wrapper.focus .ts-control,
+.ts-wrapper .ts-control:focus-within {
+    box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.ts-wrapper .ts-control input::placeholder {
+    color: var(--grey);
+}
+
+.ts-wrapper .ts-dropdown {
+    border: 1px solid var(--primary-color);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.875rem;
+}
+
+.date-native-input {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 30px !important;
+    font-size: 0.875rem;
+    font-family: var(--font-poppins);
+    background: var(--beige-transparent);
+    color: var(--texte-fonce);
+    outline: none;
+    cursor: pointer;
+}
+
+.date-native-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(253, 157, 13, 0.25);
+    border-color: var(--primary-color);
+}
+
+.search-section {
+    border-radius: 16px !important;
+    padding: 1.25rem 1.25rem;
+}
+
+.search-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--beige-transparent);
+    border: 1px solid var(--primary-color);
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+}
+
+.search-icon {
+    color: var(--grey);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 0.875rem;
+    color: var(--texte-fonce);
+}
+
+.search-sections-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.phone-search-bar {
+    background: var(--beige-transparent);
+    border: 2px solid var(--primary-color);
+    border-radius: 30px;
+    padding: 0.65rem 1.25rem;
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,0.15);
+    text-decoration: none;
+    color: var(--grey);
+}

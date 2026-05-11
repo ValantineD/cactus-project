@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Theme{% endblock %}
+
+{% block body %}
+    <h1>Theme</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Icon</th>
+                <th> <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}" loading="lazy" style="height: 50px"></th>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ theme.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ theme.title }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ theme.createdAt|date("d/m/Y") }} à {{ theme.createdAt|date("h:i") }}</td>
+            </tr>
+            <tr>
+                <th>Modifié le</th>
+                <td>{{ theme.updatedAt|date("d/m/Y") }} à {{ theme.updatedAt|date("h:i") }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_theme_index') }}" class="btn btn-cactus-secondary">back to list</a>
+
+    <a href="{{ path('app_theme_edit', {'id': theme.id}) }}" class="btn btn-cactus-primary">edit</a>
+
+{% endblock %}

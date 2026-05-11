@@ -4,13 +4,13 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class UserFormType extends AbstractType
 {
@@ -23,24 +23,26 @@ class UserFormType extends AbstractType
                 ]
             ])
             ->add('picture', FileType::class, [
-                'label' => 'Profil Image',
-                'mapped' => false,
+                'label'    => 'Photo de profil',
+                'mapped'   => false,
                 'required' => false,
                 'constraints' => [
                     new Assert\File(
+                        maxSize: 10000000,
+                        mimeTypes: ['image/jpeg', 'image/png'],
                         extensions: ['jpg', 'jpeg', 'png'],
-                        extensionsMessage: 'Please upload a valid picture'
+                        extensionsMessage: 'Please upload a valid picture',
                     ),
                 ]
             ])
             ->add('username')
             ->add('email')
             ->add('location')
-            ->add("birthday", DateType::class, [
+            ->add("birthday", BirthdayType::class, [
                 "label" => "Date d'anniversaire",
-                'widget' => 'single_text',
-                'html5'  => false,
-                'format' => 'dd/MM/yyyy'])
+                'widget' => 'choice',
+                'format' => 'dd MM yyyy',
+            ])
 
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',

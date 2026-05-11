@@ -52,3 +52,53 @@
     --bs-btn-disabled-border-color: #198754;
     border-radius: var(--bs-border-radius-xxl) !important;
 }
+
+.badges-theme {
+    background-color: var(--beige-transparent);
+    border: 1px solid var(--primary-color);;
+    border-radius: 20px;
+}
+
+#tags-select ~ .ts-wrapper .ts-control .item,
+.select-custom-tags ~ .ts-wrapper .ts-control .item {
+    background-color: var(--green-pastel) !important;
+    border: 1px solid var(--tertiary-color) !important;
+    color: var(--texte-fonce) !important;
+}
+
+.date-toggle {
+    display: flex;
+    background: var(--beige-transparent);
+    border: 1px solid var(--primary-color);
+    border-radius: 30px;
+    padding: 3px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.date-toggle-btn {
+    border: none;
+    background: transparent;
+    border-radius: 30px;
+    padding: 0.35rem 1.1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--texte-fonce);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-toggle-btn--active {
+    background: var(--quaternary-color);
+    color: var(--texte-clair);
+}
+
+.search-submit-btn {
+    width: 100%;
+    max-width: 300px;
+    height: 52px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}

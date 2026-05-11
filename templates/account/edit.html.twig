@@ -4,7 +4,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('handleChangePfpModal') }}
+    {{ encore_entry_script_tags('handle-change-pfp-modal') }}
 {% endblock %}
 
 {% block body %}
@@ -28,7 +28,7 @@
             <button id="openModalBtn" class="btn btn-cactus-primary my-3">Change Profile Picture</button>
 
             <div class="view">
-                <div class="modal-pfp container overflow-auto">
+                <div class="modal-pfp container overflow-auto p-2">
                     <button id="closeModalBtn" type="button" class="close btn-close" aria-label="Close"></button>
 
                     <div class="text-center">
@@ -68,8 +68,9 @@
                 <div>
                     {{ form_start(form) }}
 
-                    {{ form_row(form.picture) }}
+
                     {{ form_row(form.profileFilename) }}
+                    {{ form_row(form.picture) }}
                     {{ form_row(form.username) }}
                     {{ form_row(form.email) }}
                     {{ form_row(form.location) }}

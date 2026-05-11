@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Activity{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('select-custom-tags') }}
+    {{ encore_entry_link_tags('select-custom-themes') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('image-file-activity-uploader') }}
+    {{ encore_entry_script_tags('select-custom-tags') }}
+    {{ encore_entry_script_tags('select-custom-themes') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="px-lg-4 px-2 order-1 order-lg-2">
+                <h1 class="text-break">Edit Activity</h1>
+
+                <div class="cactus-border-shadow w-100 mx-auto p-3 p-lg-5">
+                    {{ form_start(form) }}
+
+                    <div class="mb-4">
+
+                        <div class="py-3">
+                            <label class="form-label">Photos de l'Activité <small class="text-muted">(5 max)</small></label>
+
+                            <div
+                                id="photo-collection"
+                                class="photo-grid"
+                                data-index="{{ form.imageFiles|length }}"
+                                data-prototype="{{ form_widget(form.imageFiles.vars.prototype)|e('html_attr') }}"
+                                data-max="5"
+                            >
+
+                                {% for imageFile in activity.imageFiles %}
+                                    <div class="photo-entry photo-existing">
+                                        <img src="{{ asset(imageFile.filename) }}" alt="photo {{ loop.index }}">
+                                        <button type="button" class="remove-photo">✕</button>
+                                        <input type="hidden" name="deleteImages[]" value="{{ imageFile.id }}" disabled>
+                                    </div>
+                                {% endfor %}
+
+                                {% for formImageFile in form.imageFiles %}
+                                    <div class="photo-entry photo-new">
+                                        <div style="display:none">{{ form_widget(formImageFile.file) }}</div>
+                                        <span class="photo-placeholder">+</span>
+                                        <img class="photo-preview" style="display:none" alt="">
+                                        <button type="button" class="remove-photo">✕</button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="button" id="add-photo" class="btn btn-outline-success mt-2">
+                                + Ajouter une photo
+                            </button>
+
+                            <div id="photo-limit-msg" class="text-danger small mt-1" style="display:none">
+                                Maximum 5 photos atteint.
+                            </div>
+                        </div>
+
+                        {{ form_row(form.title) }}
+
+                        <div class="pb-3">
+                            <label class="form-label">Thèmes de l'Activité <small class="text-muted">(2
+                                    max)</small></label>
+                            {{ form_widget(form.themes) }}
+                            {{ form_errors(form.themes) }}
+
+                        </div>
+
+                        {{ form_row(form.description) }}
+                        {{ form_row(form.location) }}
+                        {{ form_row(form.date_start) }}
+                        {{ form_row(form.date_end) }}
+                        {{ form_row(form.spot) }}
+                        {{ form_row(form.tags) }}
+                    </div>
+
+                    <div class="d-flex justify-content-between w-100 pt-3">
+                        {{ form_row(form.saveDraft) }}
+                        {{ form_row(form.savePublish) }}
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+
+                <div class="d-flex mx-auto py-5">
+                    {{ include('activity/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
