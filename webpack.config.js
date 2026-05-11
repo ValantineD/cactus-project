@@ -27,6 +27,8 @@ Encore
     .addEntry('select-custom-themes', './assets/js/select-custom-themes.js')
     .addEntry('select-custom-tags', './assets/js/select-custom-tags.js')
 
+    .addEntry('btn-toggle-date', './assets/js/btn-toggle-date.js')
+
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

@@ -8,6 +8,7 @@ use App\Entity\Theme;
 use App\Enum\EnumStatus;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
+use App\Repository\ThemeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -27,11 +28,13 @@ final class ActivityController extends AbstractController
         $localisation = $request->query->get('localisation');
         $activite     = $request->query->get('activite');
         $dates        = $request->query->get('dates');
+        $themes       = $request->query->all('theme');
+        $tags         = $request->query->all('tags');
 
-        $hasSearched = !empty($localisation) || !empty($activite) || !empty($dates);
+        $hasSearched = !empty($localisation) || !empty($activite) || !empty($dates) || !empty($themes) || !empty($tags);
 
         if ($hasSearched) {
-            $activities = $activityRepository->findBySearch($localisation, $activite, $dates);
+            $activities = $activityRepository->findBySearch($localisation, $activite, $dates, $themes, $tags);
         } else {
             $activities = $activityRepository->findBy(['status' => EnumStatus::PUBLISHED]);
         }
@@ -41,6 +44,16 @@ final class ActivityController extends AbstractController
             'localisation' => $localisation,
             'activite' => $activite,
             'dates' => $dates,
+        ]);
+    }
+
+    #[Route('/search', name: 'app_activity_search', methods: ['GET'])]
+    public function search(ActivityRepository $activityRepository, Request $request, ThemeRepository $themeRepository):
+    Response {
+        return $this->render('activity/search.html.twig', [
+            'themes' => $themeRepository->findAll(),
+            'selectedThemes' => $request->query->all('theme'),
+            'tags'           => $request->query->all('tags'),
         ]);
     }
 

@@ -17,7 +17,7 @@ class ActivityRepository extends ServiceEntityRepository
         parent::__construct($registry, Activity::class);
     }
 
-    public function findBySearch(?string $localisation, ?string $activite, ?string $date): array
+    public function findBySearch(?string $localisation, ?string $activite, ?string $date, array $themes = [], array $tags = []): array
     {
         $query = $this->createQueryBuilder('searchedActivity')
             ->where('searchedActivity.status = :status')
@@ -43,6 +43,19 @@ class ActivityRepository extends ServiceEntityRepository
             if ($newDate) {
                 $query->andWhere('searchedActivity.dateStart >= :dateStart')
                     ->setParameter('dateStart', $newDate->setTime(0, 0, 0));
+            }
+        }
+
+        if (!empty($themes)) {
+            $query->join('searchedActivity.themes', 't')
+                ->andWhere('t.id IN (:themes)')
+                ->setParameter('themes', $themes);
+        }
+
+        if (!empty($tags)) {
+            foreach ($tags as $index => $tag) {
+                $query->andWhere('searchedActivity.tags LIKE :tag' . $index)
+                    ->setParameter('tag' . $index, '%' . $tag . '%');
             }
         }
 

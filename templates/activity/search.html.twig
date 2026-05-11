@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('select-custom-themes') }}
+    {{ encore_entry_link_tags('select-custom-tags') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('select-custom-themes') }}
+    {{ encore_entry_script_tags('select-custom-tags') }}
+    {{ encore_entry_script_tags('btn-toggle-date') }}
+{% endblock %}
+
+{% block title %}Rechercher une Activité{% endblock %}
+
+{% block body %}
+    <div class="">
+
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{{ path('app_activity_index') }}"
+               class="btn btn-cactus-secondary d-flex align-items-center justify-content-center"
+               style="width: 58px; height: 58px; border-radius: 8px;">
+                <i class="bi bi-arrow-left-circle"></i>
+            </a>
+
+            <a href="{{ path('app_activity_new') }}"
+               class="btn btn-cactus-secondary d-flex align-items-center justify-content-center gap-2"
+               style="height: 58px; border-radius: 8px; padding: 0 1.25rem;">
+                Créer une Activité
+                <i class="bi bi-plus-circle"></i>
+            </a>
+        </div>
+
+        <div class="text-center mb-4">
+            <h1 class="search-title">
+                Rechercher
+            </h1>
+        </div>
+
+        <div class="w-100 mx-auto p-3 p-lg-5">
+            <form method="GET" action="{{ path('app_activity_index') }}">
+                <div class="search-sections-wrapper">
+
+                    <div class="search-section cactus-border-shadow mb-3 pb-4">
+                        <div class="d-flex justify-content-center pb-4">
+                            <h5 class="section-title ">Quelle Activité ?</h5>
+                        </div>
+
+                        <div class="search-input-row">
+                            <i class="bi bi-search search-icon"></i>
+                            <input
+                                type="text"
+                                name="activite"
+                                value="{{ activite ?? '' }}"
+                                placeholder="Quelle Activité?"
+                                class="search-input"
+                            >
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="section-label">Quel Thème ? <small class="text-muted">(2 max)</small></label>
+                            <select name="theme[]" id="search-themes" class="select-custom-themes mt-2" multiple>
+                                {% for theme in themes %}
+                                    <option
+                                        value="{{ theme.id }}"
+                                        data-icon="{{ asset(theme.iconFilename) }}"
+                                        {{ selectedThemes is defined and theme.id in selectedThemes ? 'selected' : '' }}
+                                    >
+                                        {{ theme.title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="section-label">Approfondir votre recherche:</label>
+                            <select name="tags[]" id="search-tags" class="select-custom-tags mt-2" multiple>
+                                {% if tags is defined and tags %}
+                                    {% for tag in tags %}
+                                        <option value="{{ tag }}" selected>{{ tag }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <div class="search-section cactus-border-shadow mb-3 pb-4">
+                        <div class="d-flex justify-content-center pb-4">
+                            <h5 class="section-title">Où ?</h5>
+                        </div>
+
+                        <div class="search-input-row mt-2">
+                            <i class="bi bi-geo-alt search-icon"></i>
+                            <input
+                                type="text"
+                                name="localisation"
+                                value="{{ localisation ?? '' }}"
+                                placeholder="Rechercher une Localisation"
+                                class="search-input"
+                            >
+                        </div>
+                    </div>
+
+
+                    <div class="search-section cactus-border-shadow mb-4 pb-4">
+                        <div class="d-flex justify-content-center pb-4">
+                            <h5 class="section-title">Quand ?</h5>
+                        </div>
+
+                        <div class="date-toggle mb-3">
+                            <button type="button" class="date-toggle-btn date-toggle-btn--active" id="btnExact">Choisir
+                                une
+                                Date
+                            </button>
+                            <button type="button" class="date-toggle-btn" id="btnFlexible">I'm Flexible</button>
+                        </div>
+
+                        <div id="exactDatePicker" class="pb-3">
+                            <input
+                                type="date"
+                                name="dates"
+                                value="{{ dates ?? '' }}"
+                                class="date-native-input cactus-border-shadow"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-center pb-4">
+                        <button type="submit" class="btn btn-cactus-secondary search-submit-btn">
+                            <i class="bi bi-search me-2"></i>
+                            Recherche
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

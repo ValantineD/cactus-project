@@ -65,3 +65,40 @@
     border: 1px solid var(--tertiary-color) !important;
     color: var(--texte-fonce) !important;
 }
+
+.date-toggle {
+    display: flex;
+    background: var(--beige-transparent);
+    border: 1px solid var(--primary-color);
+    border-radius: 30px;
+    padding: 3px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.date-toggle-btn {
+    border: none;
+    background: transparent;
+    border-radius: 30px;
+    padding: 0.35rem 1.1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--texte-fonce);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-toggle-btn--active {
+    background: var(--quaternary-color);
+    color: var(--texte-clair);
+}
+
+.search-submit-btn {
+    width: 100%;
+    max-width: 300px;
+    height: 52px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}

@@ -21,7 +21,9 @@
 
 {{ include('partials/_header.html.twig') }}
 
-{% if currentPath != path('app_login') and currentPath != path('app_register') %}
+{% if currentPath != path('app_login')
+    and currentPath != path('app_register')
+    and currentPath != path('app_activity_search') %}
     {{ include('partials/_search_bar.html.twig') }}
 {% endif %}
 
