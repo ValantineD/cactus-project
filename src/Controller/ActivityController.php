@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Activity;
 use App\Entity\ImageFile;
+use App\Entity\Participation;
 use App\Entity\Theme;
+use App\Enum\EnumState;
 use App\Enum\EnumStatus;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
@@ -26,10 +28,10 @@ final class ActivityController extends AbstractController
     public function index(ActivityRepository $activityRepository, Request $request): Response
     {
         $localisation = $request->query->get('localisation');
-        $activite     = $request->query->get('activite');
-        $dates        = $request->query->get('dates');
-        $themes       = $request->query->all('theme');
-        $tags         = $request->query->all('tags');
+        $activite = $request->query->get('activite');
+        $dates = $request->query->get('dates');
+        $themes = $request->query->all('theme');
+        $tags = $request->query->all('tags');
 
         $hasSearched = !empty($localisation) || !empty($activite) || !empty($dates) || !empty($themes) || !empty($tags);
 
@@ -49,11 +51,12 @@ final class ActivityController extends AbstractController
 
     #[Route('/search', name: 'app_activity_search', methods: ['GET'])]
     public function search(ActivityRepository $activityRepository, Request $request, ThemeRepository $themeRepository):
-    Response {
+    Response
+    {
         return $this->render('activity/search.html.twig', [
             'themes' => $themeRepository->findAll(),
             'selectedThemes' => $request->query->all('theme'),
-            'tags'           => $request->query->all('tags'),
+            'tags' => $request->query->all('tags'),
         ]);
     }
 
@@ -238,7 +241,8 @@ final class ActivityController extends AbstractController
                         break;
                     }
                 }
-            }-
+            }
+            -
 
             $existingCount = $activity->getImageFiles()->count();
 
@@ -354,6 +358,74 @@ final class ActivityController extends AbstractController
         }
 
         return $this->redirectToRoute('app_activity_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/join', name: 'app_activity_join', methods: ['POST'])]
+    public function join(Activity $activity, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if ($user === $activity->getUser()) {
+            $this->addFlash('error', "Vous ne pouvez pas rejoindre votre propre activité.");
+            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        }
+
+        if ($activity->isFull()) {
+            $this->addFlash('error', "Nombre de participants max atteint");
+            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        }
+
+        $existing = $entityManager->getRepository(Participation::class)
+            ->findOneBy(['user' => $user, 'activity' => $activity]);
+
+        if ($existing) {
+            $this->addFlash('warning', 'Already registered.');
+            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        }
+
+        $participation = new Participation();
+        $participation->setUser($user);
+        $participation->setActivity($activity);
+
+        $entityManager->persist($participation);
+
+        $now = new \DateTimeImmutable();
+
+        if ($now > $activity->getDateEnd()) {
+            $activity->setState(EnumState::CLOSED);
+        } elseif ($now > $activity->getDateStart()) {
+            $activity->setState(EnumState::IN_PROGRESS);
+        } elseif ($activity->isFull()) {
+            $activity->setState(EnumState::FULL);
+        } else {
+            $activity->setState(EnumState::OPEN);
+        }
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Joined successfully!');
+        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+
+    }
+
+    #[Route('/{id}/leave', name: 'activity_leave')]
+    public function leave(Activity $activity, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        $participation = $entityManager->getRepository(Participation::class)
+            ->findOneBy(['user' => $user, 'activity' => $activity]);
+
+        if (!$participation) {
+            $this->addFlash('error', 'You are not registered.');
+            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        }
+
+        $entityManager->remove($participation);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Left successfully.');
+        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
     }
 
     private function resizeImage(\GdImage $uploadImage, int $width, int $height): \GdImage

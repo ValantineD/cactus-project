@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\EnumState;
 use App\Enum\EnumStatus;
 use App\Repository\ActivityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -72,16 +73,23 @@ class Activity
     #[ORM\ManyToMany(targetEntity: Theme::class, mappedBy: 'activities')]
     private Collection $themes;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?EnumStatus $status = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $state = null;
+    #[ORM\Column(nullable: true)]
+    private ?EnumState $state = EnumState::OPEN;
+
+    /**
+     * @var Collection<int, Participation>
+     */
+    #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'activity')]
+    private Collection $participations;
 
     public function __construct()
     {
         $this->imageFiles = new ArrayCollection();
         $this->themes = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -310,6 +318,44 @@ class Activity
         $this->state = $state;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): static
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setActivity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): static
+    {
+        if ($this->participations->removeElement($participation)) {
+            if ($participation->getActivity() === $this) {
+                $participation->setActivity(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isFull(): bool {
+        return $this->participations->count() >= $this->spot;
+    }
+
+    public function getRemainingSpots(): int
+    {
+        return max(0, $this->spot - $this->participations->count());
     }
 
 }
