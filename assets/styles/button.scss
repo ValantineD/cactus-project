@@ -102,3 +102,62 @@
     font-weight: 700;
     letter-spacing: 0.02em;
 }
+
+.cactus-tags {
+    background: var(--green-pastel);
+    border: 2px solid var(--tertiary-color);
+    border-radius: 5px;
+    color: var(--texte-fonce);
+
+}
+
+.tag-creator {
+    background: var(--texte-clair);
+    border: 2px solid var(--tertiary-color);
+    border-radius: 20px;
+    color: var(--texte-fonce);
+    font-size: 0.75rem;
+
+}
+
+.tag-participation {
+    background: var(--texte-clair);
+    border: 2px solid var(--quaternary-color);
+    border-radius: 20px;
+    color: var(--quaternary-color);
+    font-size: 0.75rem;
+
+}
+
+.theme-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.35rem;
+    width: 90px;
+    height: 75px;
+    background: var(--primary-color);
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--texte-fonce);
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 2px solid var(--primary-color);
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.theme-chip:hover {
+    border-color: var(--primary-color);
+    background: var(--beige-transparent);
+    color: var(--texte-fonce);
+    transform: translateY(-2px);
+}
+
+.theme-chip img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+}

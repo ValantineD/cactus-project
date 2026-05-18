@@ -1,0 +1,14 @@
+.moment-grid .h-100 {
+    height: auto !important;
+}
+
+.moment-grid > div {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.moment-grid img {
+    height: 150px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}

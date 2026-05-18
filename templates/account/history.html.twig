@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Activités{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
+            </div>
+
+            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2 pb-3">
+                <h1>Historique des Activités</h1>
+
+                <section class="mb-5 py-4">
+                    <h2 class="h4 fw-bold mb-3">Activités à venir:</h2>
+
+                    <div class="py-3">
+                        <h3 class="h6 fw-bold mb-2">Activité créées:</h3>
+                        <div class="d-flex flex-wrap gap-3 mb-4">
+                            {% set has_upcoming_created = false %}
+                            {% for activity in created_activities %}
+                                {% if activity.dateEnd >= date() %}
+                                    {% set has_upcoming_created = true %}
+                                    <div style="flex-shrink: 0;">
+                                        {% include('partials/_activity_card_small.html.twig') %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not has_upcoming_created %}
+                                <p class="text-muted small">Pas d'activité pour le moment.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="py-3">
+                        <h3 class="h6 fw-bold mb-2">Activité participées:</h3>
+                        <div class="d-flex flex-wrap gap-3 mb-2">
+                            {% set has_upcoming_participated = false %}
+                            {% for activity in participated_activities %}
+                                {% if activity.dateEnd >= date() %}
+                                    {% set has_upcoming_participated = true %}
+                                    <div style="flex-shrink: 0;">
+                                        {% include('partials/_activity_card_small.html.twig') %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not has_upcoming_participated %}
+                                <p class="text-muted small">Pas d'activité pour le moment.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+
+                <hr style="border-color: var(--primary-color); opacity: 0.4;">
+
+
+                <section class="mt-4 py-4">
+                    <h2 class="h4 fw-bold mb-3">Activités passées:</h2>
+
+                    <div class="py-3">
+                        <h3 class="h6 fw-bold mb-2">Activité créées:</h3>
+                        <div class="d-flex flex-wrap gap-3 mb-4">
+                            {% set has_past_created = false %}
+                            {% for activity in created_activities %}
+                                {% if activity.dateEnd < date() %}
+                                    {% set has_past_created = true %}
+                                    <div style="flex-shrink: 0;">
+                                        {% include('partials/_activity_card_small.html.twig') %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not has_past_created %}
+                                <p class="text-muted small">Pas d'activité pour le moment.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="py-3">
+                        <h3 class="h6 fw-bold mb-2">Activité participées:</h3>
+                        <div class="d-flex flex-wrap gap-3 mb-2">
+                            {% set has_past_participated = false %}
+                            {% for activity in participated_activities %}
+                                {% if activity.dateEnd < date() %}
+                                    {% set has_past_participated = true %}
+                                    <div style="flex-shrink: 0;">
+                                        {% include('partials/_activity_card_small.html.twig') %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not has_past_participated %}
+                                <p class="text-muted small">Pas d'activité pour le moment.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

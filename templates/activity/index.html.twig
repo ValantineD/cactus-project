@@ -8,7 +8,9 @@
             <div class="col-12 col-lg-6 order-lg-1 order-2">
                 <div class="row g-3">
                     {% for activity in activities %}
-                        {% include('partials/_activity_card_pc.html.twig') %}
+                        <div class="col-12 col-sm-6">
+                            {% include('partials/_activity_card_pc.html.twig') %}
+                        </div>
                     {% else %}
                         <div class="col-12">
                             <p class="text-muted">Aucune activité trouvée.</p>

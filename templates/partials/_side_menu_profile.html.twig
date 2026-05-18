@@ -17,7 +17,7 @@
                 <i class="bi bi-calendar-check" style="font-size: 40px"></i>
                 Calendrier
             </a>
-            <a href="#" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none" style="min-height: 74px">
+            <a href="{{ path('app_user_history') }}" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none {{ currentPath === path('app_user_history') ? 'cactus-active-side-menu' : '' }}" style="min-height: 74px">
                 <i class="bi bi-book" style="font-size: 40px"></i>
                 Historique des Activités
             </a>

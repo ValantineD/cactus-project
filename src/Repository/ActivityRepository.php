@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Activity;
+use App\Entity\User;
+use App\Enum\EnumParticipationStatus;
 use App\Enum\EnumStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -60,6 +62,49 @@ class ActivityRepository extends ServiceEntityRepository
         }
 
         return $query->orderBy('searchedActivity.dateStart', 'ASC')->getQuery()->getResult();
+    }
+
+    public function findUserActivities(User $user): array
+    {
+        return $this->createQueryBuilder('a')
+            ->distinct()
+            ->leftJoin('a.participations', 'p')
+            ->where('a.user = :user')
+            ->orWhere('p.user = :user AND p.status != :cancelled')
+            ->andWhere('a.status = :status')
+            ->setParameter('user', $user)
+            ->setParameter('cancelled', EnumParticipationStatus::CANCELLED)
+            ->setParameter('status', EnumStatus::PUBLISHED)
+            ->orderBy('a.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findCreatedByUser(User $user): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.user = :user')
+            ->andWhere('a.status = :status')
+            ->setParameter('user', $user)
+            ->setParameter('status', EnumStatus::PUBLISHED)
+            ->orderBy('a.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findParticipatedByUser(User $user): array
+    {
+        return $this->createQueryBuilder('a')
+            ->join('a.participations', 'p')
+            ->where('p.user = :user')
+            ->andWhere('p.status != :cancelled')
+            ->andWhere('a.status = :status')
+            ->setParameter('user', $user)
+            ->setParameter('cancelled', \App\Enum\EnumParticipationStatus::CANCELLED)
+            ->setParameter('status', EnumStatus::PUBLISHED)
+            ->orderBy('a.dateStart', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }
 

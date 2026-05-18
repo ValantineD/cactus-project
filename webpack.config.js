@@ -29,6 +29,8 @@ Encore
 
     .addEntry('btn-toggle-date', './assets/js/btn-toggle-date.js')
 
+    .addEntry('home-scroller', './assets/js/home-scroller.js')
+
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
