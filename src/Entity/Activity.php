@@ -308,12 +308,12 @@ class Activity
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): ?EnumState
     {
         return $this->state;
     }
 
-    public function setState(?string $state): static
+    public function setState(?EnumState $state): static
     {
         $this->state = $state;
 

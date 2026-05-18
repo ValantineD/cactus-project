@@ -6,6 +6,7 @@ use App\Entity\Activity;
 use App\Entity\ImageFile;
 use App\Entity\Participation;
 use App\Entity\Theme;
+use App\Enum\EnumParticipationStatus;
 use App\Enum\EnumState;
 use App\Enum\EnumStatus;
 use App\Form\ActivityFormType;
@@ -348,11 +349,18 @@ final class ActivityController extends AbstractController
     public function delete(Request $request, Activity $activity, EntityManagerInterface $entityManager): Response
     {
         if ($this->getUser() !== $activity->getUser()) {
-            throw new AccessDeniedHttpException('You cannot delete this activity because you are not its creator!');
+            throw new AccessDeniedHttpException("Vous ne pouvez pas supprimer une activité dont vous n'êtes pas le créateur");
         }
 
         if ($this->isCsrfTokenValid('delete' . $activity->getId(), $request->getPayload()->getString('_token'))) {
             $activity->setStatus(EnumStatus::DELETED);
+            $activity->setState(EnumState::CLOSED);
+
+            foreach ($activity->getParticipations() as $participation) {
+                $participation->setStatus(EnumParticipationStatus::CANCELLED);
+                $entityManager->persist($participation);
+            }
+
             $entityManager->persist($activity);
             $entityManager->flush();
         }
@@ -361,18 +369,22 @@ final class ActivityController extends AbstractController
     }
 
     #[Route('/{id}/join', name: 'app_activity_join', methods: ['POST'])]
-    public function join(Activity $activity, EntityManagerInterface $entityManager): Response
+    public function join(Activity $activity, EntityManagerInterface $entityManager, Request $request): Response
     {
         $user = $this->getUser();
 
+        if (!$this->isCsrfTokenValid('join' . $activity->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
         if ($user === $activity->getUser()) {
             $this->addFlash('error', "Vous ne pouvez pas rejoindre votre propre activité.");
-            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+            return $this->redirectToRoute('app_activity_show', ['id' => $activity->getId()]);
         }
 
         if ($activity->isFull()) {
             $this->addFlash('error', "Nombre de participants max atteint");
-            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+            return $this->redirectToRoute('app_activity_show', ['id' => $activity->getId()]);
         }
 
         $existing = $entityManager->getRepository(Participation::class)
@@ -380,7 +392,7 @@ final class ActivityController extends AbstractController
 
         if ($existing) {
             $this->addFlash('warning', 'Already registered.');
-            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+            return $this->redirectToRoute('app_activity_show', ['id' => $activity->getId()]);
         }
 
         $participation = new Participation();
@@ -404,11 +416,11 @@ final class ActivityController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Joined successfully!');
-        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        return $this->redirectToRoute('app_activity_show', ['id' => $activity->getId()]);
 
     }
 
-    #[Route('/{id}/leave', name: 'activity_leave')]
+    #[Route('/{id}/leave', name: 'app_activity_leave', methods: ['POST'])]
     public function leave(Activity $activity, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
@@ -417,15 +429,15 @@ final class ActivityController extends AbstractController
             ->findOneBy(['user' => $user, 'activity' => $activity]);
 
         if (!$participation) {
-            $this->addFlash('error', 'You are not registered.');
-            return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+            $this->addFlash('error', "Vous ne pouvez pas rejoindre car pas connecté!");
+            return $this->redirectToRoute('app_activity_show', ['id' => $activity->getId()]);
         }
 
         $entityManager->remove($participation);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Left successfully.');
-        return $this->redirectToRoute('activity_show', ['id' => $activity->getId()]);
+        $this->addFlash('success', "Vous avez quitté l'activité");
+        return $this->redirectToRoute('app_activity_show', ['id' => $activity->getId()]);
     }
 
     private function resizeImage(\GdImage $uploadImage, int $width, int $height): \GdImage
