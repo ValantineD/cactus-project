@@ -2,6 +2,12 @@
 
 {% block title %}Recherche Activité{% endblock %}
 
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('handle-map') }}
+{% endblock %}
+
 {% block body %}
     <div class="d-none d-lg-block container-fluid px-4 py-3" style="align-items: flex-start; gap: 1rem;">
         <div class="row g-3">
@@ -20,9 +26,9 @@
             </div>
 
             <div class="col-12 col-lg-6 order-lg-2 order-1 container-map">
-                <div
+                <div class="cactus-map"
                     style="position: sticky; top: 70px; height: calc(100vh - 90px); border-radius: 8px; overflow: hidden;">
-                    <div class="cactus-border-shadow d-flex align-items-center justify-content-center w-100 h-100"
+                    <div class="cactus-border-shadow d-flex align-items-center justify-content-center w-100 h-100 "
                          style="background: #e0e0e0; border-radius: 8px;">
                         <div class="text-center text-muted">
                             <i class="bi bi-map" style="font-size: 38px"></i>
