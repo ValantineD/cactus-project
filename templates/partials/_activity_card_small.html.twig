@@ -4,9 +4,11 @@
        style="width: 120px; height: 120px; border-radius: 10px;
               overflow: hidden; position: relative;
               box-shadow: 0 1px 6px rgba(0,0,0,0.12);">
+        {% set splitFilename = asset(activity.imageFiles[0].filename)|split('.') %}
+        {% set imagefilename = splitFilename|join('_small.') %}
 
         {% if activity.imageFiles is not empty %}
-            <img src="{{ asset(activity.imageFiles[0].filename) }}"
+            <img src="{{ imagefilename}}"
                  alt="{{ activity.title }}"
                  class="w-100 h-100" style="object-fit: cover;" loading="lazy">
         {% else %}
