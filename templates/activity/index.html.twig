@@ -2,6 +2,10 @@
 
 {% block title %}Recherche Activité{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('handle-map') }}
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -26,15 +30,7 @@
             </div>
 
             <div class="col-12 col-lg-6 order-lg-2 order-1 container-map">
-                <div class="cactus-map"
-                    style="position: sticky; top: 70px; height: calc(100vh - 90px); border-radius: 8px; overflow: hidden;">
-                    <div class="cactus-border-shadow d-flex align-items-center justify-content-center w-100 h-100 "
-                         style="background: #e0e0e0; border-radius: 8px;">
-                        <div class="text-center text-muted">
-                            <i class="bi bi-map" style="font-size: 38px"></i>
-                            <p class="mt-2 mb-0" style="font-size: 0.9rem;">Pas de Carte....</p>
-                        </div>
-                    </div>
+                <div class="cactus-map cactus-map-desktop">
                 </div>
             </div>
 
@@ -45,11 +41,7 @@
          style="display: flex; flex-direction: column;">
 
         <div style="height: 60vh; background: #e0e0e0; position: relative;">
-            <div class="cactus-border-shadow d-flex align-items-center justify-content-center w-100 h-100">
-                <div class="text-center text-muted">
-                    <i class="bi bi-map" style="font-size: 38px"></i>
-                    <p class="mt-2 mb-0" style="font-size: 0.9rem;">Pas de Carte....</p>
-                </div>
+            <div class="cactus-map cactus-map-mobile d-flex align-items-center justify-content-center w-100 h-100">
             </div>
         </div>
 

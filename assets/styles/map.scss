@@ -1,4 +1,15 @@
 .container-map {
+    align-self: flex-start;
     position: sticky !important;
-    top: 50px;
+    top: 70px;
+}
+
+.cactus-map {
+    height: calc(100vh - 90px);
+    width: 100%;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
