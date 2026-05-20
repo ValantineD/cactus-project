@@ -16,7 +16,7 @@
     "private": true,
     "scripts": {
         "dev-server": "encore dev-server",
-        "dev": "encore dev",
+        "dev": "encore dev"d
         "watch": "encore dev --watch",
         "build": "encore production --progress"
     },
