@@ -12,6 +12,7 @@ use App\Enum\EnumStatus;
 use App\Form\ActivityFormType;
 use App\Repository\ActivityRepository;
 use App\Repository\ThemeRepository;
+use App\Services\GeocodingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -58,6 +59,7 @@ final class ActivityController extends AbstractController
             'themes' => $themeRepository->findAll(),
             'selectedThemes' => $request->query->all('theme'),
             'tags' => $request->query->all('tags'),
+
         ]);
     }
 
@@ -66,6 +68,7 @@ final class ActivityController extends AbstractController
     public function new(
         Request                                                              $request,
         EntityManagerInterface                                               $entityManager,
+        GeocodingService                                                     $geocoding,
         #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
     ): Response
     {
@@ -172,6 +175,14 @@ final class ActivityController extends AbstractController
                 }
             }
 
+
+            $coords = $geocoding->geocode($activity->getLocation());
+            if ($coords) {
+                $activity->setLatitude($coords['lat']);
+                $activity->setLongitude($coords['lng']);
+            }
+
+
             $entityManager->persist($activity);
             $entityManager->flush();
 
@@ -199,6 +210,7 @@ final class ActivityController extends AbstractController
         Request                                                              $request,
         Activity                                                             $activity,
         EntityManagerInterface                                               $entityManager,
+        GeocodingService                                                     $geocoding,
         #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
     ): Response
     {
@@ -331,6 +343,12 @@ final class ActivityController extends AbstractController
             foreach ($activity->getImageFiles() as $imageFile) {
                 $imageFile->setPosition($positionImage++);
                 $entityManager->persist($imageFile);
+            }
+
+            $coords = $geocoding->geocode($activity->getLocation());
+            if ($coords) {
+                $activity->setLatitude($coords['lat']);
+                $activity->setLongitude($coords['lng']);
             }
 
             $entityManager->flush();

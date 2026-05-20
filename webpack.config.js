@@ -32,6 +32,7 @@ Encore
     .addEntry('home-scroller', './assets/js/home-scroller.js')
 
     .addEntry('handle-map', './assets/js/handle-map.js')
+    .addEntry('handle-map-show', './assets/js/handle-map-show.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

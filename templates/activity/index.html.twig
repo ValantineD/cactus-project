@@ -13,6 +13,19 @@
 {% endblock %}
 
 {% block body %}
+
+    {% set activitiesData = [] %}
+    {% for a in activities %}
+        {% if a.latitude and a.longitude %}
+            {% set activitiesData = activitiesData|merge([{
+                lat: a.latitude,
+                lng: a.longitude,
+                icon: asset(a.themes|first.iconFilename),
+                title: a.title
+            }]) %}
+        {% endif %}
+    {% endfor %}
+
     <div class="d-none d-lg-block container-fluid px-4 py-3" style="align-items: flex-start; gap: 1rem;">
         <div class="row g-3">
             <div class="col-12 col-lg-6 order-lg-1 order-2">
@@ -30,7 +43,7 @@
             </div>
 
             <div class="col-12 col-lg-6 order-lg-2 order-1 container-map">
-                <div class="cactus-map cactus-map-desktop">
+                <div class="cactus-map cactus-map-desktop" data-activities="{{ activitiesData|json_encode }}">
                 </div>
             </div>
 
@@ -41,7 +54,8 @@
          style="display: flex; flex-direction: column;">
 
         <div style="height: 60vh; background: #e0e0e0; position: relative;">
-            <div class="cactus-map cactus-map-mobile d-flex align-items-center justify-content-center w-100 h-100">
+            <div class="cactus-map cactus-map-mobile d-flex align-items-center justify-content-center w-100 h-100"
+                 data-activities="{{ activitiesData|json_encode }}">
             </div>
         </div>
 
