@@ -43,7 +43,20 @@
             </div>
 
             <div class="col-12 col-lg-6 order-lg-2 order-1 container-map">
-                <div class="cactus-map cactus-map-desktop" data-activities="{{ activitiesData|json_encode }}">
+                <div class="cactus-map cactus-map-desktop" data-activities="{{ activitiesData|json_encode }}"
+                     data-localisation="{{ localisation ?? '' }}">
+                    {% for activity in activities %}
+                        {% if activity.latitude and activity.longitude %}
+                            <div class="map-popup-card"
+                                 data-lat="{{ activity.latitude }}"
+                                 data-lng="{{ activity.longitude }}"
+                                 style="display:none; position:absolute; bottom:16px; left:50%;
+                        transform:translateX(-50%); z-index:1000; width:calc(100% - 32px);
+                        max-width:420px; background: var(--texte-clair); border-radius: 8px">
+                                {% include 'partials/_activity_card_phone.html.twig' %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 
@@ -55,7 +68,19 @@
 
         <div style="height: 60vh; background: #e0e0e0; position: relative;">
             <div class="cactus-map cactus-map-mobile d-flex align-items-center justify-content-center w-100 h-100"
-                 data-activities="{{ activitiesData|json_encode }}">
+                 data-activities="{{ activitiesData|json_encode }}" data-localisation="{{ localisation ?? '' }}">
+                {% for activity in activities %}
+                    {% if activity.latitude and activity.longitude %}
+                        <div class="map-popup-card"
+                             data-lat="{{ activity.latitude }}"
+                             data-lng="{{ activity.longitude }}"
+                             style="display:none; position:absolute; bottom:16px; left:50%;
+                        transform:translateX(-50%); z-index:1000; width:calc(100% - 32px);
+                        max-width:420px; background: var(--texte-clair); border-radius: 8px">
+                            {% include 'partials/_activity_card_phone.html.twig' %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
 
