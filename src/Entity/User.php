@@ -70,10 +70,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Participation::class, mappedBy: 'user')]
     private Collection $participations;
 
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
+    private Collection $sender;
+
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'receiver')]
+    private Collection $receiver;
+
+    /**
+     * @var Collection<int, Message>
+     */
+
     public function __construct()
     {
         $this->activities = new ArrayCollection();
         $this->participations = new ArrayCollection();
+        $this->sender = new ArrayCollection();
+        $this->receiver = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -297,4 +315,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Message>
+     */
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getSender(): Collection
+    {
+        return $this->sender;
+    }
+
+    public function addSender(Message $sender): static
+    {
+        if (!$this->sender->contains($sender)) {
+            $this->sender->add($sender);
+            $sender->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSender(Message $sender): static
+    {
+        if ($this->sender->removeElement($sender)) {
+            // set the owning side to null (unless already changed)
+            if ($sender->getSender() === $this) {
+                $sender->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getReceiver(): Collection
+    {
+        return $this->receiver;
+    }
+
+    public function addReceiver(Message $receiver): static
+    {
+        if (!$this->receiver->contains($receiver)) {
+            $this->receiver->add($receiver);
+            $receiver->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiver(Message $receiver): static
+    {
+        if ($this->receiver->removeElement($receiver)) {
+            // set the owning side to null (unless already changed)
+            if ($receiver->getReceiver() === $this) {
+                $receiver->setReceiver(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

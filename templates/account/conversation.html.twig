@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation with {{ otherUser.username }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
+            </div>
+
+            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2 pb-3">
+                <h1>Conversation with {{ otherUser.username }}</h1>
+
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.sender == app.user ? 'sent' : 'received' }}">
+                            <p>{{ message.content }}</p>
+                            <small>{{ message.createdAt|date('H:i') }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <form method="post">
+                    <textarea name="content" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
