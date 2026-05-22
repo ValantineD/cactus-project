@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Entity\User;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,13 +13,56 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/account/messagerie', name: 'account_')]
+#[Route('account/profile/messagerie', name: 'app_', methods: ['GET'])]
 #[IsGranted('ROLE_USER')]
-class MessageController extends AbstractController  // ← was missing
+class MessageController extends AbstractController
 {
-    #[Route('/{username}', name: 'conversation')]   // ← plain {username} param
+
+    #[Route('', name: 'messagerie')]
+    public function messagerie(
+        Request           $request,
+        MessageRepository $messageRepository,
+        UserRepository    $userRepository
+    ): Response
+    {
+        $currentUser = $this->getUser();
+        $messages = $messageRepository->messagerie($currentUser);
+
+        $conversations = [];
+        foreach ($messages as $message) {
+            $otherUser = $message->getSender() === $currentUser
+                ? $message->getReceiver()
+                : $message->getSender();
+
+            $otherUserId = $otherUser->getId();
+
+            if (!isset($conversations[$otherUserId])) {
+                $conversations[$otherUserId] = [
+                    'user' => $otherUser,
+                    'lastMessage' => $message,
+                ];
+            }
+        }
+
+        $q = $request->query->get('q', '');
+        $users = $q ? $userRepository->createQueryBuilder('u')
+            ->where('u.username LIKE :q')
+            ->setParameter('q', "%$q%")
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult() : [];
+
+        return $this->render('account/messagerie.html.twig', [
+            'conversations' => $conversations,
+            'q' => $q,
+            'users' => $users,
+        ]);
+    }
+
+
+    #[Route('/{username}', name: 'conversation', methods: ['GET', 'POST'])]
     public function conversation(
-        string                 $username,           // ← receive it as a string
+        string                 $username,
         UserRepository         $userRepository,
         MessageRepository      $messageRepository,
         Request                $request,
@@ -26,11 +70,16 @@ class MessageController extends AbstractController  // ← was missing
     ): Response
     {
         $currentUser = $this->getUser();
-        $otherUser = $userRepository->findOneBy(['username' => $username]); // ← find by username
+        $otherUser = $userRepository->findOneBy(['username' => $username]);
 
-        if (!$otherUser || $otherUser === $currentUser) {
+        if (!$otherUser) {
             throw $this->createNotFoundException();
         }
+
+        if ($otherUser === $currentUser) {
+            return $this->redirectToRoute('app_user_show', ['username' => $currentUser->getUsername()]);
+        }
+
 
         if ($request->isMethod('POST')) {
             $content = trim($request->request->get('content', ''));
@@ -39,19 +88,16 @@ class MessageController extends AbstractController  // ← was missing
                 $message->setSender($currentUser);
                 $message->setReceiver($otherUser);
                 $message->setContent($content);
-                $message->setSendingDate(new \DateTime());
                 $entityManager->persist($message);
                 $entityManager->flush();
             }
-            // ← redirect using 'username', matching the route param above
-            return $this->redirectToRoute('account_conversation', ['username' => $username]);
+            return $this->redirectToRoute('app_conversation', ['username' => $username]);
         }
 
         $messages = $messageRepository->findConversation($currentUser, $otherUser);
 
-        return $this->render('account/conversation.html.twig', [
-            'otherUser' => $otherUser,
-            'messages'  => $messages,
-        ]);
+        return $this->redirectToRoute('app_conversation', ['username' => $username]);
     }
+
+
 }

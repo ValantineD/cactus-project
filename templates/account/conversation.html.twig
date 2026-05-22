@@ -12,20 +12,28 @@
             </div>
 
             <div class="col-12 col-lg-8 px-5 order-1 order-lg-2 pb-3">
-                <h1>Conversation with {{ otherUser.username }}</h1>
+                <div class="d-flex">
+                    <h1>Conversation with {{ otherUser.username }}</h1>
+                    <a href="{{ path('app_messagerie') }}" class="btn btn-cactus-secondary p-0 mb-3">
+                        <i class="bi bi-arrow-left-circle"></i>
+                    </a>
+                </div>
 
                 <div class="messages">
+
                     {% for message in messages %}
                         <div class="message {{ message.sender == app.user ? 'sent' : 'received' }}">
                             <p>{{ message.content }}</p>
                             <small>{{ message.createdAt|date('H:i') }}</small>
                         </div>
+                    {% else %}
+                        <p>Pas encore de message, tape la discut'!</p>
                     {% endfor %}
                 </div>
 
-                <form method="post">
-                    <textarea name="content" required></textarea>
-                    <button type="submit">Send</button>
+                <form method="post" >
+                    <textarea name="content" required placeholder="Ecrire mon message..."></textarea>
+                    <button type="submit" class="btn btn-cactus-primary">Envoyer</button>
                 </form>
 
             </div>

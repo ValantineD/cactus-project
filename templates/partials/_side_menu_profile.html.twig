@@ -9,7 +9,7 @@
                 {{ include('partials/_profile.html.twig', {size: 40}) }}
                 A propos de Moi
             </a>
-            <a href="#" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none" style="min-height: 74px">
+            <a href="{{ path('app_messagerie') }}" class="h6 px-2 d-flex gap-3 align-items-center justify-content-start text-decoration-none {{ currentPath === path('app_messagerie') ? "cactus-active-side-menu" : '' }}" style="min-height: 74px">
                 <i class="bi bi-envelope-fill" style="font-size: 40px"></i>
                 Messagerie
             </a>

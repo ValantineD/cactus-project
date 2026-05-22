@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}messagerie{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
+            </div>
+
+            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2 pb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <h1>Messagerie</h1>
+                    <a href="#" class="btn btn-cactus-primary" data-bs-toggle="modal" data-bs-target="#modalConversationRecherche">
+                        Nouvelle Conversation
+                    </a>
+                </div>
+
+                {% for conversation in conversations %}
+                    <a href="{{ path('app_conversation', { username: conversation.user.username }) }}"
+                       class="conversation-item">
+                        <div>
+                            <strong>{{ conversation.user.username }}</strong>
+                            <div class="conversation-preview">{{ conversation.lastMessage.content }}</div>
+                        </div>
+                        <div class="conversation-date">
+                            {{ conversation.lastMessage.createdAt|date('d/m H:i') }}
+                        </div>
+                    </a>
+                {% else %}
+                    <p class="text-muted">Pas encore de conversations.</p>
+                {% endfor %}
+
+                <div class="container mt-4">
+                    {% if q %}
+                        <h2>Results for "{{ q }}"</h2>
+                        {% for user in users %}
+                            <a href="{{ path('app_conversation', { username: user.username }) }}"
+                               class="btn btn-cactus-primary d-block mb-2">
+                                {{ user.username }}
+                            </a>
+                        {% else %}
+                            <p>Aucun utilisateur n'a ce nom!.</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConversationRecherche" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nouvelle conversation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="get" action="{{ path('app_messagerie') }}">
+                        <input type="text" name="q" class="form-control" placeholder="rechercher un utilisateur..." required>
+                        <button type="submit" class="btn btn-cactus-primary mt-2 w-100">rechercher</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

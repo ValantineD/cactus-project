@@ -4,8 +4,18 @@
        style="width: 120px; height: 120px; border-radius: 10px;
               overflow: hidden; position: relative;
               box-shadow: 0 1px 6px rgba(0,0,0,0.12);">
-        {% set splitFilename = asset(activity.imageFiles[0].filename)|split('.') %}
-        {% set imagefilename = splitFilename|join('_small.') %}
+        {% set firstImage = activity.imageFiles.first() %}
+        {% if firstImage %}
+            {% set splitFilename = asset(firstImage.filename)|split('.') %}
+            {% set imagefilename = splitFilename|join('_small.') %}
+            <img src="{{ imagefilename }}"
+                 alt="{{ activity.title }}"
+                 class="w-100 h-100" style="object-fit: cover;" loading="lazy">
+        {% else %}
+            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-secondary bg-opacity-25">
+                <i class="bi bi-image text-muted" style="font-size: 1.5rem;"></i>
+            </div>
+        {% endif %}
 
         {% if activity.imageFiles is not empty %}
             <img src="{{ imagefilename}}"
