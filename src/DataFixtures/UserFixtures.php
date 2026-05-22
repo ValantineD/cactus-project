@@ -51,13 +51,13 @@ class UserFixtures extends Fixture
             $user = new User();
             $password = $this->hasher->hashPassword($user, 'password');
 
-            $user->setUsername($faker->name())
+            $user->setUsername($faker->firstName($gender = null|'male'|'female') )
                 ->setEmail($faker->email())
                 ->setPassword($password)
                 ->setRoles(['ROLE_USER'])
                 ->setCreatedAt(new \DateTime())
                 ->setBirthday($faker->dateTimeBetween('-60 years', '-18 years'))
-                ->setLocation("Marseille");
+                ->setLocation($faker->city());
 
             $manager->persist($user);
         }

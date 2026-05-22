@@ -26,7 +26,7 @@
                        class="conversation-item d-flex px-4">
                         <div class="d-flex align-items-center gap-3">
                             <div>
-                                <img src="{{ asset(conversation.user.profileFilename) }}" style="height: 70px">
+                                <img src="{{ asset(conversation.user.profileFilename) }}" style="height: 70px" loading="lazy">
                             </div>
                             <div class="d-flex flex-column">
                                 <strong>{{ conversation.user.username }}</strong>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="get" action="{{ path('app_messagerie') }}">
-                        <input type="text" name="q" class="form-control" placeholder="rechercher un utilisateur..."
+                        <input type="text" name="q" class="form-control w-100" placeholder="rechercher un utilisateur..."
                                required>
                         <button type="submit" class="btn btn-cactus-primary mt-2 w-100">rechercher</button>
                     </form>
