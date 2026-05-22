@@ -96,7 +96,10 @@ class MessageController extends AbstractController
 
         $messages = $messageRepository->findConversation($currentUser, $otherUser);
 
-        return $this->redirectToRoute('app_conversation', ['username' => $username]);
+        return $this->render('account/conversation.html.twig', [
+            "otherUser" => $otherUser,
+            "messages" => $messages,
+        ]);
     }
 
 

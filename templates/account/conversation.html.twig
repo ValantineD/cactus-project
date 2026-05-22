@@ -13,10 +13,11 @@
 
             <div class="col-12 col-lg-8 px-5 order-1 order-lg-2 pb-3">
                 <div class="d-flex">
-                    <h1>Conversation with {{ otherUser.username }}</h1>
-                    <a href="{{ path('app_messagerie') }}" class="btn btn-cactus-secondary p-0 mb-3">
+                    <a href="{{ path('app_messagerie') }}" class="btn btn-cactus-secondary d-flex align-items-center justify-content-center"
+                       style="width: 58px; height: 58px; border-radius: 8px;">
                         <i class="bi bi-arrow-left-circle"></i>
                     </a>
+                    <h1>Conversation with {{ otherUser.username}}</h1>
                 </div>
 
                 <div class="messages">

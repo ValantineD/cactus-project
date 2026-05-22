@@ -15,19 +15,26 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
 
                     <h1>Messagerie</h1>
-                    <a href="#" class="btn btn-cactus-primary" data-bs-toggle="modal" data-bs-target="#modalConversationRecherche">
+                    <a href="#" class="btn btn-cactus-primary" data-bs-toggle="modal"
+                       data-bs-target="#modalConversationRecherche">
                         Nouvelle Conversation
                     </a>
                 </div>
 
                 {% for conversation in conversations %}
                     <a href="{{ path('app_conversation', { username: conversation.user.username }) }}"
-                       class="conversation-item">
-                        <div>
-                            <strong>{{ conversation.user.username }}</strong>
-                            <div class="conversation-preview">{{ conversation.lastMessage.content }}</div>
+                       class="conversation-item d-flex px-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div>
+                                <img src="{{ asset(conversation.user.profileFilename) }}" style="height: 70px">
+                            </div>
+                            <div class="d-flex flex-column">
+                                <strong>{{ conversation.user.username }}</strong>
+                                <div class="conversation-preview">{{ conversation.lastMessage.content }}</div>
+                            </div>
                         </div>
-                        <div class="conversation-date">
+
+                        <div class="conversation-date ">
                             {{ conversation.lastMessage.createdAt|date('d/m H:i') }}
                         </div>
                     </a>
@@ -37,14 +44,14 @@
 
                 <div class="container mt-4">
                     {% if q %}
-                        <h2>Results for "{{ q }}"</h2>
+                        <h2>Resultats pour "{{ q }}"</h2>
                         {% for user in users %}
                             <a href="{{ path('app_conversation', { username: user.username }) }}"
                                class="btn btn-cactus-primary d-block mb-2">
                                 {{ user.username }}
                             </a>
                         {% else %}
-                            <p>Aucun utilisateur n'a ce nom!.</p>
+                            <p>Aucun utilisateur n'a ce nom!</p>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -62,7 +69,8 @@
                 </div>
                 <div class="modal-body">
                     <form method="get" action="{{ path('app_messagerie') }}">
-                        <input type="text" name="q" class="form-control" placeholder="rechercher un utilisateur..." required>
+                        <input type="text" name="q" class="form-control" placeholder="rechercher un utilisateur..."
+                               required>
                         <button type="submit" class="btn btn-cactus-primary mt-2 w-100">rechercher</button>
                     </form>
                 </div>
