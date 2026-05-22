@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,17 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/profile/history', name: 'app_user_history')]
+    public function history(ActivityRepository $activityRepository): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('account/history.html.twig', [
+            'created_activities'      => $activityRepository->findCreatedByUser($user),
+            'participated_activities' => $activityRepository->findParticipatedByUser($user),
+        ]);
     }
 
 

@@ -1,17 +1,143 @@
 {% extends 'base.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('home-scroller') }}
+{% endblock %}
 
 {% block title %} Page Home {% endblock %}
 
 {% block body %}
 
-    <a href="{{ path('app_register') }}" class="btn btn-cactus-primary">Create new</a>
-    <a href="{{ path('app_login') }}" class="btn btn-cactus-primary">Login</a>
-    <a href="{{ path('app_activity_index') }}" class="btn btn-cactus-primary">Activity</a>
+    <div class="d-none d-lg-block" style="min-height: 100vh">
+        <h1 class="pb-3">Page D'Accueil</h1>
+        {% if app.user %}
+            <div class="px-3 px-lg-4 py-3">
+                <h2 class="h5 fw-bold mb-3">
+                    Mes Activités:
+                </h2>
+                <div class="d-flex flex-wrap gap-3">
+                    {% for activity in my_activities %}
+                        <div style="width: 220px; flex-shrink: 0;">
+                            {% include('partials/_activity_card_pc.html.twig') %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small">Aucune activité trouvée.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr class="section-divider">
+        {% endif %}
 
 
+        <div class="px-3 px-lg-4 py-5">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="h5 fw-bold mb-0">
+                    <a href="{{ path('app_activity_index') }}" class="text-decoration-none"
+                       style="color: var(--texte-fonce)">Activités du Moment:</a>
+                </h2>
+                <div class="d-flex gap-2">
+                    <button id="moment-prev"
+                            class="btn btn-cactus-primary rounded-circle d-flex align-items-center justify-content-center"
+                            style="width:34px; height:34px; padding:0;"
+                            aria-label="Précédent">
+                        <i class="bi bi-arrow-left"></i>
+                    </button>
+                    <button id="moment-next"
+                            class="btn btn-cactus-primary rounded-circle d-flex align-items-center justify-content-center"
+                            style="width:34px; height:34px; padding:0;"
+                            aria-label="Suivant">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
 
-    {% if app.user %}
-        <a href="{{ path('app_user_show', {'username': app.user.username}) }}" >My Account</a>
-    {% endif %}
+            <div id="moment-scroll" style=" overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;">
+                <div class="d-flex gap-3" style="width: max-content;">
+                    {% for activity in featured_activities %}
+                        <div style="width: 220px; flex-shrink: 0;">
+                            {% include('partials/_activity_card_pc.html.twig') %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small">Aucune activité trouvée.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <hr class="section-divider">
+
+
+        <div class="px-3 px-lg-4 py-3">
+            <h2 class="h5 fw-bold mb-3">
+                Par Thèmes:
+            </h2>
+            <div class="d-flex flex-wrap gap-2">
+                {% for theme in themes %}
+                    <a href="{{ path('app_activity_index', {'theme[]': theme.id}) }}" class="theme-chip">
+                        {% if theme.iconFilename %}
+                            <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}">
+                        {% endif %}
+                        <span>{{ theme.title }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="d-block d-lg-none">
+        <h1 class="pb-3">Page D'Accueil</h1>
+
+        {% if app.user %}
+            <section class="px-3 py-3">
+                <h2 class="h5 fw-bold mb-3">Mes Activités:</h2>
+                <div style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;">
+                    <div class="d-flex gap-3" style="width: max-content;">
+                        {% for activity in my_activities %}
+                            {% include('partials/_activity_card_small.html.twig') %}
+                        {% else %}
+                            <p class="text-muted small">Aucune activité trouvée.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            <hr style="border-color: var(--primary-color); opacity: 0.4; margin: 0 1rem;">
+        {% endif %}
+
+        <section class="px-3 py-3">
+            <h2 class="h5 fw-bold mb-3">
+                <a href="{{ path('app_activity_index') }}" class="text-decoration-none" style="color: var(--texte-fonce)">Activités du Moment:</a>
+            </h2>
+            <div style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;">
+                <div class="d-flex gap-3" style="width: max-content;">
+                    {% for activity in featured_activities %}
+                        {% include('partials/_activity_card_phone.html.twig') %}
+                    {% else %}
+                        <p class="text-muted small">Aucune activité trouvée.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <hr style="border-color: var(--primary-color); opacity: 0.4; margin: 0 1rem;">
+
+        <section class="px-3 py-3">
+            <h2 class="h5 fw-bold mb-3">Par Thèmes:</h2>
+            <div style="overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;">
+                <div class="d-flex gap-2" style="width: max-content;">
+                    {% for theme in themes %}
+                        <a href="{{ path('app_activity_index', {'theme[]': theme.id}) }}" class="theme-chip">
+                            {% if theme.iconFilename %}
+                                <img src="{{ asset(theme.iconFilename) }}" alt="{{ theme.title }}">
+                            {% endif %}
+                            <span>{{ theme.title }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+    </div>
 
 {% endblock %}

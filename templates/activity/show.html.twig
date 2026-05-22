@@ -2,6 +2,16 @@
 
 {% block title %}{{ activity.title }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('handle-map-show') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('handle-map-show') }}
+{% endblock %}
+
 {% block body %}
 
     <div class="d-block d-lg-none" style="position: relative;">
@@ -126,12 +136,11 @@
 
 
         <div class="d-lg-none mb-3">
-            <div class="cactus-border-shadow d-flex align-items-center justify-content-center py-3"
-                 style="height: 200px; border-radius: 8px; background: #e0e0e0;">
-                <div class="text-center text-muted">
-                    <i class="bi bi-map" style="font-size: 2rem;"></i>
-                    <p class="mt-1 mb-0" style="font-size: 0.8rem;">Pas de Carte...</p>
-                </div>
+            <div class="cactus-map-show-mobile"
+                 data-lat="{{ activity.latitude }}"
+                 data-lng="{{ activity.longitude }}"
+                 data-icon="{{ asset(activity.themes|first.iconFilename) }}"
+                 style="height: 200px; border-radius: 8px;">
             </div>
 
             <div class="h-100 d-flex flex-column gap-1">
@@ -175,12 +184,11 @@
             </div>
 
             <div class="col-12 col-md-7">
-                <div class="cactus-border-shadow d-flex align-items-center justify-content-center"
-                     style="height: 500px; width: 500px; border-radius: 8px; background: #e0e0e0;">
-                    <div class="text-center text-muted">
-                        <i class="bi bi-map" style="font-size: 2rem;"></i>
-                        <p class="mt-1 mb-0" style="font-size: 0.8rem;">Pas de Carte...</p>
-                    </div>
+                <div class="cactus-map-show-desktop"
+                     data-lat="{{ activity.latitude }}"
+                     data-lng="{{ activity.longitude }}"
+                     data-icon="{{ asset(activity.themes|first.iconFilename) }}"
+                     style="height: 500px; border-radius: 8px;">
                 </div>
             </div>
         </div>
@@ -209,7 +217,19 @@
         <div class="mb-5">
             <h5>Participants :</h5>
             <div class="d-flex flex-wrap gap-3 mt-2">
-                <p class="text-muted">Aucun participant pour l'instant.</p>
+                {% if activity.participations is empty %}
+                    <p class="text-muted">Aucun participant pour l'instant.</p>
+                {% else %}
+                    {% for participation in activity.participations %}
+                        <a href="{{ path('app_user_show', {username: participation.user.username}) }}"
+                           class="text-decoration-none text-dark d-flex align-items-center gap-2">
+                            <img src="{{ asset(participation.user.profileFilename) }}"
+                                 alt="{{ participation.user.username }}"
+                                 class="rounded-circle" style="width: 36px; height: 36px; object-fit: cover;">
+                            <span>{{ participation.user.username }}</span>
+                        </a>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
 
@@ -217,30 +237,49 @@
         <hr style="border-color: 2px var(--primary-color);">
     </div>
 
-    <div class=" border-top d-flex align-items-center justify-content-between"
+    <div class="border-top d-flex align-items-center justify-content-between p-3"
          style="background: white; box-shadow: 0 -2px 8px rgba(0,0,0,0.08);">
 
         <div>
-            <small class="text-muted d-block">{{ activity.dateStart ? activity.dateStart|date('l d F \\à G\\h') : '' }}</small>
-            <span class="fw-bold">{{ activity.title }}</span>
+            <small class="text-muted d-none d-lg-block">{{ activity.dateStart ? activity.dateStart|date('l d F \\à G\\h') : '' }}</small>
+            <span class="fw-bold d-none d-lg-block">{{ activity.title }}</span>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-            <p>Places restantes:</p>
-            0 / {{ activity.spot }}
+        <div class="d-flex align-items-center flex-row gap-2">
+            <p class="mb-0">Places restantes:</p>
+            <p class="">{{ activity.remainingSpots }} / {{ activity.spot }}</p>
 
-            <button
-                class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
-                style="width: 36px; height: 36px; padding: 0;">
+            <button class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                    style="width: 36px; height: 36px; padding: 0;">
                 <i class="bi bi-share"></i>
             </button>
 
             {% if app.user %}
                 {% if app.user == activity.user %}
-                    <a href="{{ path('app_activity_edit', {id: activity.id}) }}"
-                       class="btn btn-cactus-secondary">
+                    <a href="{{ path('app_activity_edit', {id: activity.id}) }}" class="btn btn-cactus-secondary">
                         <i class="bi bi-pencil me-1"></i>Modifier
                     </a>
+                {% else %}
+                    {% set isParticipating = false %}
+                    {% for p in activity.participations %}
+                        {% if p.user == app.user %}
+                            {% set isParticipating = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if isParticipating %}
+                        <form method="post" action="{{ path('app_activity_leave', {id: activity.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('leave' ~ activity.id) }}">
+                            <button type="submit" class="btn btn-outline-danger">Quitter</button>
+                        </form>
+                    {% elseif activity.remainingSpots > 0 %}
+                        <form method="post" action="{{ path('app_activity_join', {id: activity.id}) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('join' ~ activity.id) }}">
+                            <button type="submit" class="btn btn-cactus-primary">Participer</button>
+                        </form>
+                    {% else %}
+                        <button class="btn btn-cactus-primary" disabled>Complet</button>
+                    {% endif %}
                 {% endif %}
             {% else %}
                 <a href="{{ path('app_login') }}" class="btn btn-cactus-primary">Participer</a>

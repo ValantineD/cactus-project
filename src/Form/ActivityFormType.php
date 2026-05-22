@@ -94,8 +94,10 @@ class ActivityFormType extends AbstractType
                 ],
             ])
             ->add('location', TextType::class, [
-                "label" => "Lieu de l'Activité",
-                'required' => false,
+                'attr' => [
+                    'autocomplete' => 'street-address',
+                    'placeholder' => '13 Rue de la République, Marseille'
+                ]
             ])
             ->add('date_start', DateTimeType::class, [
                 'label' => "Date de début de l'Activité",

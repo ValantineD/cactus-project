@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conversation with {{ otherUser.username }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
+            </div>
+
+            <div class="col-12 col-lg-8 px-5 order-1 order-lg-2 pb-3">
+                <div class="d-flex justify-content-between p-2"  style="background: var(--beige-transparent); border-radius: 8px" >
+                    <a href="{{ path('app_messagerie') }}" class="btn btn-cactus-secondary d-flex align-items-center justify-content-center"
+                       style="width: 58px; height: 58px; border-radius: 8px;">
+                        <i class="bi bi-arrow-left-circle"></i>
+                    </a>
+                    <div class="d-flex flex-column w-100 align-items-center">
+                        <img src="{{ asset(otherUser.profileFilename) }}" loading="lazy" width="90px">
+                        <h1>{{ otherUser.username}}</h1>
+                    </div>
+                </div>
+
+                <div class="messages p-3">
+                    {% for message in messages %}
+                        <div class="message {{ message.sender == app.user ? 'sent' : 'received' }}">
+                            <p>{{ message.content }}</p>
+                            <small>{{ message.createdAt|date('H:i') }}</small>
+                        </div>
+                    {% else %}
+                        <p>Pas encore de message, tape la discut'!</p>
+                    {% endfor %}
+                </div>
+
+                <form method="post" class="d-flex flex-column">
+                    <textarea class="d-block w-100 form-control mb-3" name="content" required placeholder="Ecrire mon message..."></textarea>
+                    <button type="submit" class="btn btn-cactus-primary">Envoyer</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
