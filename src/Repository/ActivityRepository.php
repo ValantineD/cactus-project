@@ -42,8 +42,21 @@ class ActivityRepository extends ServiceEntityRepository
             $sql = 'SELECT ' . $rsm->generateSelectClause(['a' => 'a']);
         }
 
-        $sql .= ' FROM activity a WHERE a.status = :status';
+        $sql .= ' FROM activity a';
+
         $params = ['status' => EnumStatus::PUBLISHED->value];
+
+        if (!empty($themes)) {
+            $placeholders = [];
+            foreach ($themes as $index => $theme) {
+                $placeholders[] = ':theme' . $index;
+                $params['theme' . $index] = $theme;
+            }
+            $sql .= ' INNER JOIN theme_activity ta ON ta.activity_id = a.id
+              AND ta.theme_id IN (' . implode(',', $placeholders) . ')';
+        }
+
+        $sql .= ' WHERE a.status = :status';
 
         if ($lat !== null && $lng !== null) {
             $sql .= ' AND a.latitude IS NOT NULL AND a.longitude IS NOT NULL';
@@ -63,11 +76,6 @@ class ActivityRepository extends ServiceEntityRepository
                 $sql .= ' AND a.date_start >= :dateStart';
                 $params['dateStart'] = $newDate->setTime(0, 0, 0)->format('Y-m-d H:i:s');
             }
-        }
-
-        if (!empty($themes)) {
-            $sql .= ' AND a.id IN (SELECT at.activity_id FROM activity_theme at WHERE at.theme_id IN (:themes))';
-            $params['themes'] = implode(',', $themes);
         }
 
         if (!empty($tags)) {
