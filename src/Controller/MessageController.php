@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('account/profile/messagerie', name: 'app_', methods: ['GET'])]
+#[Route('profile/messagerie', name: 'app_', methods: ['GET'])]
 #[IsGranted('ROLE_USER')]
 class MessageController extends AbstractController
 {

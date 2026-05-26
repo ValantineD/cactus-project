@@ -1,0 +1,55 @@
+{# templates/calendar/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}My Calendar{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('handle-calendar') }}
+    <style>
+        #calendar { max-width: 1100px; margin: 2rem auto; }
+        #event-modal .modal-header { border-bottom: 3px solid var(--event-color, #0d6efd); }
+        .badge-created { background-color: #0d6efd; }
+        .badge-participation { background-color: #198754; }
+    </style>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('handle-calendar') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-4">
+        <h1 class="mb-4"><i class="bi bi-calendar3"></i> My Calendar</h1>
+
+        <div class="d-flex gap-3 mb-3">
+            <span class="badge badge-created fs-6 px-3 py-2">🔵 Created by me</span>
+            <span class="badge badge-participation fs-6 px-3 py-2">🟢 Participating</span>
+        </div>
+
+        {# Pass the API URL via data attribute — no Twig inside JS files #}
+        <div id="calendar" data-events-url="{{ path('api_calendar_events') }}"></div>
+    </div>
+
+    {# Bootstrap modal — same as before #}
+    <div class="modal fade" id="event-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" id="modal-header">
+                    <h5 class="modal-title" id="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-unstyled" id="modal-body"></ul>
+                </div>
+                <div class="modal-footer">
+                    <a id="modal-link" href="#" class="btn btn-primary">View Activity</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
