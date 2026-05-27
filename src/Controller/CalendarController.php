@@ -7,11 +7,11 @@ use App\Repository\ParticipationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
-#[Route('profile/calendar')]
+#[Route('/profile/calendar')]
 class CalendarController extends AbstractController
 {
     #[Route('/', name: 'app_calendar')]
@@ -28,14 +28,19 @@ class CalendarController extends AbstractController
         $user = $this->getUser();
         $events = [];
 
-        // Activities the user CREATED
         foreach ($user->getActivities() as $activity) {
+            $themes = $activity->getThemes();
+            $firstTheme = !$themes->isEmpty() ? $themes->first() : null;
+
+
             $events[] = [
                 'id'    => $activity->getId(),
                 'title' => $activity->getTitle(),
                 'start' => $activity->getDateStart()?->format('c'),
                 'end'   => $activity->getDateEnd()?->format('c'),
-                'color' => '#0d6efd',   // Bootstrap primary (blue) = created
+                'backgroundColor' => 'var(--primary-color)',
+                'borderColor'     => 'var(--primary-color)',
+                'textColor'       => 'var(--texte-fonce)',
                 'extendedProps' => [
                     'type'        => 'created',
                     'location'    => $activity->getLocation(),
@@ -44,29 +49,36 @@ class CalendarController extends AbstractController
                     'remaining'   => $activity->getRemainingSpots(),
                     'status'      => $activity->getStatus()?->value,
                     'state'       => $activity->getState()?->value,
+                    'icon'        => $firstTheme?->getIconFilename(),
                 ],
             ];
         }
 
-        // Activities the user PARTICIPATES IN (avoid duplicates)
         foreach ($user->getParticipations() as $participation) {
             $activity = $participation->getActivity();
-            // Skip if user also created it (already added above)
             if ($activity->getUser() === $user) {
                 continue;
             }
+
+            $themes = $activity->getThemes();
+            $firstTheme = !$themes->isEmpty() ? $themes->first() : null;
+
+
             $events[] = [
                 'id'    => 'p_' . $activity->getId(),
                 'title' => $activity->getTitle(),
                 'start' => $activity->getDateStart()?->format('c'),
                 'end'   => $activity->getDateEnd()?->format('c'),
-                'color' => '#198754',   // Bootstrap success (green) = participating
+                'backgroundColor' => 'var(--quaternary-color)',
+                'borderColor'     => 'var(--quaternary-color)',
+                'textColor'       => 'var(--texte-clair)',
                 'extendedProps' => [
                     'type'             => 'participation',
                     'participationStatus' => $participation->getStatus()?->value,
                     'location'         => $activity->getLocation(),
                     'description'      => $activity->getDescription(),
                     'organizer'        => $activity->getUser()?->getUsername(),
+                    'icon'                => $firstTheme?->getIconFilename(),
                 ],
             ];
         }
