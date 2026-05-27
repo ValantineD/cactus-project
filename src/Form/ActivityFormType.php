@@ -5,6 +5,7 @@ namespace App\Form;
 
 use App\Entity\Activity;
 use App\Entity\Theme;
+use App\Services\GeocodingService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
@@ -30,7 +31,13 @@ use Symfony\Component\Validator\Constraints\Range;
 class ActivityFormType extends AbstractType
 {
 
-    public function __construct(private Packages $assets){}
+    public function __construct(
+        private readonly Packages         $assets,
+        private readonly GeocodingService $geocodingService
+    )
+    {
+
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -94,21 +101,26 @@ class ActivityFormType extends AbstractType
                 ],
             ])
             ->add('location', TextType::class, [
+                'required' => false,
                 'attr' => [
                     'autocomplete' => 'street-address',
                     'placeholder' => '13 Rue de la République, Marseille'
-                ]
-            ])
+                ],
+                'constraints' => [
+                    new NotBlank(
+                        message: 'Ecrivez adcqsxdvqsgbjdh',
+                    ),
+                ]])
             ->add('date_start', DateTimeType::class, [
                 'label' => "Date de début de l'Activité",
                 'widget' => 'choice',
                 'html5' => false,
                 'input' => 'datetime',
                 'placeholder' => [
-                    'day'    => 'Jour',
-                    'month'  => 'Mois',
-                    'year'   => 'Année',
-                    'hour'   => 'Heure',
+                    'day' => 'Jour',
+                    'month' => 'Mois',
+                    'year' => 'Année',
+                    'hour' => 'Heure',
                     'minute' => 'Minute',
                 ],
                 'years' => range(date('Y'), date('Y') + 10),
@@ -130,10 +142,10 @@ class ActivityFormType extends AbstractType
                 'html5' => false,
                 'input' => 'datetime',
                 'placeholder' => [
-                    'day'    => 'Jour',
-                    'month'  => 'Mois',
-                    'year'   => 'Année',
-                    'hour'   => 'Heure',
+                    'day' => 'Jour',
+                    'month' => 'Mois',
+                    'year' => 'Année',
+                    'hour' => 'Heure',
                     'minute' => 'Minute',
                 ],
                 'years' => range(date('Y'), date('Y') + 10),
@@ -210,10 +222,11 @@ class ActivityFormType extends AbstractType
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function ($event) {
             $form = $event->getForm();
-            $data = $event->getData();
+            /** @var Activity $activity */
+            $activity = $event->getData();
 
-            $dateStart = $data->getDateStart();
-            $dateEnd = $data->getDateEnd();
+            $dateStart = $activity->getDateStart();
+            $dateEnd = $activity->getDateEnd();
 
             if ($dateStart && $dateEnd && $dateEnd <= $dateStart) {
                 $form->get('date_end')->addError(
@@ -222,6 +235,25 @@ class ActivityFormType extends AbstractType
                     )
                 );
             }
+        });
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function ($event) {
+            $form = $event->getForm();
+            /** @var Activity $activity */
+            $activity = $event->getData();
+
+            $coords = $this->geocodingService->geocode($activity->getLocation());
+
+            if ($coords === null) {
+                $form->get('location')->addError(
+                    new FormError('Adresse introuvable.')
+                );
+
+                return;
+            }
+
+            $activity->setLatitude($coords['lat']);
+            $activity->setLongitude($coords['lng']);
         });
     }
 

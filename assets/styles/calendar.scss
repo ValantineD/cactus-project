@@ -1,0 +1,118 @@
+// assets/styles/handle-calender.scss
+
+// Toolbar
+.fc .fc-toolbar {
+    padding: 0.75rem 1rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.fc .fc-toolbar-title {
+    color: var(--quaternary-color);
+    font-weight: 700;
+}
+
+.fc .fc-daygrid-day-number {
+    text-decoration: none;
+    color: var(--texte-fonce);
+    display: block;
+}
+
+// All buttons
+.fc .fc-button {
+    background-color: var(--quaternary-color) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 6px !important;
+
+    &:hover, &.fc-button-active {
+        background-color: var(--tertiary-color) !important;
+    }
+}
+
+// Day/column headers
+.fc .fc-col-header-cell {
+    background-color: var(--green-pastel);
+    color: white;
+    font-weight: 600;
+    padding: 0.4rem 0;
+}
+
+.fc .fc-col-header-cell-cushion {
+    text-decoration: none;
+    color: var(--texte-fonce);
+}
+
+// Today highlight
+.fc .fc-day-today {
+    background-color: var(--beige-transparent) !important;
+}
+
+// Today's date number circle
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    background-color: var(--quaternary-color);
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+// List view day headers
+.fc .fc-list-day-cushion {
+    background-color: var(--beige-transparent) !important;
+    color: var(--quaternary-color) !important;
+    font-weight: 600;
+}
+
+.fc .fc-list-event:hover td {
+    background-color: var(--green-pastel) !important;
+}
+
+#calendar {
+    max-width: 1100px;
+    margin: 2rem auto;
+}
+
+#event-modal .modal-header {
+    border-bottom: 3px solid var(--quaternary-color);
+}
+
+.badge-created {
+    background-color: var(--primary-color);
+    color: var(--texte-fonce);
+}
+
+.badge-participation {
+    background-color: var(--quaternary-color);
+    color: var(--texte-clair);
+}
+
+.fc-direction-ltr .fc-list-day-side-text {
+    text-decoration: none;
+    color: var(--quaternary-color);
+}
+
+.fc-direction-ltr .fc-list-day-text {
+    text-decoration: none;
+    color: var(--quaternary-color);
+}
+
+.fc .fc-toolbar {
+    flex-wrap: wrap;
+}
+
+/* Force title full width row */
+.fc .fc-toolbar-title {
+    flex-basis: 100%;
+    text-align: center;
+    margin: 8px 0;
+}
+
+/* Put left + right on separate lines cleanly */
+.fc .fc-toolbar-chunk {
+    display: flex;
+    gap: 6px;
+}

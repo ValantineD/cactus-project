@@ -4,13 +4,14 @@
     {{ parent() }}
     {{ encore_entry_link_tags('select-custom-themes') }}
     {{ encore_entry_link_tags('select-custom-tags') }}
+    {{ encore_entry_link_tags('handle-datepicker') }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('select-custom-themes') }}
     {{ encore_entry_script_tags('select-custom-tags') }}
-    {{ encore_entry_script_tags('btn-toggle-date') }}
+    {{ encore_entry_script_tags('handle-datepicker') }}
 {% endblock %}
 
 {% block title %}Rechercher une Activité{% endblock %}
@@ -112,20 +113,35 @@
                         </div>
 
                         <div class="date-toggle mb-3">
-                            <button type="button" class="date-toggle-btn date-toggle-btn--active" id="btnExact">Choisir
-                                une
-                                Date
+
+                            <button
+                                type="button"
+                                class="date-toggle-btn date-toggle-btn--active"
+                                id="btnExact"
+                            >
+                                Choisir une date
                             </button>
-                            <button type="button" class="date-toggle-btn" id="btnFlexible">I'm Flexible</button>
+
+                            <button
+                                type="button"
+                                class="date-toggle-btn"
+                                id="btnFlexible"
+                            >
+                                Je suis flexible
+                            </button>
+
                         </div>
 
                         <div id="exactDatePicker" class="pb-3">
+
                             <input
-                                type="date"
+                                type="hidden"
                                 name="dates"
+                                id="selected-date"
                                 value="{{ dates ?? '' }}"
-                                class="date-native-input cactus-border-shadow"
                             >
+                            <div id="inline-calendar" style="display:none; margin-top:15px;"></div>
+
                         </div>
 
                     </div>

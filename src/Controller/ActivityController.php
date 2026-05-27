@@ -27,7 +27,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ActivityController extends AbstractController
 {
     #[Route('', name: 'app_activity_index', methods: ['GET'])]
-    public function index(ActivityRepository $activityRepository, Request $request): Response
+    public function index(
+        ActivityRepository $activityRepository,
+        Request            $request,
+        GeocodingService   $geocodingService,
+    ): Response
     {
         $localisation = $request->query->get('localisation');
         $activite = $request->query->get('activite');
@@ -35,10 +39,32 @@ final class ActivityController extends AbstractController
         $themes = $request->query->all('theme');
         $tags = $request->query->all('tags');
 
+
         $hasSearched = !empty($localisation) || !empty($activite) || !empty($dates) || !empty($themes) || !empty($tags);
 
         if ($hasSearched) {
-            $activities = $activityRepository->findBySearch($localisation, $activite, $dates, $themes, $tags);
+            $lat = null;
+            $lng = null;
+
+            if (!empty($localisation)) {
+                $coords = $geocodingService->geocode($localisation);
+
+                if ($coords) {
+                    $lat = $coords['lat'];
+                    $lng = $coords['lng'];
+                } else {
+                    $this->addFlash('warning', 'Location "' . $localisation . '" Adresse introuvable. Resultat sans filtres.');
+                }
+            }
+
+            $activities = $activityRepository->findBySearch(
+                activite: $activite,
+                date: $dates,
+                themes: $themes,
+                tags: $tags,
+                lat: $lat,
+                lng: $lng
+            );
         } else {
             $activities = $activityRepository->findBy(['status' => EnumStatus::PUBLISHED]);
         }
@@ -68,7 +94,6 @@ final class ActivityController extends AbstractController
     public function new(
         Request                                                              $request,
         EntityManagerInterface                                               $entityManager,
-        GeocodingService                                                     $geocoding,
         #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
     ): Response
     {
@@ -175,14 +200,6 @@ final class ActivityController extends AbstractController
                 }
             }
 
-
-            $coords = $geocoding->geocode($activity->getLocation());
-            if ($coords) {
-                $activity->setLatitude($coords['lat']);
-                $activity->setLongitude($coords['lng']);
-            }
-
-
             $entityManager->persist($activity);
             $entityManager->flush();
 
@@ -210,7 +227,6 @@ final class ActivityController extends AbstractController
         Request                                                              $request,
         Activity                                                             $activity,
         EntityManagerInterface                                               $entityManager,
-        GeocodingService                                                     $geocoding,
         #[Autowire('%kernel.project_dir%/public/uploads/activities')] string $imageActivityDirectory
     ): Response
     {
@@ -343,12 +359,6 @@ final class ActivityController extends AbstractController
             foreach ($activity->getImageFiles() as $imageFile) {
                 $imageFile->setPosition($positionImage++);
                 $entityManager->persist($imageFile);
-            }
-
-            $coords = $geocoding->geocode($activity->getLocation());
-            if ($coords) {
-                $activity->setLatitude($coords['lat']);
-                $activity->setLongitude($coords['lng']);
             }
 
             $entityManager->flush();

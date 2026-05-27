@@ -10,6 +10,7 @@
 @import "./photo-activity-show";
 @import "./home";
 @import "./messages";
+@import "./calendar";
 
 
 @font-face {
@@ -55,10 +56,10 @@
     --secondary-color: rgba(231, 222, 175, 1);
     --tertiary-color: #418F3B;
     --quaternary-color: rgba(38, 67, 19, 1);
-    --texte-clair: rgba(245, 245, 240, 1);
-    --texte-fonce: rgba(17, 17, 17, 1);
     --green-pastel: rgba(115, 175, 111, 0.15000000596046448);
     --beige-transparent: rgba(215, 192, 151, 0.25);
+    --texte-clair: rgba(245, 245, 240, 1);
+    --texte-fonce: rgba(17, 17, 17, 1);
     --red: rgba(255, 56, 60, 1);
     --grey: rgba(142, 142, 147, 1);
     --text-black: rgba(0, 0, 0, 1);

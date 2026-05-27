@@ -1,0 +1,62 @@
+{# templates/calendar/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}My Calendar{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('handle-calendar') }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('handle-calendar') }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-lg-4 order-2 order-lg-1 border-cactus">
+                <h2>Menu</h2>
+                {{ include('partials/_side_menu_profile.html.twig') }}
+            </div>
+
+            <div class="col-12 col-lg-8 px-lg-5 px-2 order-1 order-lg-2 pb-3">
+                <h1>Calendrier</h1>
+
+                <div class="container-fluid py-4">
+                    <div class="d-flex gap-3 mb-3">
+                        <span class="badge badge-created fs-6 px-3 py-2"> Created by me</span>
+                        <span class="badge badge-participation fs-6 px-3 py-2">Participating</span>
+                    </div>
+
+                    <div id="calendar" data-events-url="{{ path('api_calendar_events') }}"></div>
+                </div>
+
+                <div class="modal fade" id="event-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" id="modal-header">
+                                <h5 class="modal-title" id="modal-title"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-unstyled" id="modal-body"></ul>
+                            </div>
+                            <div class="modal-footer">
+                                <a id="modal-link" href="#" class="btn btn-primary">View Activity</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

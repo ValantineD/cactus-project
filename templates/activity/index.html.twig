@@ -15,13 +15,13 @@
 {% block body %}
 
     {% set activitiesData = [] %}
-    {% for a in activities %}
-        {% if a.latitude and a.longitude %}
+    {% for activity in activities %}
+        {% if activity.latitude and activity.longitude %}
             {% set activitiesData = activitiesData|merge([{
-                lat: a.latitude,
-                lng: a.longitude,
-                icon: asset(a.themes|first.iconFilename),
-                title: a.title
+                lat: activity.latitude,
+                lng: activity.longitude,
+                icon: asset(activity.themes|first.iconFilename),
+                title: activity.title
             }]) %}
         {% endif %}
     {% endfor %}
