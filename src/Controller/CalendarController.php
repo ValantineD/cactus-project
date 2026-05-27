@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Asset\Packages;
 
 #[IsGranted('ROLE_USER')]
 #[Route('/profile/calendar')]
@@ -22,9 +23,11 @@ class CalendarController extends AbstractController
 
     #[Route('/calendar/events', name: 'api_calendar_events', methods: ['GET'])]
     public function events(
-        ActivityRepository $activityRepository,
-        ParticipationRepository $participationRepository
-    ): JsonResponse {
+        ActivityRepository      $activityRepository,
+        ParticipationRepository $participationRepository,
+        Packages                $assets
+    ): JsonResponse
+    {
         $user = $this->getUser();
         $events = [];
 
@@ -34,22 +37,24 @@ class CalendarController extends AbstractController
 
 
             $events[] = [
-                'id'    => $activity->getId(),
+                'id' => $activity->getId(),
                 'title' => $activity->getTitle(),
                 'start' => $activity->getDateStart()?->format('c'),
-                'end'   => $activity->getDateEnd()?->format('c'),
+                'end' => $activity->getDateEnd()?->format('c'),
                 'backgroundColor' => 'var(--primary-color)',
-                'borderColor'     => 'var(--primary-color)',
-                'textColor'       => 'var(--texte-fonce)',
+                'borderColor' => 'var(--primary-color)',
+                'textColor' => 'var(--texte-fonce)',
                 'extendedProps' => [
-                    'type'        => 'created',
-                    'location'    => $activity->getLocation(),
+                    'type' => 'created',
+                    'location' => $activity->getLocation(),
                     'description' => $activity->getDescription(),
-                    'spots'       => $activity->getSpot(),
-                    'remaining'   => $activity->getRemainingSpots(),
-                    'status'      => $activity->getStatus()?->value,
-                    'state'       => $activity->getState()?->value,
-                    'icon'        => $firstTheme?->getIconFilename(),
+                    'spots' => $activity->getSpot(),
+                    'remaining' => $activity->getRemainingSpots(),
+                    'status' => $activity->getStatus()?->value,
+                    'state' => $activity->getState()?->value,
+                    'icon' => $firstTheme !== null
+                        ? $assets->getUrl($firstTheme->getIconFilename())
+                        : null,
                 ],
             ];
         }
@@ -65,20 +70,22 @@ class CalendarController extends AbstractController
 
 
             $events[] = [
-                'id'    => 'p_' . $activity->getId(),
+                'id' => 'p_' . $activity->getId(),
                 'title' => $activity->getTitle(),
                 'start' => $activity->getDateStart()?->format('c'),
-                'end'   => $activity->getDateEnd()?->format('c'),
+                'end' => $activity->getDateEnd()?->format('c'),
                 'backgroundColor' => 'var(--quaternary-color)',
-                'borderColor'     => 'var(--quaternary-color)',
-                'textColor'       => 'var(--texte-clair)',
+                'borderColor' => 'var(--quaternary-color)',
+                'textColor' => 'var(--texte-clair)',
                 'extendedProps' => [
-                    'type'             => 'participation',
+                    'type' => 'participation',
                     'participationStatus' => $participation->getStatus()?->value,
-                    'location'         => $activity->getLocation(),
-                    'description'      => $activity->getDescription(),
-                    'organizer'        => $activity->getUser()?->getUsername(),
-                    'icon'                => $firstTheme?->getIconFilename(),
+                    'location' => $activity->getLocation(),
+                    'description' => $activity->getDescription(),
+                    'organizer' => $activity->getUser()?->getUsername(),
+                    'icon' => $firstTheme !== null
+                        ? $assets->getUrl($firstTheme->getIconFilename())
+                        : null,
                 ],
             ];
         }

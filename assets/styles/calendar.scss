@@ -99,3 +99,20 @@
     text-decoration: none;
     color: var(--quaternary-color);
 }
+
+.fc .fc-toolbar {
+    flex-wrap: wrap;
+}
+
+/* Force title full width row */
+.fc .fc-toolbar-title {
+    flex-basis: 100%;
+    text-align: center;
+    margin: 8px 0;
+}
+
+/* Put left + right on separate lines cleanly */
+.fc .fc-toolbar-chunk {
+    display: flex;
+    gap: 6px;
+}

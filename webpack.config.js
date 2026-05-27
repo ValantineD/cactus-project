@@ -35,6 +35,7 @@ Encore
     .addEntry('handle-map-show', './assets/js/handle-map-show.js')
 
     .addEntry('handle-calendar', './assets/js/handle-calender.js')
+    .addEntry('handle-datepicker', './assets/js/handle-datepicker.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

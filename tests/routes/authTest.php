@@ -23,6 +23,9 @@ class authTest extends WebTestCase
 
         yield ["/account/val"];
         yield ["/settings/profile"];
+        yield ["/profile/calendar"];
+        yield ["/profile/messagerie"];
+        yield ["/account/profile/history"];
         yield ["/settings/"];
         yield ["/activity/new"];
         yield ["/admin/theme/"];
