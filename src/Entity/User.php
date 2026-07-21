@@ -32,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Regex(
         pattern: '/^[a-z0-9]+$/i',
-        htmlPattern: '^[a-zA-Z0-9]+$'
+        htmlPattern: '^[a-z0-9]+$'
     )]
     protected ?string $username = null;
 
